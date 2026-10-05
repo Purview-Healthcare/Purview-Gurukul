@@ -1,7 +1,7 @@
 /* Purview Gurukul offline service worker.
    Bump VER on any release to invalidate old caches. */
 const PRE = "purview-gurukul-";
-const VER = PRE + "v1";
+const VER = PRE + "v2";
 const RT  = VER + "-rt";
 const APP = ["./", "./index.html", "./manifest.webmanifest",
              "./icon-192.png", "./icon-512.png", "./icon-maskable-512.png",
@@ -21,12 +21,12 @@ self.addEventListener("activate", e => {
 
 self.addEventListener("fetch", e => {
   const req = e.request;
-  if (req.method !== "GET") return;   // never touch the sign-up/login POSTs
+  if (req.method !== "GET") return;
   const url = new URL(req.url);
 
-  // Page loads and config.js: network-first so updates (and the SCRIPT_URL) arrive,
+  // Page loads: network-first so updates arrive,
   // cached copy when offline.
-  if (req.mode === "navigate" || url.pathname.endsWith("/config.js")) {
+  if (req.mode === "navigate") {
     e.respondWith(
       fetch(req).then(r => {
         const cp = r.clone();
