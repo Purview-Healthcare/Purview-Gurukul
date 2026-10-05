@@ -59,6 +59,10 @@ svg{display:block;flex:0 0 auto}
 .brandrow{display:flex;align-items:center;gap:11px;margin:0 0 10px}
 .brand{font-size:19px;font-weight:800;color:var(--ink);letter-spacing:-.4px;margin:0}
 .brand span{color:var(--orange)}
+.gkdefs{position:absolute;width:0;height:0;overflow:hidden}
+.gkmark{flex:0 0 auto}
+.hero-brand{display:flex;align-items:center;gap:14px;margin:0 0 10px;position:relative}
+.hero-brand h1{margin:0}
 .hexmark{flex:0 0 auto}
 .intag{font-style:normal;font-family:var(--font-display);font-size:10.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--orange-deep);background:var(--orange-soft);border:1px solid var(--orange-line);border-radius:999px;padding:3px 9px;margin-left:9px;vertical-align:middle;position:relative;top:-2px}
 /* Purview lockup — light treatment for the dark bar, real logo art for the light footer */
@@ -296,6 +300,7 @@ footer b{color:var(--ink-2)}
   .topbar-in{padding:12px 15px 0}
   .hero{padding:22px 20px}
   .hero h1{font-size:24px}
+  .gkmark-hero{width:44px;height:44px}
   .hero .wm{display:none}
   .card-body{padding:18px 16px}
   .card-q,.alts{padding-left:16px;padding-right:16px}
@@ -432,12 +437,32 @@ footer b{color:var(--ink-2)}
 </style>
 </head>
 <body>
+<svg class="gkdefs" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id="gkL" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="100" y2="100">
+      <stop offset="0" stop-color="#0b8f84"/><stop offset="1" stop-color="#1a93c4"/>
+    </linearGradient>
+    <linearGradient id="gkD" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="100" y2="100">
+      <stop offset="0" stop-color="#45e695"/><stop offset="1" stop-color="#1fbfe8"/>
+    </linearGradient>
+    <!-- Purview Gurukul mark: a diya (lamp of learning) inside the Purview hexagon.
+         Flame inherits fill from <use>; hex, bowl and foot use currentColor. -->
+    <symbol id="gkmark" viewBox="0 0 100 100">
+      <polygon points="50,6 88.1,28 88.1,72 50,94 11.9,72 11.9,28" fill="none" stroke="currentColor" stroke-width="5.5" stroke-linejoin="round"/>
+      <path d="M50 21 C 61 32 65 43 57 53 C 53 57.5 47 57.5 43 53 C 35 43 39 32 50 21 Z"/>
+      <path d="M50 36 C 55 41.5 56 47 52.5 51 C 51 52.5 49 52.5 47.5 51 C 44 47 45 41.5 50 36 Z" fill="#fff" opacity=".9"/>
+      <path d="M24 61 H76 C 75 71 64 79 50 79 C 36 79 25 71 24 61 Z" fill="currentColor"/>
+      <rect x="42" y="82" width="16" height="5" rx="2.5" fill="currentColor"/>
+    </symbol>
+  </defs>
+</svg>
 
 
 
 <div class="topbar">
   <div class="topbar-in">
     <div class="brandrow">
+      <svg class="gkmark" viewBox="0 0 100 100" width="34" height="34" aria-hidden="true"><use href="#gkmark" fill="url(#gkL)" color="#0b8f84"/></svg>
       <p class="brand">Purview<span>Gurukul</span></p>
     </div>
     <div class="navrow">
@@ -487,7 +512,10 @@ footer b{color:var(--ink-2)}
 
   <section class="hero">
     <div class="wm">DENIALS</div>
-    <h1>Purview <span>Gurukul</span></h1>
+    <div class="hero-brand">
+      <svg class="gkmark gkmark-hero" viewBox="0 0 100 100" width="56" height="56" aria-hidden="true"><use href="#gkmark" fill="url(#gkD)" color="#fff"/></svg>
+      <h1>Purview <span>Gurukul</span></h1>
+    </div>
     <p>Ask about any denial — what it means, what to ask the payer on the call, and what to do next.</p>
     <div class="tiles" id="tiles"></div>
   </section>
