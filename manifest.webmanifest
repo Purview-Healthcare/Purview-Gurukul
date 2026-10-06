@@ -1,7 +1,7 @@
 {
   "name": "Purview Gurukul | RCM Training",
   "short_name": "Gurukul",
-  "description": "Purview RCM training. Ask about any denial: what it means, what to ask the payer, what to do next. 66 AR denial scenarios plus quizzes.",
+  "description": "Purview RCM training. Ask about any denial: what it means, what to ask the payer, what to do next. 66 AR denial scenarios, a 3-day RCM Basics course, and quizzes.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
