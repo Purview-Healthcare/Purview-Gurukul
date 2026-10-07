@@ -222,6 +222,7 @@ mark{background:#bdeedb;color:var(--ink);padding:1px 3px;border-radius:3px;font-
 
 .panel{display:none}
 .panel.on{display:block}
+body.nohero .hero{display:none}
 
 /* home starter cards */
 .starter h3{font-size:12px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);
@@ -370,6 +371,7 @@ dl.terms dd{margin:0;font-size:13.8px;line-height:1.5;color:var(--ink-2)}
   .hero h1{font-size:24px}
   .gkmark-hero{width:44px;height:44px}
   .hero .wm{display:none}
+  .navtab{padding:10px 10px 9px;font-size:13.5px}
   .card-body{padding:18px 16px}
   .card-q,.alts{padding-left:16px;padding-right:16px}
   .hit h2{font-size:19px}
@@ -912,6 +914,7 @@ function logQuestion(q){}
 
 function showPanel(id){
   $$(".panel").forEach(p=>p.classList.toggle("on",p.id===id));
+  document.body.classList.toggle("nohero",id==="basicsPanel");   // the hero is about denials; the course has its own header
   $$(".navtab").forEach(b=>b.classList.toggle("on",b.dataset.panel===id));
   // Deal a fresh set every time the quiz is opened — but never wipe a round in progress,
   // since answering a question can send you to the Ask tab and back.
