@@ -509,8 +509,36 @@ textarea.fbin{resize:vertical;min-height:110px;line-height:1.5}
   .cycle{grid-template-columns:1fr}
   dl.terms{grid-template-columns:1fr}
 }
+.printrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
+.printrow .pname{flex:1 1 220px;min-width:0;margin:0}
+.printrow .btn{display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
+#printSheet{display:none}
 @media print{.topbar,.chips,.searchbar,.hero,.alts,.copybtn,footer,.band,.cycle,.bhead,#basicsIndex,.gloss,.lnav{display:none!important}
-  .card{box-shadow:none;border:1px solid #ccc}body{background:#fff}}
+  .card{box-shadow:none;border:1px solid #ccc}body{background:#fff}
+  body.printing>*:not(#printSheet){display:none!important}
+  body.printing #printSheet{display:block!important;font-family:Georgia,"Times New Roman",serif;color:#000;font-size:11.5pt;line-height:1.45;max-width:none;margin:0;padding:0}
+  #printSheet .phead{display:flex;justify-content:space-between;font-size:10pt;color:#444;border-bottom:1px solid #999;padding-bottom:6px;margin-bottom:10px}
+  #printSheet h1{font-size:17pt;margin:0 0 4px}
+  #printSheet .pmeta{margin:0 0 14px;font-size:11pt}
+  #printSheet .pq{break-inside:avoid;page-break-inside:avoid;border:1px solid #bbb;border-radius:4px;padding:8px 10px;margin:0 0 9px}
+  #printSheet .pq.no{border-color:#c0392b}
+  #printSheet .pqh{display:flex;gap:10px;align-items:baseline;font-size:9.5pt;color:#555;margin-bottom:3px}
+  #printSheet .pn{font-weight:700;color:#000}
+  #printSheet .pcat{flex:1}
+  #printSheet .pmark{font-weight:700;color:#1e7a3c}
+  #printSheet .pq.no .pmark{color:#c0392b}
+  #printSheet .pctx{margin:0 0 4px;font-size:10pt;color:#333;font-style:italic}
+  #printSheet .pqt{margin:0 0 5px;font-weight:700}
+  #printSheet .popts{margin:0;padding:0;list-style:none}
+  #printSheet .popts li{padding:1px 0 1px 22px;position:relative}
+  #printSheet .popts li>span{position:absolute;left:2px;font-weight:700}
+  #printSheet .popts li.right{font-weight:700}
+  #printSheet .popts li.picked{text-decoration:underline}
+  #printSheet .popts em{font-style:normal;font-size:9.5pt;margin-left:6px}
+  #printSheet .popts li.right em{color:#1e7a3c}
+  #printSheet .popts li.picked em{color:#c0392b}
+  #printSheet .pex{margin:5px 0 0;font-size:10pt;color:#333}
+  #printSheet .pfoot{margin-top:18px;font-size:9.5pt;color:#555;border-top:1px solid #999;padding-top:8px}}
 
 /* ── auth gate ─────────────────────────────── */
 #authGate{position:fixed;inset:0;z-index:2000;background:linear-gradient(135deg,#0b8f84,#1a93c4);
@@ -858,6 +886,7 @@ textarea.fbin{resize:vertical;min-height:110px;line-height:1.5}
 </div>
 
 <div class="toast" id="toast"></div>
+<div id="printSheet" aria-hidden="true"></div>
 
 <script src="basics.js"></script>
 <script src="scenarios.js"></script>
@@ -876,6 +905,7 @@ const IC={
   q:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>',
   warn:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.9 18a2 2 0 0 0 1.7 3h16.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17v.01"/></svg>',
   ext:'<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4 11 13"/><path d="M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/></svg>',
+  print:'<svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v7H6z"/></svg>',
   copy:'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></svg>',
   arw:'<svg class="arw" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13"/><path d="m12 5 7 7-7 7"/></svg>',
   fam:'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/></svg>',
@@ -1347,7 +1377,7 @@ function dayQuizSize(day){ const n=BASICS_MODULES.filter(m=>m.day===day).reduce(
 function mountQuiz(area,makeQs,onClose,label){
   const qs=makeQs();
   if(!qs.length){ area.innerHTML='<div class="none">Not enough material here to build a quiz.</div>'; return; }
-  let i=0, score=0, answered=false; const missed=[];
+  let i=0, score=0, answered=false; const missed=[], picks=[];
   function render(){
     if(i>=qs.length) return result();
     const q=qs[i], pct=Math.round(i/qs.length*100);
@@ -1361,7 +1391,7 @@ function mountQuiz(area,makeQs,onClose,label){
     if(answered) return; answered=true;
     const q=qs[i], ok=k===q.correct;
     $$r(".opt",area).forEach((b,ix)=>{ b.disabled=true; if(ix===q.correct) b.classList.add("right"); else if(ix===k) b.classList.add("wrong"); });
-    if(ok) score++; else missed.push(q);
+    picks.push({q:q,pick:k}); if(ok) score++; else missed.push(q);
     area.querySelector(".dqfb").innerHTML='<div class="fb '+(ok?"ok":"no")+'"><b>'+(ok?"Correct.":"Not quite — the answer is "+"ABCD"[q.correct]+".")+'</b> '+esc(q.ex||"")+'</div>';
     const nx=area.querySelector(".dqnext"); nx.style.display=""; nx.addEventListener("click",()=>{ i++; answered=false; render(); });
     area.querySelector(".score").textContent="Score: "+score+" / "+(i+1);
@@ -1371,11 +1401,60 @@ function mountQuiz(area,makeQs,onClose,label){
     const v=pct>=90?["Excellent","You own "+label+"."]:pct>=70?["Solid","Reopen the topics behind the ones you missed."]:pct>=50?["Getting there","Read "+label+" again before moving on."]:["Needs work","Go back through "+label+" before the next one."];
     area.innerHTML='<div class="dq"><div class="result"><div class="big">'+score+' / '+n+'</div><div class="pct">'+pct+'% correct</div><h3>'+v[0]+'</h3><p>'+esc(v[1])+'</p></div>'+
       (missed.length?'<div class="misslist"><h4>Review these ('+missed.length+')</h4>'+missed.map(q=>'<div class="missrow">'+q.q+'<b class="ans">'+esc(q.options[q.correct])+'</b></div>').join("")+'</div>':'')+
-      '<div class="qnav"><button class="btn dqagain">New set of questions</button><button class="btn ghost dqclose">Close quiz</button></div></div>';
+      printRow()+'<div class="qnav"><button class="btn dqagain">New set of questions</button><button class="btn ghost dqclose">Close quiz</button></div></div>';
+    wirePrintRow(area,"Quiz: "+label,picks,score);
     area.querySelector(".dqagain").addEventListener("click",()=>mountQuiz(area,makeQs,onClose,label));
     area.querySelector(".dqclose").addEventListener("click",()=>{ area.innerHTML=""; if(onClose) onClose(); });
   }
   render(); area.scrollIntoView({behavior:"smooth",block:"start"});
+}
+/* ── printable results ──────────────────────────────────────────────────────
+   No backend: the browser's print dialog (or Save as PDF) is the record. Every
+   quiz ends with the same row: a name box, Print results, Copy as text. */
+function printRow(){
+  let nm=""; try{ nm=localStorage.getItem("gk_name")||""; }catch(e){}
+  return '<div class="printrow"><input type="text" class="fbin pname" placeholder="Your name (goes on the printout)" value="'+esc(nm)+'" aria-label="Your name">'+
+    '<button class="btn ghost dqprint">'+IC.print+'Print results</button><button class="btn ghost dqcopy">'+IC.copy+'Copy as text</button></div>';
+}
+function wirePrintRow(area,label,picks,score){
+  const nameOf=()=>{ const v=(area.querySelector(".pname")||{}).value||""; try{ localStorage.setItem("gk_name",v.trim()); }catch(e){} return v.trim(); };
+  area.querySelector(".dqprint").addEventListener("click",()=>printResults(label,picks,score,nameOf()));
+  area.querySelector(".dqcopy").addEventListener("click",()=>copy(resultsText(label,picks,score,nameOf())));
+}
+function resultRows(picks){
+  return picks.map((p,i)=>{
+    const q=p.q; let ctx="";
+    if(q.pre){ const t=document.createElement("div"); t.innerHTML=q.pre; const hd=t.querySelector(".callhead"), now=t.querySelector(".callline.now span");
+      if(hd){ const tn=hd.querySelector(".turn"); ctx=hd.textContent.replace(tn?tn.textContent:"","").trim()+(tn?" ("+tn.textContent+")":""); }
+      if(now) ctx+=(ctx?" — ":"")+"Rep: "+now.textContent; }
+    return {n:i+1,ctx:ctx,q:q.q,options:q.options,pick:p.pick,correct:q.correct,ok:p.pick===q.correct,ex:q.ex||"",cat:q.cat||""};
+  });
+}
+function stripHtml(s){ const t=document.createElement("div"); t.innerHTML=s; return t.textContent; }
+function whenNow(){ return new Date().toLocaleString("en-GB",{day:"numeric",month:"long",year:"numeric",hour:"2-digit",minute:"2-digit"}); }
+function printResults(label,picks,score,name){
+  const rows=resultRows(picks), n=rows.length, pct=n?Math.round(score/n*100):0, wrong=rows.filter(r=>!r.ok).length;
+  $("#printSheet").innerHTML='<div class="phead"><span><b>Purview Gurukul</b> · quiz results</span><span>'+esc(whenNow())+'</span></div>'+
+    '<h1>'+esc(label)+'</h1><p class="pmeta">'+(name?'Name: <b>'+esc(name)+'</b> · ':'')+'Score: <b>'+score+' / '+n+'</b> ('+pct+'%) · '+(wrong?wrong+' to review':'all correct')+'</p>'+
+    rows.map(r=>'<div class="pq '+(r.ok?'ok':'no')+'"><div class="pqh"><span class="pn">'+r.n+'</span><span class="pcat">'+esc(r.cat)+'</span><span class="pmark">'+(r.ok?'Correct':'Wrong')+'</span></div>'+
+      (r.ctx?'<p class="pctx">'+esc(r.ctx)+'</p>':'')+'<p class="pqt">'+r.q+'</p><ol class="popts">'+
+      r.options.map((o,k)=>'<li class="'+(k===r.correct?'right':'')+(k===r.pick&&k!==r.correct?' picked':'')+'"><span>'+"ABCD"[k]+'</span>'+esc(o)+(k===r.correct?' <em>✓ correct answer</em>':'')+(k===r.pick&&k!==r.correct?' <em>✗ your answer</em>':'')+'</li>').join("")+
+      '</ol>'+(r.ex?'<p class="pex">'+esc(r.ex)+'</p>':'')+'</div>').join("")+
+    '<p class="pfoot">Printed from Purview Gurukul. Results are not stored anywhere; this page is the record. Sign: ______________________  Trainer: ______________________</p>';
+  document.body.classList.add("printing");
+  const done=()=>{ document.body.classList.remove("printing"); removeEventListener("afterprint",done); document.removeEventListener("click",done); };
+  addEventListener("afterprint",done);
+  // print() blocks until the dialog closes in most browsers (then afterprint fires); where it
+  // does not, the next tap anywhere clears the print view.
+  setTimeout(()=>{ window.print(); setTimeout(()=>document.addEventListener("click",done),400); },30);
+}
+function resultsText(label,picks,score,name){
+  const rows=resultRows(picks), n=rows.length, pct=n?Math.round(score/n*100):0;
+  let t="Purview Gurukul — "+label+"\n"+whenNow()+(name?"\nName: "+name:"")+"\nScore: "+score+" / "+n+" ("+pct+"%)\n\n";
+  rows.forEach(r=>{ t+=r.n+". "+(r.ok?"[Correct] ":"[Wrong] ")+(r.ctx?r.ctx+"\n   ":"")+stripHtml(r.q)+"\n";
+    r.options.forEach((o,k)=>{ t+="   "+"ABCD"[k]+". "+o+(k===r.correct?"  ✓ correct":"")+(k===r.pick&&k!==r.correct?"  ✗ your answer":"")+"\n"; });
+    if(r.ex) t+="   Why: "+r.ex+"\n"; t+="\n"; });
+  return t;
 }
 function mountDayQuiz(day,area,box){
   const size=dayQuizSize(day);
@@ -1772,10 +1851,10 @@ function buildRoundRCM(filter){
 }
 function buildRound(mode,filter){ return mode==="rcm"?buildRoundRCM(filter):buildRoundAR(filter); }
 
-let QZ={mode:"ar",filter:"All",qs:[],i:0,score:0,answered:false,missed:[]};
+let QZ={mode:"ar",filter:"All",qs:[],i:0,score:0,answered:false,missed:[],picks:[]};
 
 function startQuiz(mode,filter){
-  QZ={mode:mode,filter:filter,qs:buildRound(mode,filter),i:0,score:0,answered:false,missed:[]};
+  QZ={mode:mode,filter:filter,qs:buildRound(mode,filter),i:0,score:0,answered:false,missed:[],picks:[]};
   renderQuiz();
 }
 function renderFilters(){
@@ -1813,7 +1892,7 @@ function answer(i){
     else if(ix===i) b.classList.add("wrong");
   });
   const ok=i===right;
-  if(ok) QZ.score++; else QZ.missed.push(q);
+  QZ.picks.push({q:q,pick:i}); if(ok) QZ.score++; else QZ.missed.push(q);
   $("#fb").innerHTML='<div class="fb '+(ok?"ok":"no")+'"><b>'+(ok?"Correct.":"Not quite — the answer is "+"ABCD"[right]+".")+'</b> '+
     esc(q.ex||"")+(q.d?' <a href="#" data-open="'+esc(q.d.name)+'">Open the full answer →</a>':'')+'</div>';
   if(q.d) $("#fb a").addEventListener("click",e=>{e.preventDefault();const tg=DATA.find(x=>x.name===e.target.dataset.open);if(tg)show(tg);});
@@ -1841,8 +1920,9 @@ function renderResult(){
         '</button>').join("")+'</div>':'')+
     (missRcm.length?'<div class="misslist"><h4>Review these answers ('+missRcm.length+')</h4>'+
       missRcm.map(q=>'<div class="missrow">'+q.q+'<b class="ans">'+esc(q.options[q.correct])+'</b></div>').join("")+'</div>':'')+
-    '<div class="qnav"><button class="btn" id="again">New round</button>'+
+    printRow()+'<div class="qnav"><button class="btn" id="again">New round</button>'+
       '<button class="btn ghost" id="backAsk">Back to Ask</button></div></div></div>';
+  wirePrintRow($("#quizArea"),"Theory quiz: "+(QZ.mode==="rcm"?"RCM Basics":"AR & Denials")+" / "+QZ.filter,QZ.picks,QZ.score);
   $$("#quizArea .misslist button").forEach(b=>b.addEventListener("click",()=>{
     const tg=DATA.find(x=>x.name===b.dataset.name); if(tg) show(tg); }));
   $("#again").addEventListener("click",()=>startQuizUI(QZ.mode,QZ.filter));

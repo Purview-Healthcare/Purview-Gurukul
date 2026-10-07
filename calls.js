@@ -256,7 +256,7 @@ function denialCall(d){
   if(!a1&&!act) return [];
   const opening=payer+" provider services, this is "+rep+". I have claim "+claim+" for "+pt+", date of service "+dos+". It denied with "+(code||"the code on your remittance")+": ‘"+d.denial_wording+"’. What do you need?";
   if(a1) turns.push({rep:opening,q:"What do you ask first?",options:a1.options,correct:a1.correct,say:a1.options[a1.correct],
-    ex:"This is one of the questions the library lists for "+d.name+". "+(a1.explain||"")});
+    ex:"Only one of these belongs on a call about "+d.name+"; the other three are questions for different denials. "+(a1.explain||"").replace(/^One of \d+ questions the library lists for this denial\.?\s*/,"")});
   if(a2) turns.push({rep:"Let me check that for you… yes, I can confirm it. Anything else?",
     q:"What else do you ask before you close?",options:a2.options,correct:a2.correct,say:a2.options[a2.correct],
     ex:"A second question from this denial’s list. Ask everything you need in one call; a second call costs another queue."});
