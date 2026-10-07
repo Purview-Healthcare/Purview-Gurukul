@@ -8,9 +8,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <title>Purview Gurukul | RCM Training</title>
 <meta name="theme-color" content="#0b8f84">
-<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
-<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v=2">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png?v=2">
+<link rel="apple-touch-icon" href="icon-180.png?v=2">
 <style>
 :root{
   --navy:#0b1b26;
@@ -314,21 +314,6 @@ footer b{color:var(--ink-2)}
 .cstep.on{background:var(--navy);border-color:var(--navy);color:#fff}
 .cstep.on i{background:#fff;color:var(--navy)}
 .cstep+.cstep::before{content:"";width:0;height:0;border-left:5px solid var(--line-2);border-top:4px solid transparent;border-bottom:4px solid transparent;position:absolute;left:-5px;top:50%;transform:translateY(-50%)}
-.bidx .daytag{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--orange-deep);background:var(--orange-soft);border:1px solid var(--orange-line);border-radius:999px;padding:2px 8px;margin-right:4px}
-.bidx summary .blurb{display:block;font-size:12.5px;font-weight:500;color:var(--ink-3);margin-top:3px;line-height:1.45}
-.bidx summary>span:first-of-type{display:flex;flex-direction:column;flex:1;min-width:0}
-.bidx .accbody button .stp{font-style:normal;font-size:10.5px;font-weight:800;color:var(--blue-deep);background:var(--blue-soft);border-radius:4px;padding:2px 6px;flex:0 0 auto}
-.bidx .accbody button .tick{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--line-2);display:grid;place-items:center;color:#fff;flex:0 0 auto}
-.bidx .accbody button.done .tick{background:var(--green);border-color:var(--green)}
-.bidx .accbody button .hitterm{margin-left:auto;font-size:11.5px;color:var(--ink-3);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:45%}
-.bidx .accbody button.dim{opacity:.38}
-.lesson .card-q{justify-content:space-between;flex-wrap:wrap;gap:8px}
-.lesson .card-q .crumb{display:flex;align-items:center;gap:8px;min-width:0}
-.lesson .card-q .crumb b{white-space:nowrap}
-.lesson .card-q .lnav{display:flex;gap:6px}
-.lesson .card-q .lnav button{background:#fff;border:1px solid var(--line-2);border-radius:6px;font:inherit;font-size:12.5px;font-weight:700;color:var(--ink-2);padding:6px 10px;cursor:pointer}
-.lesson .card-q .lnav button:hover:not(:disabled){border-color:var(--blue);color:var(--blue-deep)}
-.lesson .card-q .lnav button:disabled{opacity:.4;cursor:default}
 .tag.step{color:var(--orange-deep);background:var(--orange-soft)}
 .prose+.prose{margin-top:12px}
 ol.flow{margin:0;padding:0;list-style:none;counter-reset:fl}
@@ -359,6 +344,52 @@ dl.terms dd{margin:0;font-size:13.8px;line-height:1.5;color:var(--ink-2)}
 .glossbody .g span{color:var(--ink-2)}
 .glossbody .g a{color:var(--blue);font-weight:700;text-decoration:none;font-size:12.5px}
 .glossbody .g a:hover{text-decoration:underline}
+.tree{display:flex;flex-direction:column;gap:12px}
+.tree details{border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:var(--card)}
+.tree details[hidden]{display:none}
+.tree summary{display:flex;align-items:center;gap:11px;cursor:pointer;list-style:none;transition:.13s}
+.tree summary::-webkit-details-marker{display:none}
+.tree .chev{color:var(--ink-3);transition:transform .18s;flex:0 0 auto}
+.tree details[open]>summary>.chev{transform:rotate(90deg)}
+.tree .cnt{margin-left:auto;font-size:11.5px;font-weight:700;color:var(--ink-3);background:#e8f2f1;padding:4px 10px;border-radius:999px;font-variant-numeric:tabular-nums;flex:0 0 auto}
+.tree .cnt.full{background:var(--green);color:#fff}
+details.day{border:0;box-shadow:var(--sh-md)}
+details.day>summary{padding:16px 20px;background:linear-gradient(110deg,var(--band-a),var(--band-b));color:#fff}
+details.day>summary .chev{color:rgba(255,255,255,.75)}
+details.day>summary .dtitle{display:flex;flex-direction:column;font-family:var(--font-display);font-size:18px;font-weight:800;letter-spacing:-.3px;line-height:1.15}
+details.day>summary .dtitle small{font-size:12.5px;font-weight:600;color:#dff2f3;margin-top:4px;letter-spacing:0}
+details.day>summary .cnt{background:rgba(255,255,255,.18);color:#fff}
+details.day>summary .cnt.full{background:#fff;color:var(--green)}
+.daybody{padding:12px;display:flex;flex-direction:column;gap:10px;background:#eef6f6}
+details.mod>summary{padding:14px 18px;font-family:var(--font-display);font-size:14.5px;font-weight:800;color:var(--ink)}
+details.mod>summary:hover{background:#f5faf9}
+details.mod[open]>summary{background:#f5faf9;border-bottom:1px solid var(--line)}
+details.mod[open]>summary>.chev{color:var(--blue)}
+details.mod>summary .mtitle{display:flex;flex-direction:column;flex:1;min-width:0}
+details.mod>summary .blurb{font-family:var(--font-body);font-size:12.5px;font-weight:500;color:var(--ink-3);margin-top:3px;line-height:1.45}
+.modbody{padding:8px 12px 12px;display:flex;flex-direction:column;gap:8px}
+details.les>summary{padding:12px 14px;font-size:14.2px;font-weight:600;color:var(--ink);line-height:1.4}
+details.les>summary:hover{color:var(--blue-deep)}
+details.les[open]>summary{background:#f5faf9;border-bottom:1px solid var(--line);color:var(--blue-deep)}
+details.les>summary .ltitle{flex:1;min-width:0}
+details.les>summary .tick{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--line-2);display:grid;place-items:center;color:#fff;flex:0 0 auto}
+details.les.done>summary .tick{background:var(--green);border-color:var(--green)}
+details.les>summary .stp{font-style:normal;font-size:10.5px;font-weight:800;color:var(--blue-deep);background:var(--blue-soft);border-radius:4px;padding:2px 6px;flex:0 0 auto}
+details.les>summary .hitterm{font-style:normal;font-size:11.5px;color:var(--ink-3);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:40%}
+details.les>summary .hitterm:empty{display:none}
+.lesbody{padding:18px 18px 20px}
+.ltags{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.lesfoot{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:22px;padding-top:16px;border-top:1px solid var(--line)}
+.lesfoot .copybtn{margin-left:auto}
+.lesfoot .done-msg{display:inline-flex;align-items:center;gap:6px;color:var(--green);font-weight:700;font-size:13.5px}
+.dayquiz{background:#fff;border:1.5px dashed var(--line-2);border-radius:var(--r);padding:16px 18px}
+.dq-head{display:flex;gap:10px;align-items:flex-start;margin-bottom:12px;color:var(--orange-deep)}
+.dq-head b{display:block;font-family:var(--font-display);font-size:15px;color:var(--ink)}
+.dq-head span{display:block;font-size:13.5px;color:var(--ink-2);line-height:1.5;margin-top:2px}
+.dq{margin-top:14px}
+.accbody .dayquiz{grid-column:1/-1;margin-top:10px}
+.card-body .dqarea:not(:empty){margin-top:18px;padding-top:4px;border-top:1px solid var(--line)}
+
 .glossbody .gl{column-span:all;font-family:var(--font-display);font-size:12px;font-weight:800;letter-spacing:.09em;color:var(--ink-3);padding:14px 0 4px}
 .bmatch{padding:0 0 10px;font-size:13px;color:var(--ink-3)}
 .bmatch b{color:var(--ink)}
@@ -378,6 +409,9 @@ dl.terms dd{margin:0;font-size:13.8px;line-height:1.5;color:var(--ink-2)}
   .grid{grid-template-columns:1fr}
   .tile{flex:1 1 calc(50% - 6px);min-width:0}
   .glossbody{columns:1}
+  .lesbody{padding:14px 12px 16px}
+  .daybody{padding:8px}
+  details.day>summary{padding:14px 14px}
   .cstep{font-size:12px;padding:6px 11px 6px 6px}
   dl.terms{grid-template-columns:1fr}
 }
@@ -597,7 +631,7 @@ dl.terms dd{margin:0;font-size:13.8px;line-height:1.5;color:var(--ink-2)}
   <div id="askPanel" class="panel on">
     <div class="searchbar">
       <svg class="mag" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-      <input type="text" id="q" placeholder="Ask a question or enter a denial code…" autocomplete="off" autofocus>
+      <input type="text" id="q" placeholder="Ask about a denial or any RCM term — CO-97, timely filing, what is coinsurance…" autocomplete="off" autofocus>
       <button id="go" title="Ask" aria-label="Ask">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13"/><path d="m12 5 7 7-7 7"/></svg>
       </button>
@@ -607,6 +641,8 @@ dl.terms dd{margin:0;font-size:13.8px;line-height:1.5;color:var(--ink-2)}
     <div class="starter" id="starter">
       <h3>Most common denials — click to open</h3>
       <div class="grid" id="starterGrid"></div>
+      <h3 style="margin-top:26px">RCM Basics — start here</h3>
+      <div class="grid" id="starterBasics"></div>
     </div>
   </div>
 
@@ -629,11 +665,11 @@ dl.terms dd{margin:0;font-size:13.8px;line-height:1.5;color:var(--ink-2)}
       </button>
     </div>
     <div class="chips" id="bchips"></div>
-    <div id="basicsReader"></div>
     <div class="bhead"><h3>The revenue cycle — click a step</h3><span id="bprog"></span></div>
     <div class="cycle" id="cycleMap"></div>
-    <div class="bhead"><h3>Course outline</h3><span><button class="btn ghost sm" id="bExpand">Expand all</button> <button class="btn ghost sm" id="bCollapse">Collapse all</button></span></div>
-    <div class="acc" id="basicsIndex"></div>
+    <div class="bhead"><h3>Course — Day 1 to Day 3</h3><span><button class="btn ghost sm" id="bCollapse">Collapse all</button></span></div>
+    <div class="none" id="bnone" hidden><b>No topic matches that.</b> Try a shorter word, or clear the search.</div>
+    <div class="tree" id="basicsTree"></div>
     <details class="gloss" id="glossary"><summary>Glossary A–Z <span class="cnt" id="glossCnt"></span></summary><div class="glossbody" id="glossBody"></div></details>
   </div>
 
@@ -863,7 +899,7 @@ function renderAnswer(d,q,alts,weak){
   const secDo = (d.actions&&d.actions.length)?head(IC.todo,"What to do",d.actions.length)+
     '<ul class="list">'+d.actions.map(x=>'<li>'+hl(x,terms)+'</li>').join("")+'</ul>':'';
   h += intent==="ask" ? (secAsk+secDo+secMeans) : intent==="do" ? (secDo+secAsk+secMeans) : (secMeans+secAsk+secDo);
-  h+='<div class="srcrow"><button class="copybtn">'+IC.copy+'Copy answer</button></div>'+saagHtml(d)+'</div>';
+  h+='<div class="srcrow"><button class="btn ghost dquiz">Quiz me on this denial</button><button class="copybtn">'+IC.copy+'Copy answer</button></div><div class="dqarea"></div>'+saagHtml(d)+'</div>';
   if(alts&&alts.length){
     h+='<div class="alts"><div class="lbl">'+IC.fam+'Related denials</div>'+
       alts.map(a=>'<button class="alt" data-name="'+esc(a.name)+'"><span>'+esc(a.name)+'</span>'+
@@ -871,6 +907,8 @@ function renderAnswer(d,q,alts,weak){
   }
   c.innerHTML=h;
   c.querySelector(".copybtn").addEventListener("click",()=>copy(plainText(d)));
+  c.querySelector(".dquiz").addEventListener("click",()=>{ c.querySelector(".dquiz").hidden=true;
+    mountQuiz(c.querySelector(".dqarea"),()=>buildDenialQuiz(d),()=>{ c.querySelector(".dquiz").hidden=false; },"this denial"); });
   saagWire(c,d);
   c.querySelectorAll(".alt").forEach(b=>b.addEventListener("click",()=>{
     const t=DATA.find(x=>x.name===b.dataset.name); if(t) show(t,b.dataset.name);
@@ -882,7 +920,7 @@ function renderNone(q,b){
   const near=(b||[]).slice(0,3);
   c.innerHTML='<div class="card-q">'+IC.q+'<span>Asked <b>'+esc(q)+'</b></span></div>'+
     '<div class="none"><b>Nothing here matches that.</b> This covers '+DATA.length+
-    ' denial scenarios plus the RCM Basics course — it can\'t answer questions about client rules, snooze windows, or your own SOPs.'+
+    ' denial scenarios and the RCM Basics course — it can\'t answer questions about client rules, snooze windows, or your own SOPs.'+
     '<br><br>Try the denial code on its own (<code>CO-97</code>), a few words from the payer\'s wording '+
     '(<code>not eligible</code>, <code>timely</code>, <code>no auth</code>), or a term from the course (<code>deductible</code>, <code>COB</code>).</div>'+
     (near.length?'<div class="alts"><div class="lbl">'+IC.fam+'Closest lessons in RCM Basics</div>'+near.map(a=>'<button class="alt" data-go="'+a.l.id+'"><span>'+esc(a.l.title)+'</span><em>'+esc(a.l.mod.short)+'</em>'+IC.arw+'</button>').join("")+'</div>':'');
@@ -901,8 +939,12 @@ function ask(){
   const q=$("#q").value.trim(); if(!q) return;
   logQuestion(q);
   const r=search(q), b=bSearch(q), bStrong=b.length>0&&b[0].s>=40;
+  // "what is a deductible" is a glossary question even when a denial scenario carries the same word
+  const ql=q.toLowerCase().trim(), topTerm=bStrong&&b[0].term?b[0].term:null;
+  const bare=!!topTerm&&(ql===topTerm.toLowerCase()||ql===topTerm.toLowerCase().replace(/\s*\(.*\)\s*$/,"").trim()||ql===((topTerm.match(/\(([^)]+)\)/)||[])[1]||"").toLowerCase().replace(/[^a-z0-9]/g,""));   // "ERA", "COB", "deductible" on their own
+  const defQ=!!topTerm&&!queryCodes(q).size&&(bare||(/^(what is|what are|what's|whats|define|definition of|meaning of|explain)\b/.test(ql)&&termInQuery(topTerm,q)));
   if(!r.length){ push(bStrong?basicsAnswer(q,b):renderNone(q,b)); }
-  else if(!isConfident(r)&&bStrong&&b[0].s>r[0].s){ push(basicsAnswer(q,b)); }
+  else if(defQ||(!isConfident(r)&&bStrong&&b[0].s>r[0].s)){ const card=basicsAnswer(q,b); card.appendChild(denialLink(r[0].d)); push(card); }
   else{ const card=renderAnswer(r[0].d,q,r.slice(1,5).map(x=>x.d),!isConfident(r)); if(bStrong) card.appendChild(basicsLink(b[0].l)); push(card); }
   $("#q").value=""; $("#q").focus();
 }
@@ -927,12 +969,14 @@ function showPanel(id){
 $$(".navtab").forEach(b=>b.addEventListener("click",()=>showPanel(b.dataset.panel)));
 
 /* ─────────────────────────  RCM BASICS COURSE  ─────────────────────────
-   Content lives in basics.js (BASICS_MODULES, BASICS_QUIZ). This block renders
-   the course: a searchable outline, the 13-step cycle map, lesson cards with
-   prev/next, per-viewer progress, and a glossary built from the lessons' terms.
-   The Ask tab falls back to these lessons when a question is not a denial.    */
+   Content lives in basics.js (BASICS_MODULES, BASICS_QUIZ). The course is a
+   nested outline: Day → module → lesson, every level a <details> dropdown, so a
+   lesson opens in place and closing it brings the list straight back. Each day
+   ends with a randomised quiz drawn from that day's modules. Search filters the
+   tree; the cycle map and the Ask tab open lessons in place.               */
 const B_LESSONS=[]; BASICS_MODULES.forEach(m=>m.lessons.forEach(l=>{ l.mod=m; B_LESSONS.push(l); }));
 const B_BY_ID={}; B_LESSONS.forEach(l=>{ B_BY_ID[l.id]=l; });
+const B_DAYS=[]; BASICS_MODULES.forEach(m=>{ if(B_DAYS.indexOf(m.day)<0) B_DAYS.push(m.day); });
 const B_STEPS=B_LESSONS.filter(l=>l.step).sort((a,b)=>a.step-b.step);
 const B_STEP_LABEL={1:"Scheduling & pre-registration",2:"Eligibility & benefits",3:"Encounter",4:"Medical coding",5:"Demo & charge entry",
   6:"Claim submission",7:"Clearinghouse",8:"Adjudication",9:"Payment posting",10:"AR follow-up",11:"Denial management",12:"Credit balance",13:"Patient collections"};
@@ -948,10 +992,12 @@ function bScore(l,q){
   const ql=q.toLowerCase().trim(); if(!ql) return {s:0,term:null};
   const terms=tok(ql); let sc=0, hitTerm=null;
   if(l.title.toLowerCase().includes(ql)) sc+=60;
-  (l.terms||[]).forEach(x=>{ const tl=x[0].toLowerCase();
+  const wre=t=>new RegExp("(^|[^a-z0-9])"+t.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+"(?![a-z0-9])"), qlc=ql.replace(/[^a-z0-9 ]/g," ");
+  (l.terms||[]).forEach(x=>{ const tl=x[0].toLowerCase(), ab=(x[0].match(/\(([^)]+)\)/)||[])[1], abl=ab?ab.toLowerCase().replace(/[^a-z0-9]/g,""):"";
     if(tl===ql){sc+=120;hitTerm=hitTerm||x[0];}
-    else if(ql.length>2&&tl.includes(ql)){sc+=50;hitTerm=hitTerm||x[0];}
-    else if(tl.length>3&&ql.includes(tl)){sc+=40;hitTerm=hitTerm||x[0];} });
+    else if(abl.length>1&&(ql===abl||wre(abl).test(qlc))){sc+=100;hitTerm=hitTerm||x[0];}   // "what is COB" hits "Coordination of benefits (COB)"
+    else if(ql.length>2&&wre(ql).test(tl)){sc+=50;hitTerm=hitTerm||x[0];}                  // the query is a whole word inside the term
+    else if(tl.length>2&&wre(tl).test(ql)){sc+=40;hitTerm=hitTerm||x[0];} });              // the term appears, as whole words, in the query
   if(!terms.length) return {s:sc,term:hitTerm};
   const T=new Set(tok(l.title)), L=new Set(tok(l.line)), K=new Set(tok((l.terms||[]).map(x=>x[0]).join(" "))),
     D=new Set(tok((l.terms||[]).map(x=>x[1]).join(" "))),
@@ -976,14 +1022,11 @@ function lessonText(l){
   if(l.remember) t+="\nRemember: "+strip(l.remember)+"\n";
   return t;
 }
-function lessonCard(l){
-  const m=l.mod, idx=B_LESSONS.indexOf(l), prev=B_LESSONS[idx-1], next=B_LESSONS[idx+1], mi=m.lessons.indexOf(l)+1;
+/* the inside of a lesson dropdown; rendered the first time it is opened */
+function lessonBody(l){
+  const m=l.mod, idx=B_LESSONS.indexOf(l), next=B_LESSONS[idx+1];
   const head=(ic,t,n)=>'<div class="sec">'+ic+'<h3>'+t+'</h3>'+(n?'<span class="n">'+n+'</span>':'')+'</div>';
-  let h='<div class="card-q"><div class="crumb">'+IC.q+'<span>'+esc(m.day)+' · '+esc(m.title)+' · <b>Lesson '+mi+' of '+m.lessons.length+'</b></span></div>'+
-    '<div class="lnav"><button data-go="'+(prev?prev.id:"")+'"'+(prev?"":" disabled")+'>← Previous</button>'+
-    '<button data-go="'+(next?next.id:"")+'"'+(next?"":" disabled")+'>Next →</button></div></div>'+
-    '<div class="card-body"><div class="hit"><h2>'+esc(l.title)+'</h2><span class="tag">'+esc(m.short)+'</span>'+
-    (l.step?'<span class="tag step">RCM step '+l.step+'</span>':'')+'</div>'+
+  let h='<div class="lesbody"><div class="ltags"><span class="tag">'+esc(m.short)+'</span>'+(l.step?'<span class="tag step">RCM step '+l.step+'</span>':'')+'</div>'+
     '<div class="answer"><div class="answer-h">'+IC.spark+'In one line</div><p>'+fmt(l.line)+'</p></div>';
   if(l.body&&l.body.length) h+=head(IC.info,"Explained")+l.body.map(p=>'<p class="prose">'+fmt(p)+'</p>').join("");
   if(l.flow) h+=head(IC.todo,"Process flow",l.flow.steps.length)+'<ol class="flow">'+l.flow.steps.map(x=>'<li>'+fmt(x)+'</li>').join("")+'</ol>'+
@@ -993,68 +1036,124 @@ function lessonCard(l){
   if(l.terms&&l.terms.length) h+=head(IC.ask,"Key terms",l.terms.length)+'<dl class="terms">'+l.terms.map(x=>'<div><dt>'+esc(x[0])+'</dt><dd>'+fmt(x[1])+'</dd></div>').join("")+'</dl>';
   if(l.tips&&l.tips.length) h+=head(IC.check,"On the job")+'<ul class="list">'+l.tips.map(x=>'<li>'+fmt(x)+'</li>').join("")+'</ul>';
   if(l.remember) h+='<div class="remember">'+IC.spark+'<div><b>Remember</b>'+fmt(l.remember)+'</div></div>';
-  h+='<div class="srcrow"><button class="btn ghost" data-quiz="1">Quiz me on '+esc(m.short)+'</button><button class="copybtn">'+IC.copy+'Copy lesson</button></div></div>';
-  const rest=m.lessons.filter(x=>x!==l);
-  if(rest.length) h+='<div class="alts lnext"><div class="lbl">'+IC.fam+'Also in '+esc(m.title)+'</div>'+
-    rest.map(x=>'<button class="alt" data-go="'+x.id+'"><span>'+esc(x.title)+'</span>'+IC.arw+'</button>').join("")+'</div>';
-  const c=document.createElement("div"); c.className="card lesson"; c.innerHTML=h;
-  c.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=>{ if(b.dataset.go) openLesson(b.dataset.go); }));
-  c.querySelector("[data-quiz]").addEventListener("click",()=>{ startQuizUI("rcm",m.short); showPanel("quizPanel"); });
-  c.querySelector(".copybtn").addEventListener("click",()=>copy(lessonText(l)));
-  return c;
+  h+='<div class="lesfoot"><button class="btn ghost" data-close="1">Close this topic</button>'+
+    (next?'<button class="btn" data-go="'+next.id+'">Next: '+esc(next.title)+' →</button>':'<span class="done-msg">'+IC.check+' End of the course</span>')+
+    '<button class="copybtn" data-copy="1">'+IC.copy+'Copy</button></div></div>';
+  return h;
 }
+function ensureBody(d){
+  if(d.dataset.rendered) return;
+  const l=B_BY_ID[d.dataset.id]; d.insertAdjacentHTML("beforeend",lessonBody(l)); d.dataset.rendered="1";
+  d.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=>openLesson(b.dataset.go)));
+  d.querySelector("[data-close]").addEventListener("click",()=>{ d.open=false; d.querySelector("summary").scrollIntoView({behavior:"smooth",block:"center"}); });
+  d.querySelector("[data-copy]").addEventListener("click",()=>copy(lessonText(l)));
+}
+function lesEl(id){ return document.querySelector('#basicsTree details.les[data-id="'+id+'"]'); }
 function openLesson(id){
-  const l=B_BY_ID[id]; if(!l) return;
+  const d=lesEl(id); if(!d) return;
   showPanel("basicsPanel");
-  const r=$("#basicsReader"); r.innerHTML=""; r.appendChild(lessonCard(l));
-  bMarkRead(id); B_CUR=id; renderCycle(); renderIndex($("#bq").value.trim());
-  r.scrollIntoView({behavior:"smooth",block:"start"});
+  if($("#bq").value.trim()){ $("#bq").value=""; applyFilter(""); }
+  let p=d.parentElement; while(p&&p.id!=="basicsTree"){ if(p.tagName==="DETAILS") p.open=true; p=p.parentElement; }
+  ensureBody(d); d.open=true; B_CUR=id; bMarkRead(id); refreshCounts();
+  setTimeout(()=>d.querySelector("summary").scrollIntoView({behavior:"smooth",block:"start"}),30);
 }
+function refreshCounts(){
+  const read=bRead();
+  $$("#basicsTree details.les").forEach(d=>d.classList.toggle("done",read.has(d.dataset.id)));
+  $$("#basicsTree details.mod, #basicsTree details.day").forEach(d=>{
+    const all=$$r("details.les",d).length, n=$$r("details.les",d).filter(x=>read.has(x.dataset.id)).length;
+    const c=d.querySelector(":scope > summary .cnt"); c.textContent=n+"/"+all; c.classList.toggle("full",n===all&&all>0);
+  });
+  const n=Array.from(read).filter(x=>B_BY_ID[x]).length;
+  $("#bprog").textContent=n+" of "+B_LESSONS.length+" topics read";
+  renderCycle();
+}
+const $$r=(s,root)=>[].slice.call((root||document).querySelectorAll(s));
+
 function renderCycle(){
   const read=bRead();
   $("#cycleMap").innerHTML=B_STEPS.map(l=>'<button class="cstep'+(read.has(l.id)?" done":"")+(B_CUR===l.id?" on":"")+'" data-go="'+l.id+'" title="'+esc(l.title)+'">'+
     '<i>'+(read.has(l.id)&&B_CUR!==l.id?IC.check:l.step)+'</i><span>'+esc(B_STEP_LABEL[l.step]||l.title)+'</span></button>').join("");
   $$("#cycleMap .cstep").forEach(b=>b.addEventListener("click",()=>openLesson(b.dataset.go)));
-  const n=Array.from(read).filter(x=>B_BY_ID[x]).length;
-  $("#bprog").textContent=n+" of "+B_LESSONS.length+" lessons read";
 }
-function renderIndex(q){
-  const read=bRead(), res=q?bSearch(q):null, hit={}; if(res) res.forEach(x=>{ hit[x.l.id]=x; });
-  $("#basicsIndex").innerHTML=BASICS_MODULES.map((m,mi)=>{
-    const open=res?m.lessons.some(l=>hit[l.id]):(B_CUR?m.lessons.some(l=>l.id===B_CUR):mi===0);
-    return '<details class="bidx"'+(open?" open":"")+'><summary>'+IC.chev+'<span><span><span class="daytag">'+esc(m.day)+'</span>'+esc(m.title)+'</span>'+
-      '<span class="blurb">'+esc(m.blurb)+'</span></span><span class="cnt">'+m.lessons.filter(l=>read.has(l.id)).length+'/'+m.lessons.length+'</span></summary>'+
-      '<div class="accbody" style="grid-template-columns:1fr">'+m.lessons.map(l=>{ const h=hit[l.id];
-        return '<button data-go="'+l.id+'" class="'+(read.has(l.id)?"done":"")+(res&&!h?" dim":"")+'"><span class="tick">'+IC.check+'</span><span>'+esc(l.title)+'</span>'+
-          (l.step?'<em class="stp">Step '+l.step+'</em>':'')+(h&&h.term?'<em class="hitterm">'+esc(h.term)+'</em>':'')+'</button>'; }).join("")+'</div></details>';
+function buildTree(){
+  $("#basicsTree").innerHTML=B_DAYS.map((day,di)=>{
+    const mods=BASICS_MODULES.filter(m=>m.day===day), nL=mods.reduce((a,m)=>a+m.lessons.length,0);
+    return '<details class="day"'+(di===0?" open":"")+'><summary>'+IC.chev+'<span class="dtitle">'+esc(day)+'<small>'+mods.length+' modules · '+nL+' topics · quiz at the end</small></span><span class="cnt">0/'+nL+'</span></summary>'+
+      '<div class="daybody">'+mods.map(m=>'<details class="mod" data-mod="'+m.id+'"><summary>'+IC.chev+'<span class="mtitle"><b>'+esc(m.title)+'</b><span class="blurb">'+esc(m.blurb)+'</span></span><span class="cnt">0/'+m.lessons.length+'</span></summary>'+
+        '<div class="modbody">'+m.lessons.map(l=>'<details class="les" data-id="'+l.id+'"><summary><span class="tick">'+IC.check+'</span><span class="ltitle">'+esc(l.title)+'</span>'+
+          (l.step?'<em class="stp">Step '+l.step+'</em>':'')+'<em class="hitterm"></em>'+IC.chev+'</summary></details>').join("")+'</div></details>').join("")+
+      '<div class="dayquiz" data-day="'+esc(day)+'"><div class="dq-head">'+IC.spark+'<div><b>'+esc(day)+' quiz</b><span>'+dayQuizSize(day)+' random questions from '+esc(day)+' — a different set every time you open it.</span></div></div>'+
+      '<button class="btn" data-start="1">Start the '+esc(day)+' quiz</button><div class="dqarea"></div></div></div></details>';
   }).join("");
-  $$("#basicsIndex button[data-go]").forEach(b=>b.addEventListener("click",()=>openLesson(b.dataset.go)));
+  $$("#basicsTree details.les").forEach(d=>d.addEventListener("toggle",()=>{ if(d.open){ ensureBody(d); B_CUR=d.dataset.id; bMarkRead(d.dataset.id); refreshCounts(); } }));
+  $$("#basicsTree .dayquiz").forEach(box=>box.querySelector("[data-start]").addEventListener("click",()=>{ box.querySelector("[data-start]").hidden=true; mountDayQuiz(box.dataset.day,box.querySelector(".dqarea"),box); }));
+  refreshCounts();
 }
-function renderGlossary(){
-  const seen=new Set(), all=[];
-  B_LESSONS.forEach(l=>(l.terms||[]).forEach(x=>{ const k=x[0].toLowerCase(); if(seen.has(k)) return; seen.add(k); all.push({t:x[0],d:x[1],l:l}); }));
-  all.sort((a,b)=>a.t.localeCompare(b.t));
-  let cur="", h="";
-  all.forEach(x=>{ const L=x.t[0].toUpperCase(); if(L!==cur){cur=L;h+='<div class="gl">'+esc(L)+'</div>';}
-    h+='<div class="g"><b>'+esc(x.t)+'</b><span>'+fmt(x.d)+'</span> <a href="#" data-go="'+x.l.id+'">'+esc(x.l.title)+' →</a></div>'; });
-  $("#glossBody").innerHTML=h; $("#glossCnt").textContent=all.length+" terms";
-  $$("#glossBody a[data-go]").forEach(a=>a.addEventListener("click",e=>{ e.preventDefault(); openLesson(a.dataset.go); }));
+/* search filters the tree in place, keeping whatever the reader has open */
+function applyFilter(q){
+  const res=q?bSearch(q):null, hit={}; if(res) res.forEach(x=>{ hit[x.l.id]=x; });
+  $$("#basicsTree details.les").forEach(d=>{ const h=res?hit[d.dataset.id]:null; d.hidden=!!(res&&!h); d.querySelector(".hitterm").textContent=(h&&h.term)?h.term:""; });
+  $$("#basicsTree details.mod").forEach(d=>{ const any=$$r("details.les",d).some(x=>!x.hidden); d.hidden=!!(res&&!any); if(res&&any) d.open=true; });
+  $$("#basicsTree details.day").forEach(d=>{ const any=$$r("details.mod",d).some(x=>!x.hidden); d.hidden=!!(res&&!any); if(res&&any) d.open=true; d.querySelector(".dayquiz").hidden=!!res; });
+  $("#bnone").hidden=!(res&&!res.length);
+  $("#bclear").hidden=!q;
 }
 function bQuery(openTop){
-  const q=$("#bq").value.trim(); $("#bclear").hidden=!q;
-  renderIndex(q);
-  if(openTop&&q){ const r=bSearch(q); if(r.length) openLesson(r[0].l.id); else toast("No lesson matches that"); }
+  const q=$("#bq").value.trim(); applyFilter(q);
+  if(openTop&&q){ const r=bSearch(q); if(r.length){ const id=r[0].l.id; $("#bq").value=q; const d=lesEl(id); let p=d.parentElement; while(p&&p.id!=="basicsTree"){ if(p.tagName==="DETAILS") p.open=true; p=p.parentElement; } ensureBody(d); d.open=true; d.querySelector("summary").scrollIntoView({behavior:"smooth",block:"start"}); } else toast("No topic matches that"); }
 }
 const B_CHIPS=["copay, deductible, coinsurance","coordination of benefits","ICD-10-CM code structure","modifier 26 and TC","CMS-1500 and UB-04","Medicare Part B","HIPAA minimum necessary","phonetic alphabet"];
 $("#bchips").innerHTML=B_CHIPS.map(e=>'<button class="chip">'+esc(e)+'</button>').join("");
 $$("#bchips .chip").forEach(b=>b.addEventListener("click",()=>{ $("#bq").value=b.textContent; bQuery(true); }));
 $("#bq").addEventListener("input",()=>bQuery(false));
 $("#bq").addEventListener("keydown",e=>{ if(e.key==="Enter") bQuery(true); });
-$("#bclear").addEventListener("click",()=>{ $("#bq").value=""; bQuery(false); $("#bq").focus(); });
-$("#bExpand").addEventListener("click",()=>$$("#basicsIndex details").forEach(d=>d.open=true));
-$("#bCollapse").addEventListener("click",()=>$$("#basicsIndex details").forEach(d=>d.open=false));
-$("#basicsSub").textContent=B_LESSONS.length+" lessons in "+BASICS_MODULES.length+" modules, rebuilt from the 3-day RCM induction course — search a term, click a cycle step, or read in order";
-renderCycle(); renderIndex(""); renderGlossary();
+$("#bclear").addEventListener("click",()=>{ $("#bq").value=""; applyFilter(""); $("#bq").focus(); });
+$("#bCollapse").addEventListener("click",()=>$$("#basicsTree details").forEach(d=>d.open=false));
+$("#basicsSub").textContent=B_LESSONS.length+" topics in "+BASICS_MODULES.length+" modules over three days — open a day, open a module, open a topic; a fresh quiz waits at the end of each day";
+
+/* ── day quizzes: random draw from that day's modules, new set every time ── */
+function dayPool(day){ const shorts=BASICS_MODULES.filter(m=>m.day===day).map(m=>m.short); return RCM_BANK.filter(x=>shorts.indexOf(x.t)>=0); }
+function dayQuizSize(day){ const n=BASICS_MODULES.filter(m=>m.day===day).reduce((a,m)=>a+m.lessons.length,0); return Math.min(20,Math.max(10,Math.round(n*0.9))); }
+function mountQuiz(area,makeQs,onClose,label){
+  const qs=makeQs();
+  if(!qs.length){ area.innerHTML='<div class="none">Not enough material here to build a quiz.</div>'; return; }
+  let i=0, score=0, answered=false; const missed=[];
+  function render(){
+    if(i>=qs.length) return result();
+    const q=qs[i], pct=Math.round(i/qs.length*100);
+    area.innerHTML='<div class="dq"><div class="qmeta"><span>Question '+(i+1)+' of '+qs.length+'</span><span class="cat">'+esc(q.cat||label)+'</span></div>'+
+      '<div class="qbar"><i style="width:'+pct+'%"></i></div><p class="qtext">'+q.q+'</p>'+
+      '<div class="opts">'+q.options.map((o,k)=>'<button class="opt" data-i="'+k+'"><span class="ltr">'+"ABCD"[k]+'</span><span>'+esc(o)+'</span></button>').join("")+'</div>'+
+      '<div class="dqfb"></div><div class="qnav"><button class="btn dqnext" style="display:none">'+(i===qs.length-1?"See results":"Next question")+'</button><span class="score">Score: '+score+' / '+i+'</span></div></div>';
+    $$r(".opt",area).forEach(b=>b.addEventListener("click",()=>answer(+b.dataset.i)));
+  }
+  function answer(k){
+    if(answered) return; answered=true;
+    const q=qs[i], ok=k===q.correct;
+    $$r(".opt",area).forEach((b,ix)=>{ b.disabled=true; if(ix===q.correct) b.classList.add("right"); else if(ix===k) b.classList.add("wrong"); });
+    if(ok) score++; else missed.push(q);
+    area.querySelector(".dqfb").innerHTML='<div class="fb '+(ok?"ok":"no")+'"><b>'+(ok?"Correct.":"Not quite — the answer is "+"ABCD"[q.correct]+".")+'</b> '+esc(q.ex||"")+'</div>';
+    const nx=area.querySelector(".dqnext"); nx.style.display=""; nx.addEventListener("click",()=>{ i++; answered=false; render(); });
+    area.querySelector(".score").textContent="Score: "+score+" / "+(i+1);
+  }
+  function result(){
+    const n=qs.length, pct=Math.round(score/n*100);
+    const v=pct>=90?["Excellent","You own "+label+"."]:pct>=70?["Solid","Reopen the topics behind the ones you missed."]:pct>=50?["Getting there","Read "+label+" again before moving on."]:["Needs work","Go back through "+label+" before the next one."];
+    area.innerHTML='<div class="dq"><div class="result"><div class="big">'+score+' / '+n+'</div><div class="pct">'+pct+'% correct</div><h3>'+v[0]+'</h3><p>'+esc(v[1])+'</p></div>'+
+      (missed.length?'<div class="misslist"><h4>Review these ('+missed.length+')</h4>'+missed.map(q=>'<div class="missrow">'+q.q+'<b class="ans">'+esc(q.options[q.correct])+'</b></div>').join("")+'</div>':'')+
+      '<div class="qnav"><button class="btn dqagain">New set of questions</button><button class="btn ghost dqclose">Close quiz</button></div></div>';
+    area.querySelector(".dqagain").addEventListener("click",()=>mountQuiz(area,makeQs,onClose,label));
+    area.querySelector(".dqclose").addEventListener("click",()=>{ area.innerHTML=""; if(onClose) onClose(); });
+  }
+  render(); area.scrollIntoView({behavior:"smooth",block:"start"});
+}
+function mountDayQuiz(day,area,box){
+  const size=dayQuizSize(day);
+  mountQuiz(area,()=>{ const pool=dayPool(day); return shuffle(pool).slice(0,Math.min(size,pool.length)).map(authored); },
+    ()=>{ box.querySelector("[data-start]").hidden=false; },day);
+}
+buildTree(); renderCycle();
 
 /* Ask-tab fallback: a question that is not about a denial gets the course's answer */
 function basicsAnswer(q,b){
@@ -1064,11 +1163,22 @@ function basicsAnswer(q,b){
     '<div class="answer"><div class="answer-h">'+IC.spark+'Short answer — from RCM Basics</div><p>'+(term?'<b>'+esc(term[0])+':</b> '+fmt(term[1]):fmt(l.line))+'</p></div>'+
     '<div class="hit"><h2>'+esc(l.title)+'</h2><span class="tag">'+esc(l.mod.short)+'</span></div>'+
     (term?'<p class="prose">'+fmt(l.line)+'</p>':'<p class="prose">'+fmt((l.body||[])[0]||"")+'</p>')+
-    '<div class="srcrow"><button class="btn" data-go="'+l.id+'">Open the lesson</button></div></div>';
+    '<div class="srcrow"><button class="btn" data-go="'+l.id+'">Open the topic</button></div></div>';
   const alts=b.slice(1,4).filter(x=>x.s>12);
   if(alts.length) h+='<div class="alts"><div class="lbl">'+IC.fam+'Also relevant</div>'+alts.map(a=>'<button class="alt" data-go="'+a.l.id+'"><span>'+esc(a.l.title)+'</span><em>'+esc(a.l.mod.short)+'</em>'+IC.arw+'</button>').join("")+'</div>';
   c.innerHTML=h; c.querySelectorAll("[data-go]").forEach(x=>x.addEventListener("click",()=>openLesson(x.dataset.go)));
   return c;
+}
+function termInQuery(term,q){
+  const ql=" "+q.toLowerCase()+" ", base=term.toLowerCase().replace(/\s*\(.*\)\s*$/,"").trim();
+  const abbr=(term.match(/\(([^)]+)\)/)||[])[1];
+  return (base&&ql.includes(" "+base+" "))||(base&&ql.includes(base))||(abbr&&new RegExp("\\b"+abbr.toLowerCase().replace(/[^a-z0-9]/g,"")+"\\b").test(ql));
+}
+function denialLink(d){
+  const el=document.createElement("div"); el.className="alts";
+  el.innerHTML='<div class="lbl">'+IC.fam+'Related denial scenario</div><button class="alt"><span>'+esc(d.name)+'</span>'+(d.codes&&d.codes.length?'<em>'+esc(d.codes.join(", "))+'</em>':'')+IC.arw+'</button>';
+  el.querySelector("button").addEventListener("click",()=>show(d));
+  return el;
 }
 function basicsLink(l){
   const d=document.createElement("div"); d.className="alts";
@@ -1077,7 +1187,7 @@ function basicsLink(l){
   return d;
 }
 
-const EXAMPLES=["CO-97","no auth on file","timely filing","provider not enrolled","paid to patient","what to ask for out of network"];
+const EXAMPLES=["CO-97","no auth on file","timely filing","paid to patient","what is a deductible","HMO vs PPO","what is a clearinghouse","Medicare Part B"];
 $("#chips").innerHTML=EXAMPLES.map(e=>'<button class="chip">'+esc(e)+'</button>').join("");
 $$("#chips .chip").forEach(b=>b.addEventListener("click",()=>{ $("#q").value=b.textContent; ask(); }));
 
@@ -1105,13 +1215,25 @@ $("#starterGrid").innerHTML=COMMON.map(n=>{
 $$("#starterGrid .hcard").forEach(b=>b.addEventListener("click",()=>{
   const t=DATA.find(x=>x.name===b.dataset.name); if(t) show(t);
 }));
+const STARTER_BASICS=["rcm-overview","three-ps","cost-sharing","cob","managed-care","icd10","adjudication","medicare"];
+$("#starterBasics").innerHTML=STARTER_BASICS.map(id=>{ const l=B_BY_ID[id]; if(!l) return "";
+  const first=String(l.line).replace(/\*\*/g,"").slice(0,96);
+  return '<button class="hcard" data-go="'+id+'"><div class="hc-top"><span class="hc-code">'+esc(l.mod.day)+'</span><b>'+esc(l.title)+'</b></div><p>'+esc(first)+(first.length>=96?"…":"")+'</p></button>';
+}).join("");
+$$("#starterBasics .hcard").forEach(b=>b.addEventListener("click",()=>openLesson(b.dataset.go)));
 
 $("#browseList").innerHTML=fams.map(f=>{
   const items=DATA.filter(d=>d.family===f);
   return '<details><summary>'+IC.chev+'<span>'+esc(f)+'</span><span class="cnt">'+items.length+'</span></summary>'+
     '<div class="accbody">'+items.map(d=>'<button data-name="'+esc(d.name)+'"><span>'+esc(d.name)+'</span>'+
-      (d.codes&&d.codes.length?'<em>'+esc(d.codes[0])+'</em>':'')+'</button>').join("")+'</div></details>';
+      (d.codes&&d.codes.length?'<em>'+esc(d.codes[0])+'</em>':'')+'</button>').join("")+
+      '<div class="dayquiz" data-fam="'+esc(f)+'"><div class="dq-head">'+IC.spark+'<div><b>Quiz: '+esc(f)+'</b><span>10 random questions on these '+items.length+' denials — wording, meaning, what to ask, what to do, true or false, and call scenarios. A new set every time.</span></div></div>'+
+      '<button class="btn" data-start="1">Start the quiz</button><div class="dqarea"></div></div></div></details>';
 }).join("");
+$$("#browseList .dayquiz").forEach(box=>box.querySelector("[data-start]").addEventListener("click",()=>{
+  box.querySelector("[data-start]").hidden=true;
+  mountQuiz(box.querySelector(".dqarea"),()=>buildRoundAR(box.dataset.fam),()=>{ box.querySelector("[data-start]").hidden=false; },box.dataset.fam+" denials");
+}));
 $$("#browseList .accbody button").forEach(b=>b.addEventListener("click",()=>{
   const t=DATA.find(x=>x.name===b.dataset.name); if(t) show(t);
 }));
@@ -1213,6 +1335,24 @@ const GEN={
       d:d,explain:"One of "+d.actions.length+" resolution steps the library lists for this denial."});
   }
 };
+GEN.trueFalse=function(d,pool){
+  const mine=(d.questions||[]).concat(d.actions||[]).filter(uniqLine); if(!mine.length) return null;
+  const isTrue=Math.random()<0.5; let line, other=null;
+  if(isTrue) line=pick(mine);
+  else{ const others=pool.filter(x=>x!==d&&((x.questions||[]).concat(x.actions||[]).filter(uniqLine).length)); if(!others.length) return null;
+    other=pick(others); line=pick((other.questions||[]).concat(other.actions||[]).filter(uniqLine)); }
+  return {options:["True","False"],correct:isTrue?0:1,
+    q:"True or false — on a <b>"+esc(d.name)+"</b> denial, this belongs on your call or action list:<br><i>“"+esc(line)+"”</i>",d:d,
+    explain:isTrue?"It is one of the library's lines for this denial.":"That line belongs to the "+other.name+" scenario, not this one."};
+};
+/* every question type the library can build about one denial, for the "quiz me on this denial" button */
+function buildDenialQuiz(d){
+  const qs=[];
+  ["wording","meaning","whichAsk","whichDo"].forEach(g=>{ const raw=GEN[g](d,DATA); if(raw) qs.push({q:raw.q,options:raw.options,correct:raw.correct,cat:d.family,ex:raw.explain,d:d}); });
+  for(let k=0;k<3&&qs.filter(x=>/True or false/.test(x.q)).length<2;k++){ const raw=GEN.trueFalse(d,DATA); if(raw&&!qs.some(x=>x.q===raw.q)) qs.push({q:raw.q,options:raw.options,correct:raw.correct,cat:d.family,ex:raw.explain,d:d}); }
+  AR_SCEN.filter(sc=>sc.dn===d.name).forEach(sc=>qs.push(authored(sc)));
+  return shuffle(qs);
+}
 // Code-recall questions ("which code goes with X") removed — the quiz tests understanding
 // and resolution, not code memorization. Codes still show inside every answer card.
 const GEN_ORDER=["wording","meaning","whichAsk","whichDo"];
