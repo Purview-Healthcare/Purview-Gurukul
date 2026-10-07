@@ -26,7 +26,7 @@ const CALLS=[
    wrong:["Perfect, thanks, bye.","Great. Can you also email me a copy of the benefits?","So she owes nothing tomorrow, right?"],
    why:"Read every figure back, then get the reference number and the rep’s name. The note is: date, rep, reference, each benefit, and the DOS you quoted. The patient owes the $30 copay at check-in; a copay applies even when the deductible is met."}
  ]},
-{id:"nofile",title:"Claim not on file, timely filing clock running",who:"Rep",
+{id:"nofile",dn:"No claim on file",title:"Claim not on file, timely filing clock running",who:"Rep",
  setup:"Claim for John Carter, DOB 08/30/1962, Aetna member W123456789, DOS 01/12/2026, billed $450, sent electronically 01/20/2026 through the clearinghouse. Today is 03/25/2026: no payment, no denial. Aetna’s timely filing limit is 120 days from the date of service.",
  turns:[
   {rep:"Aetna provider services, this is Marcus. May I have the provider’s tax ID and NPI?",
@@ -46,7 +46,7 @@ const CALLS=[
    wrong:["No, thanks.","Can you send me an email confirming it is not on file?","Yes, can you tell me which of our other claims are missing?"],
    why:"Close with the reference number and a note the next person can act on: what was found, what was confirmed, what you are doing next and by when."}
  ]},
-{id:"noauth",title:"CO-197: no authorisation on file",who:"Rep",
+{id:"noauth",dn:"Authorization absent or missing",title:"CO-197: no authorisation on file",who:"Rep",
  setup:"MRI lumbar spine (72148) for Aisha Khan, DOB 05/02/1988, Cigna member U55566677, DOS 02/10/2026, POS 22 outpatient hospital, billed by Riverside Imaging (NPI 1098765432, tax ID 98-7654321). Denied CO-197, precertification absent. The ordering office, Dr Rao (NPI 1456789012), says an authorisation was obtained.",
  turns:[
   {rep:"Cigna provider services, this is Lena. How can I help?",
@@ -66,7 +66,7 @@ const CALLS=[
    wrong:["Okay, thanks.","Can you call Dr Rao’s office for us?","We will just appeal it."],
    why:"Leave with the fix, the owner of each step and the deadline. 60 days from 2/10 is 4/11, and the note says so. Appeals are for when the authorisation genuinely does not exist."}
  ]},
-{id:"cob",title:"CO-22: other insurance may be primary",who:"Rep",
+{id:"cob",dn:"Other payer is primary",title:"CO-22: other insurance may be primary",who:"Rep",
  setup:"Office visit for Robert Hayes, DOB 11/05/1958, age 67, Blue Cross member XYZ123456789 through his former employer, DOS 03/02/2026. Denied CO-22: this care may be covered by another payer per coordination of benefits. Registration lists only Blue Cross.",
  turns:[
   {rep:"Blue Cross provider line, this is Sam. Tax ID and NPI please.",
@@ -86,7 +86,7 @@ const CALLS=[
    wrong:["Okay, bye.","Can you update the COB for him now?","We will appeal with a letter from the patient."],
    why:"The fix is a billing-order change plus a member COB update, not an appeal. Record the reference number and tell registration to correct the insurance order for every future visit."}
  ]},
-{id:"paidpt",title:"Payment went to the patient",who:"Rep",
+{id:"paidpt",dn:"Claim paid to patient",title:"Payment went to the patient",who:"Rep",
  setup:"Claim for Emily Chen, DOB 09/09/1990, Humana member H00112233, DOS 01/28/2026, billed $600, allowed $500. The remittance shows $380 paid and $120 patient responsibility, but no payment reached the practice. The registration packet has no signed assignment of benefits.",
  turns:[
   {rep:"Humana provider services, this is Jordan.",
@@ -106,7 +106,7 @@ const CALLS=[
    wrong:["No. Bye.","Yes, can you also tell me what else Emily has been paid for this year?","Yes, can you note that the provider disputes this?"],
    why:"The read-back locks the facts for the patient statement and the audit trail. The member’s other payments are PHI you do not need; there is nothing to dispute."}
  ]},
-{id:"medneclcd",title:"CO-50: not medically necessary (Medicare LCD)",who:"Rep",
+{id:"medneclcd",dn:"Medically not necessary",title:"CO-50: not medically necessary (Medicare LCD)",who:"Rep",
  setup:"Vitamin D test (82306) for Daniel Ruiz, Medicare ID 1EG4-TE5-MK73, DOS 02/02/2026, denied CO-50 with remark N115 (decision based on a Local Coverage Determination). Diagnosis on the claim: Z00.00, general adult exam. No GA modifier. The remittance is dated 02/20/2026.",
  turns:[
   {rep:"Novitas Medicare provider contact center, this is Tara. Please provide the PTAN, NPI and tax ID.",
@@ -126,7 +126,7 @@ const CALLS=[
    wrong:["Thanks, bye.","We will get the patient to sign an ABN now.","Noting that Medicare refused to help."],
    why:"A backdated ABN is not valid. The note separates the three paths: corrected claim, redetermination (120 days from 2/20 is 6/20), or provider write-off."}
  ]},
-{id:"timely",title:"CO-29: timely filing has expired",who:"Rep",
+{id:"timely",dn:"Timely filing expired",title:"CO-29: timely filing has expired",who:"Rep",
  setup:"Claim for Grace Okafor, DOB 06/18/1983, Cigna member U9988776, DOS 09/15/2025, billed $320, denied CO-29. Cigna’s limit is 90 days. The clearinghouse shows a submission on 09/18/2025 rejected for an invalid member ID, then a corrected submission accepted on 01/05/2026.",
  turns:[
   {rep:"Cigna provider services, this is Omar. How can I help?",
@@ -146,7 +146,7 @@ const CALLS=[
    wrong:["Thanks.","Noting that Cigna refused to pay.","We will bill the patient $320."],
    why:"The note names the root cause and the process fix. A timely filing denial is a contractual write-off; billing the patient for it breaks the network contract."}
  ]},
-{id:"ptbill",title:"Patient’s spouse calls about a bill",who:"Caller",
+{id:"ptbill",dn:"Claim applied towards deductible",title:"Patient’s spouse calls about a bill",who:"Caller",
  setup:"Inbound call. A woman says she is calling about a statement for $260 for Thomas Reed, DOS 02/11/2026. The Blue Cross EOB shows billed $400, allowed $260, applied to deductible $260, paid $0, in network.",
  turns:[
   {rep:"Hi, I got a bill for $260 for my husband Thomas and I don’t understand it. His insurance should have covered this.",
@@ -166,7 +166,7 @@ const CALLS=[
    wrong:["Then it will go to collections.","Just pay what you can, whenever.","I’ll waive it, don’t worry."],
    why:"Offer the practice’s standard plan, document it and confirm contact details. Routinely waiving patient cost sharing can breach the payer contract and, for federal programs, the anti-kickback rules."}
  ]},
-{id:"overpay",title:"Payer asks for a refund",who:"Rep",
+{id:"overpay",dn:"Claim paid and applied towards offset",title:"Payer asks for a refund",who:"Rep",
  setup:"Aetna letter OP-55821: overpayment of $185 on claim 1122334455 for Linda Park, member W987654321, DOS 11/04/2025, reason ‘duplicate payment’. The practice ledger shows two Aetna payments of $185 on that claim, posted 11/20/2025 and 12/02/2025. Patient balance $0.",
  turns:[
   {rep:"Aetna overpayment recovery, this is Nia.",
@@ -186,7 +186,7 @@ const CALLS=[
    wrong:["Thanks, bye.","Can you also check whether you overpaid any other claims?","Noting that we disagree but will comply."],
    why:"The note tells the payment poster exactly what to expect and why. The 60-day rule is Medicare law; applying the same discipline everywhere keeps the credit-balance report clean."}
  ]},
-{id:"appeal",title:"Appeal status follow-up",who:"Rep",
+{id:"appeal",dn:"Procedure inconsistent with modifier",title:"Appeal status follow-up",who:"Rep",
  setup:"Appeal faxed on 02/05/2026 (fax confirmation 2026020511) to UnitedHealthcare for a CO-4 denial (procedure inconsistent with modifier) on claim 9988776655, Kevin Brooks, DOB 12/01/1969, member 123456789, DOS 12/10/2025, billed $1,250. Today is 03/22/2026: no response after 45 days.",
  turns:[
   {rep:"UnitedHealthcare provider services, this is Alex. Tax ID and NPI?",
@@ -225,4 +225,52 @@ function buildCallRound(n){
   n=n||8; const out=[]; const cs=shuffle(CALLS.slice());
   for(const c of cs){ if(out.length>=n) break; out.push.apply(out,callTurns(c)); }
   return out;
+}
+
+/* ── Generated call for any denial in the library ─────────────────────────────
+   Four turns built from the denial's own ask-the-payer questions and resolution
+   steps (GEN.whichAsk / GEN.whichDo in the app), with distractors from other
+   denials. Patient, payer, claim number and dates are invented each time. */
+const CALL_PAYERS=["Aetna","Cigna","UnitedHealthcare","Blue Cross Blue Shield","Humana","Anthem"];
+const CALL_REPS=["Dana","Marcus","Lena","Sam","Jordan","Tara","Omar","Nia","Alex","Chris","Morgan","Riley"];
+const CALL_PATIENTS=["Maria Lopez","John Carter","Aisha Khan","Robert Hayes","Emily Chen","Daniel Ruiz","Grace Okafor","Thomas Reed","Linda Park","Kevin Brooks","Sofia Rossi","Ahmed Ali","Nora Walsh","Victor Nguyen"];
+const CALL_CLOSES=["Okay, thanks, bye.","Can you email me a summary of this call?","Please note that the provider disputes this denial.","Can you tell me what else is pending for this patient?","Thanks. I’ll call back if we need anything.","Can you just reprocess it while I wait?","Fine. We will bill the patient then."];
+function denialCall(d){
+  const e=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  const P=a=>a[Math.floor(Math.random()*a.length)];
+  const payer=P(CALL_PAYERS), rep=P(CALL_REPS), pt=P(CALL_PATIENTS);
+  const mm=1+Math.floor(Math.random()*3), dd=1+Math.floor(Math.random()*28), dos=(mm<10?"0":"")+mm+"/"+(dd<10?"0":"")+dd+"/2026";
+  const claim=String(Math.floor(1e9+Math.random()*9e9)), ref=String(Math.floor(1e5+Math.random()*9e5))+"-"+rep.slice(0,2).toUpperCase();
+  const code=(d.codes&&d.codes.length)?"code "+d.codes[0]:"";
+  // Some denials share every question with others; then any of its questions is right and
+  // the distractors come from denials that do not list that line.
+  const askAny=()=>{ const mine=(d.questions||[]); if(!mine.length) return null; const right=P(mine); const own=LINE_OWNERS[norm(right)]||new Set();
+    const seen=new Set(mine.map(norm)), pool=[]; DATA.forEach(x=>{ if(x===d||own.has(x.name)) return; (x.questions||[]).forEach(t=>{ const k=norm(t); if(!seen.has(k)){ seen.add(k); pool.push(t); } }); });
+    if(pool.length<3) return null; const o=sOpts(right,shuffle(pool).slice(0,3)); return {options:o.options,correct:o.correct,explain:"This denial’s list shares some questions with related denials; the other three lines belong to denials of a different kind."}; };
+  const a1=GEN.whichAsk(d,DATA)||askAny();
+  let a2=null; if(a1) for(let k=0;k<6;k++){ const t=GEN.whichAsk(d,DATA)||askAny(); if(t&&t.options[t.correct]!==a1.options[a1.correct]){ a2=t; break; } }
+  const act=GEN.whichDo(d,DATA);
+  const setup="You are calling "+payer+" about claim "+claim+" for "+pt+", DOS "+dos+", denied "+(code?code+", ":"")+d.name+". The remittance says: “"+d.denial_wording+"”";
+  const title="Call: "+d.name;
+  const turns=[];
+  if(!a1&&!act) return [];
+  const opening=payer+" provider services, this is "+rep+". I have claim "+claim+" for "+pt+", date of service "+dos+". It denied with "+(code||"the code on your remittance")+": ‘"+d.denial_wording+"’. What do you need?";
+  if(a1) turns.push({rep:opening,q:"What do you ask first?",options:a1.options,correct:a1.correct,say:a1.options[a1.correct],
+    ex:"This is one of the questions the library lists for "+d.name+". "+(a1.explain||"")});
+  if(a2) turns.push({rep:"Let me check that for you… yes, I can confirm it. Anything else?",
+    q:"What else do you ask before you close?",options:a2.options,correct:a2.correct,say:a2.options[a2.correct],
+    ex:"A second question from this denial’s list. Ask everything you need in one call; a second call costs another queue."});
+  const close="No, that is everything. May I have the call reference number and your name? Read-back: claim "+claim+", "+pt+", DOS "+dos+", denied "+(code?code+" ":"")+d.name+", and the answers you gave me are in my note.";
+  const closeOpts=sOpts(close,shuffle(CALL_CLOSES.slice()).slice(0,3));
+  turns.push({rep:(turns.length?"Is there anything else I can help with today?":opening+" … Anything else before we close?"),q:"How do you close the call?",options:closeOpts.options,correct:closeOpts.correct,say:close,
+    ex:"Read back the identifiers and the denial, then get the reference number and the rep’s name. That is the proof the call happened."});
+  if(act) turns.push({rep:"Reference "+ref+", this is "+rep+". Have a good day.",after:"Call ended. Back at your desk:",q:"What is the right next step for this denial?",options:act.options,correct:act.correct,say:null,
+    ex:(act.explain||"")+" The call gives you facts; the resolution step is yours."});
+  return turns.map((t,k)=>{
+    let pre='<div class="call"><div class="callhead"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>'+e(title)+'<span class="turn">turn '+(k+1)+' of '+turns.length+'</span></div>';
+    if(k===0) pre+='<div class="callsetup">'+e(setup)+'</div>';
+    for(let j=0;j<k;j++){ pre+='<div class="callline rep"><i>Rep</i><span>'+e(turns[j].rep)+'</span></div>'; if(turns[j].say) pre+='<div class="callline you"><i>You</i><span>'+e(turns[j].say)+'</span></div>'; }
+    pre+='<div class="callline rep now"><i>Rep</i><span>'+e(t.rep)+'</span></div>'+(t.after?'<div class="callsetup">'+e(t.after)+'</div>':'')+'</div>';
+    return {pre:pre,q:t.q,options:t.options,correct:t.correct,ex:t.ex,cat:"Payer call: "+d.name,call:"gen-"+d.name,d:d};
+  });
 }
