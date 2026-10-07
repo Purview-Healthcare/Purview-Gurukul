@@ -1,7 +1,7 @@
 /* Purview Gurukul offline service worker.
    Bump VER on any release to invalidate old caches. */
 const PRE = "purview-gurukul-";
-const VER = PRE + "v7";
+const VER = PRE + "v8";
 const RT  = VER + "-rt";
 const APP = ["./", "./index.html", "./basics.js", "./manifest.webmanifest",
              "./icon-192.png?v=2", "./icon-512.png?v=2", "./icon-maskable-512.png?v=2",

@@ -405,6 +405,26 @@ details.les>summary .tick:hover{border-color:var(--green)}
 .bmatch b{color:var(--ink)}
 .alts.lnext .alt span{color:var(--blue)}
 
+/* ── feedback ─────────────────────────────── */
+.fbbtn{margin:0 12px 6px 0;align-self:center}
+.fbwrap{position:fixed;inset:0;z-index:1500;background:rgba(11,27,38,.45);display:flex;align-items:flex-end;justify-content:center;padding:14px}
+.fbwrap[hidden]{display:none}
+.fbcard{background:#fff;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.3);width:100%;max-width:560px;padding:20px 22px 18px;max-height:92vh;overflow:auto;animation:rise .25s ease}
+.fbhead{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.fbhead h2{font-size:19px;font-weight:800;margin:0;letter-spacing:-.3px}
+.fbx{border:0;background:#e8f2f1;color:var(--ink-2);width:34px;height:34px;border-radius:50%;font-size:22px;line-height:1;cursor:pointer}
+.fbx:hover{background:var(--navy);color:#fff}
+.fbsub{color:var(--ink-2);font-size:13.5px;line-height:1.5;margin:6px 0 14px}
+.fbl{display:block;font-family:var(--font-display);font-size:11px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);margin:12px 0 6px}
+.fbtypes{margin-bottom:4px}
+.fbin{width:100%;border:1.5px solid var(--line-2);border-radius:8px;font:inherit;font-size:14.5px;color:var(--ink);padding:10px 12px;background:#fff;outline:none}
+.fbin:focus{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-soft)}
+.fbin[readonly]{background:#f5faf9;color:var(--ink-2)}
+textarea.fbin{resize:vertical;min-height:110px;line-height:1.5}
+.fbrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:16px}
+.fbto{font-size:12px;color:var(--ink-3);margin-left:auto;word-break:break-all}
+@media(min-width:701px){.fbwrap{align-items:center}}
+
 @media(max-width:700px){
   .wrap{padding:16px 15px 60px}
   .topbar-in{padding:12px 15px 0}
@@ -588,6 +608,7 @@ details.les>summary .tick:hover{border-color:var(--green)}
       <button class="navtab" data-panel="basicsPanel">RCM Basics</button>
       <button class="navtab" data-panel="quizPanel">Quiz</button>
       <span class="navspacer"></span>
+      <button class="pillbtn fbbtn" id="fbOpen" hidden><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v12H7l-3 3z"/><path d="M8 9h8M8 12.5h5"/></svg>Feedback</button>
       <div class="pvlock" id="pvLock">
         <img id="pvImg" alt="Purview Healthcare" hidden>
         <span id="pvFallback" class="pvfull">
@@ -691,6 +712,32 @@ details.les>summary .tick:hover{border-color:var(--green)}
     </div>
     <div class="chips" id="quizFilters"></div>
     <div id="quizArea"></div>
+  </div>
+</div>
+
+<div class="fbwrap" id="fbWrap" hidden>
+  <div class="fbcard" role="dialog" aria-modal="true" aria-labelledby="fbTitle">
+    <div class="fbhead"><h2 id="fbTitle">Send feedback</h2><button class="fbx" id="fbClose" aria-label="Close">&times;</button></div>
+    <p class="fbsub">Found a mistake, a confusing topic, or something missing? It goes by email to the team that maintains Gurukul.</p>
+    <label class="fbl">What is it about?</label>
+    <div class="chips fbtypes" id="fbTypes">
+      <button class="chip on" data-t="Content correction">Content correction</button>
+      <button class="chip" data-t="Something is confusing">Something is confusing</button>
+      <button class="chip" data-t="Missing topic or denial">Missing topic or denial</button>
+      <button class="chip" data-t="Bug or display problem">Bug or display problem</button>
+      <button class="chip" data-t="Suggestion">Suggestion</button>
+    </div>
+    <label class="fbl" for="fbCtx">Where you were</label>
+    <input type="text" id="fbCtx" class="fbin" readonly>
+    <label class="fbl" for="fbMsg">Your feedback</label>
+    <textarea id="fbMsg" class="fbin" rows="5" placeholder="What did you expect, and what did you see? Quote the exact line if it is a content error."></textarea>
+    <label class="fbl" for="fbName">Your name (optional)</label>
+    <input type="text" id="fbName" class="fbin" placeholder="So the team can reply to you">
+    <div class="fbrow">
+      <button class="btn" id="fbSend">Open in email</button>
+      <button class="btn ghost" id="fbCopy">Copy instead</button>
+      <span class="fbto" id="fbTo"></span>
+    </div>
   </div>
 </div>
 
@@ -963,6 +1010,42 @@ $("#q").addEventListener("keydown",e=>{ if(e.key==="Enter") ask(); });
 
 /* no backend: questions are not logged */
 function logQuestion(q){}
+
+/* ── feedback by email ───────────────────────
+   No backend, so feedback travels as a pre-filled email from the user's own mail
+   app. Fill FEEDBACK_TO with the maintainers' addresses; the button stays hidden
+   while the list is empty. */
+const FEEDBACK_TO=[];   // e.g. ["shreya@example.com","sweety@example.com"]
+function fbContext(){
+  const panel=($(".panel.on")||{}).id, tabs={askPanel:"Ask",browsePanel:"All Denials",basicsPanel:"RCM Basics",quizPanel:"Quiz"};
+  let where=tabs[panel]||"App";
+  if(panel==="askPanel"){ const h=$("#answers .card .hit h2"); if(h) where+=" — "+h.textContent.trim(); }
+  if(panel==="basicsPanel"&&typeof B_CUR!=="undefined"&&B_CUR&&B_BY_ID[B_CUR]) where+=" — "+B_BY_ID[B_CUR].mod.day+" / "+B_BY_ID[B_CUR].title;
+  if(panel==="quizPanel"&&typeof QZ!=="undefined") where+=" — "+(QZ.mode==="rcm"?"RCM Basics":"AR & Denials")+" / "+QZ.filter;
+  return where;
+}
+function fbText(){
+  const type=($("#fbTypes .chip.on")||{}).dataset?$("#fbTypes .chip.on").dataset.t:"Feedback";
+  return "Type: "+type+"\nWhere: "+$("#fbCtx").value+"\nFrom: "+($("#fbName").value.trim()||"(not given)")+"\nPage: "+location.href+"\n\n"+$("#fbMsg").value.trim()+"\n";
+}
+function fbOpen(){ $("#fbCtx").value=fbContext(); $("#fbWrap").hidden=false; $("#fbTo").textContent="To: "+FEEDBACK_TO.join(", "); setTimeout(()=>$("#fbMsg").focus(),50); }
+function fbClose(){ $("#fbWrap").hidden=true; }
+if(FEEDBACK_TO.length){ $("#fbOpen").hidden=false; }
+$("#fbOpen").addEventListener("click",fbOpen);
+$("#fbClose").addEventListener("click",fbClose);
+$("#fbWrap").addEventListener("click",e=>{ if(e.target===$("#fbWrap")) fbClose(); });
+addEventListener("keydown",e=>{ if(e.key==="Escape"&&!$("#fbWrap").hidden) fbClose(); });
+$$("#fbTypes .chip").forEach(b=>b.addEventListener("click",()=>{ $$("#fbTypes .chip").forEach(x=>x.classList.toggle("on",x===b)); }));
+$("#fbSend").addEventListener("click",()=>{
+  if(!$("#fbMsg").value.trim()){ $("#fbMsg").focus(); toast("Write a line of feedback first"); return; }
+  const type=$("#fbTypes .chip.on").dataset.t;
+  const href="mailto:"+FEEDBACK_TO.join(",")+"?subject="+encodeURIComponent("Gurukul feedback: "+type+" — "+$("#fbCtx").value)+"&body="+encodeURIComponent(fbText());
+  location.href=href; toast("Opening your email app"); setTimeout(fbClose,600);
+});
+$("#fbCopy").addEventListener("click",()=>{
+  if(!$("#fbMsg").value.trim()){ $("#fbMsg").focus(); toast("Write a line of feedback first"); return; }
+  copy("To: "+FEEDBACK_TO.join(", ")+"\nSubject: Gurukul feedback: "+$("#fbTypes .chip.on").dataset.t+"\n\n"+fbText());
+});
 
 function showPanel(id){
   $$(".panel").forEach(p=>p.classList.toggle("on",p.id===id));
