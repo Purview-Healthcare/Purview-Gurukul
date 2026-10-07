@@ -214,12 +214,16 @@ mark{background:#bdeedb;color:var(--ink);padding:1px 3px;border-radius:3px;font-
 .acc details[open] summary .chev{transform:rotate(90deg);color:var(--blue)}
 .acc summary .cnt{margin-left:auto;font-size:11.5px;font-weight:700;color:var(--ink-3);background:#e8f2f1;
   padding:4px 10px;border-radius:999px;font-variant-numeric:tabular-nums}
-.accbody{padding:8px 20px 14px;display:grid;grid-template-columns:repeat(auto-fill,minmax(258px,1fr));gap:0 24px}
-.accbody button{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:transparent;border:0;
+.accbody{padding:6px 20px 14px;display:grid;grid-template-columns:1fr;gap:0}
+.acclbl{font-size:11.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);padding:10px 0 6px}
+.accbody>button .arw{color:var(--ink-3);flex:0 0 auto}
+.accbody>button:hover .arw{color:var(--blue)}
+.accbody>button{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:transparent;border:0;
   padding:10px 0;font:inherit;font-size:14.2px;color:var(--ink);cursor:pointer;line-height:1.4;
   border-bottom:1px solid #eaf3f2;font-weight:600;transition:.12s}
-.accbody button:hover{color:var(--blue)}
-.accbody button em{font-style:normal;color:var(--ink-3);font-size:11.5px;font-weight:700;margin-left:auto;
+.accbody>button:hover{color:var(--blue)}
+.accbody>button>span:first-child{flex:1 1 auto}
+.accbody>button em{font-style:normal;color:var(--ink-3);font-size:11.5px;font-weight:700;
   font-variant-numeric:tabular-nums}
 .accbar{display:flex;gap:9px;margin-bottom:12px}
 
@@ -411,6 +415,7 @@ details.les>summary .tick:hover{border-color:var(--green)}
 .accbody .dayquiz{grid-column:1/-1;margin-top:10px}
 .card-body .dqarea:not(:empty){margin-top:18px;padding-top:4px;border-top:1px solid var(--line)}
 
+.glossbody .glossnote{column-span:all;margin:12px 0 4px;font-size:13.5px;color:var(--ink-2);line-height:1.55}
 .glossbody .gl{column-span:all;font-family:var(--font-display);font-size:12px;font-weight:800;letter-spacing:.09em;color:var(--ink-3);padding:14px 0 4px}
 .bmatch{padding:0 0 10px;font-size:13px;color:var(--ink-3)}
 .bmatch b{color:var(--ink)}
@@ -796,7 +801,7 @@ textarea.fbin{resize:vertical;min-height:110px;line-height:1.5}
     <div class="bhead"><h3 id="bcourseh">Course</h3><span><button class="btn ghost sm" id="bReset">Reset progress</button> <button class="btn ghost sm" id="bCollapse">Collapse all</button></span></div>
     <div class="none" id="bnone" hidden><b>No topic matches that.</b> Try a shorter word, or clear the search.</div>
     <div class="tree" id="basicsTree"></div>
-    <details class="gloss" id="glossary"><summary>Glossary A–Z <span class="cnt" id="glossCnt"></span></summary><div class="glossbody" id="glossBody"></div></details>
+    <details class="gloss" id="glossary"><summary>Glossary A–Z: every key term from Days 1–5 in one list <span class="cnt" id="glossCnt"></span></summary><div class="glossbody" id="glossBody"></div></details>
     <details class="gloss review" id="reviewBox"><summary>Keep it current: figures that change <span class="cnt" id="reviewCnt"></span></summary><div class="reviewbody" id="reviewBody"></div></details>
   </div>
 
@@ -1468,7 +1473,7 @@ function renderGlossary(){
   let cur="", h="";
   all.forEach(x=>{ const L=/\d/.test(x.t[0])?"0–9":x.t[0].toUpperCase(); if(L!==cur){cur=L;h+='<div class="gl">'+esc(L)+'</div>';}
     h+='<div class="g"><b>'+esc(x.t)+'</b><span>'+fmt(x.d)+'</span> <a href="#" data-go="'+x.l.id+'">'+esc(x.l.title)+' →</a></div>'; });
-  $("#glossBody").innerHTML=h; $("#glossCnt").textContent=all.length+" terms";
+  $("#glossBody").innerHTML='<p class="glossnote">Nothing new here: every term below is a key term from one of the course topics, collected in one place for quick lookup. The link after each one opens the topic it comes from.</p>'+h; $("#glossCnt").textContent=all.length+" terms";
   $$("#glossBody a[data-go]").forEach(a=>a.addEventListener("click",e=>{ e.preventDefault(); openLesson(a.dataset.go); }));
 }
 buildTree(); renderCycle(); renderGlossary();
@@ -1579,9 +1584,9 @@ $$("#starterBasics .hcard").forEach(b=>b.addEventListener("click",()=>openLesson
 
 $("#browseList").innerHTML=fams.map(f=>{
   const items=DATA.filter(d=>d.family===f);
-  return '<details><summary>'+IC.chev+'<span>'+esc(f)+'</span><span class="cnt">'+items.length+'</span></summary>'+
-    '<div class="accbody">'+items.map(d=>'<button data-name="'+esc(d.name)+'"><span>'+esc(d.name)+'</span>'+
-      (d.codes&&d.codes.length?'<em>'+esc(d.codes[0])+'</em>':'')+'</button>').join("")+
+  return '<details><summary>'+IC.chev+'<span>'+esc(f)+'</span><span class="cnt">'+items.length+(items.length===1?' denial':' denials')+'</span></summary>'+
+    '<div class="accbody"><div class="acclbl">'+items.length+(items.length===1?' denial':' different denials')+' in this category — open one for its full answer</div>'+items.map(d=>'<button data-name="'+esc(d.name)+'"><span>'+esc(d.name)+'</span>'+
+      (d.codes&&d.codes.length?'<em>'+esc(d.codes[0])+'</em>':'')+IC.arw+'</button>').join("")+
       '<div class="dayquiz" data-fam="'+esc(f)+'"><div class="dq-head">'+IC.spark+'<div><b>Quiz: '+esc(f)+'</b><span>10 random questions on these '+items.length+' denials — wording, meaning, what to ask, what to do, true or false, and call scenarios. A new set every time.</span></div></div>'+
       '<span class="dqgroup"><button class="btn" data-start="theory">Theory quiz</button><button class="btn ghost" data-start="call">Call quiz</button><button class="btn ghost" data-start="scenario">Scenario quiz</button></span><div class="dqarea"></div></div></div></details>';
 }).join("");
