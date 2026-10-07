@@ -1,11 +1,11 @@
 /* Purview Gurukul offline service worker.
    Bump VER on any release to invalidate old caches. */
 const PRE = "purview-gurukul-";
-const VER = PRE + "v5";
+const VER = PRE + "v6";
 const RT  = VER + "-rt";
 const APP = ["./", "./index.html", "./basics.js", "./manifest.webmanifest",
-             "./icon-192.png", "./icon-512.png", "./icon-maskable-512.png",
-             "./icon-180.png", "./favicon-32.png", "./favicon-16.png"];
+             "./icon-192.png?v=2", "./icon-512.png?v=2", "./icon-maskable-512.png?v=2",
+             "./icon-180.png?v=2", "./favicon-32.png?v=2", "./favicon-16.png?v=2"];
 
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(VER).then(c => c.addAll(APP)).then(() => self.skipWaiting()));
