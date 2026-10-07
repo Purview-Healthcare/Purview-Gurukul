@@ -115,7 +115,7 @@ const BASICS_MODULES=[
   terms:[["Place of service (POS)","Two-digit code for where care was delivered, box 24B on the CMS-1500."],["Facility vs non-facility","Payer fee schedules pay less to the physician in a facility because the facility bills its own charges."]],
   remember:"POS 11 (office), 21 (inpatient), 22 (outpatient hospital) and 23 (ER) cover most claims. Learn those four first."}
 ]},
-{id:"m2",short:"Insurance basics",title:"Insurance fundamentals",day:"Day 1",
+{id:"m2",short:"Insurance basics",title:"Insurance fundamentals",day:"Day 2",
  blurb:"The vocabulary of a health plan: who is covered, what they pay, which plan pays first.",
  lessons:[
  {id:"policy-people",title:"Policy, subscriber, dependent, beneficiary",
@@ -274,7 +274,7 @@ const BASICS_MODULES=[
   terms:[["ACA / PPACA / Obamacare","Patient Protection and Affordable Care Act, 2010."],["Marketplace / exchange","Where individuals buy ACA plans, federally (HealthCare.gov) or through a state exchange."],["Essential health benefits","Ten service categories every ACA-compliant plan must cover."],["Metal tiers","Bronze, Silver, Gold, Platinum: plan generosity levels."],["Grace period","90 days for subsidised Marketplace members to pay overdue premiums; claims may pend in months two and three."],["Medical loss ratio (MLR)","Minimum share of premiums an insurer must spend on care."]],
   remember:"A Marketplace patient whose eligibility shows \"pending premium\" is in the grace period. Verify again before the claim is written off."}
 ]},
-{id:"m3",short:"Revenue cycle",title:"The revenue cycle at a glance",day:"Day 2",
+{id:"m3",short:"Revenue cycle",title:"The revenue cycle at a glance",day:"Day 3",
  blurb:"Thirteen steps from the appointment to the last dollar collected, and who owns each one.",
  lessons:[
  {id:"rcm-overview",title:"What revenue cycle management is",
@@ -301,7 +301,7 @@ const BASICS_MODULES=[
   terms:[["Revenue cycle management (RCM)","The end-to-end process of getting paid for care."],["Front end / mid cycle / back end","The three phases of the cycle."],["Clean claim","A claim that passes every edit and pays on first submission."],["First-pass resolution rate","Share of claims paid without rework; the headline measure of a healthy cycle."],["Days in AR","Average days a charge waits to be paid: total AR divided by average daily charges."],["Net collection rate","Payments collected as a share of what the payer contracts allowed; measures leakage."]],
   remember:"Fix problems at the step that created them. A denial worked in AR is a registration or coding failure that escaped."}
 ]},
-{id:"m4",short:"Front end",title:"Front end: before and during the visit",day:"Day 2",
+{id:"m4",short:"Front end",title:"Front end: before and during the visit",day:"Day 3",
  blurb:"Scheduling, registration, eligibility verification and the encounter: where the claim is either set up to pay or set up to fail.",
  lessons:[
  {id:"scheduling",step:1,title:"Appointment scheduling and pre-registration",
@@ -345,7 +345,7 @@ const BASICS_MODULES=[
   terms:[["Encounter","A documented clinical contact between patient and provider."],["Medical record / chart","The complete documentation of the patient's care."],["Medical transcription","Converting dictated voice files into text records."],["EHR / EMR","Electronic health or medical record."],["Medical necessity","The clinical justification, in the record, for a billed service."],["Provider signature","Authentication of the note; unsigned notes do not support a claim."]],
   remember:"Coders code from the note, not from the superbill alone. A service circled on a superbill with no note behind it cannot be billed."}
 ]},
-{id:"m5",short:"Coding & charge entry",title:"Medical coding and charge entry",day:"Day 2",
+{id:"m5",short:"Coding & charge entry",title:"Medical coding and charge entry",day:"Day 3",
  blurb:"Turning the medical record into standard codes, then into charges on the patient's account.",
  lessons:[
  {id:"coding-overview",step:4,title:"Medical coding: diagnoses, procedures and modifiers",
@@ -404,7 +404,7 @@ const BASICS_MODULES=[
   terms:[["Demographic entry","Creating or updating the patient account from the facesheet."],["Charge entry / charge capture","Posting coded services and charges to the account."],["Practice management system (PMS)","The billing software holding accounts, charges, claims and payments."],["Fee schedule (provider)","The provider's list of charges by code."],["Batch","A group of encounters entered and reconciled together."],["Charge lag","Days between the DOS and charge entry; long lags threaten timely filing."]],
   remember:"Search by name and date of birth, never name alone. Posting to the wrong patient is a HIPAA problem and a billing problem at once."}
 ]},
-{id:"m6",short:"Claims & adjudication",title:"Claims: submission to adjudication",day:"Day 2",
+{id:"m6",short:"Claims & adjudication",title:"Claims: submission to adjudication",day:"Day 3",
  blurb:"The claim form, the clearinghouse that scrubs it, and the payer that decides to pay it.",
  lessons:[
  {id:"claim-forms",step:6,title:"Claim forms: CMS-1500 and UB-04",
@@ -441,7 +441,7 @@ const BASICS_MODULES=[
   terms:[["Adjudication","Payer's decision process on a claim."],["Paid / denied / partially paid / pended","The four adjudication outcomes."],["EOB","Explanation of Benefits: human-readable statement of the decision."],["ERA (835)","Electronic Remittance Advice: machine-readable remittance."],["EFT","Electronic funds transfer of the payment."],["CARC","Claim Adjustment Reason Code: why an amount was not paid."],["RARC","Remittance Advice Remark Code: extra explanation."],["Group codes CO / PR / OA / PI","Who is responsible for an adjusted amount."],["Pended claim","Claim held by the payer awaiting information or review."]],
   remember:"Read the CARC and the RARC together, then check the group code. CO is yours to fix or absorb, PR is the patient's to pay."}
 ]},
-{id:"m7",short:"Payments & AR",title:"Payments, AR and collections",day:"Day 2",
+{id:"m7",short:"Payments & AR",title:"Payments, AR and collections",day:"Day 3",
  blurb:"Posting what the payer sent, chasing what it did not, refunding what it overpaid, and collecting the patient's share.",
  lessons:[
  {id:"payment-posting",step:9,title:"Payment posting",
@@ -498,7 +498,7 @@ const BASICS_MODULES=[
   terms:[["Patient responsibility","Amounts the policy assigns to the patient."],["Patient statement","Bill sent to the patient showing services, payments and amount due."],["Dunning letter","Demand letter in a collection sequence."],["Collection agency","Third party pursuing unpaid patient balances for a fee."],["Bad debt","Patient balances deemed uncollectible and written off."],["Payment plan","Agreed instalments for a patient balance."],["Good-faith estimate","Advance cost estimate required for uninsured and self-pay patients."]],
   remember:"Confirm the balance is really the patient's before the first statement goes out. Billing a patient for a payer's error is the fastest way to lose both the money and the patient."}
 ]},
-{id:"m8",short:"US payers",title:"Insurance in the US: the payers",day:"Day 3",
+{id:"m8",short:"US payers",title:"Insurance in the US: the payers",day:"Day 4",
  blurb:"Who actually pays the claims: government programs, commercial insurers, and liability carriers, with the rules that make each one different.",
  lessons:[
  {id:"federal-overview",title:"Federal and state programs: the map",
@@ -659,3 +659,23 @@ BASICS_QUIZ.push(
 {t:"Healthcare & 3Ps",q:"A patient has been in the hospital under observation for 30 hours and was never formally admitted. Their status is:",correct:"Outpatient (observation)",wrongs:["Inpatient, because the stay exceeded 24 hours","Hospice","Skilled nursing"],ex:"The admission order, not the clock, decides inpatient status. Observation stays are outpatient even past 24 hours."},
 {t:"Revenue cycle",q:"Which document moves from coding to charge entry?",correct:"The superbill or charge ticket with the coded encounter",wrongs:["The EOB","The patient statement","The 835 remittance"],ex:"Encounter → medical record → codes on a superbill → charges on the account → claim."}
 );
+
+/* The 13 steps of the revenue cycle, one clear line each. Used by the cycle map
+   and inserted into the "What revenue cycle management is" topic. */
+const BASICS_CYCLE=[
+{n:1,id:"scheduling",name:"Appointment scheduling & pre-registration",line:"The patient books a visit; the office collects their demographics and insurance details before they arrive."},
+{n:2,id:"eligibility",name:"Eligibility & benefits verification",line:"Before the visit, confirm the policy is active for the date of service and learn the copay, deductible, referral and authorization rules."},
+{n:3,id:"encounter",name:"Encounter",line:"The provider sees, diagnoses and treats the patient and documents everything in the medical record."},
+{n:4,id:"coding-overview",name:"Medical coding",line:"Coders turn the documentation into ICD-10-CM diagnosis codes, CPT/HCPCS procedure codes and modifiers."},
+{n:5,id:"charge-entry",name:"Demographic & charge entry",line:"Patient details and the coded services are entered into the billing system as charges, each with its fee."},
+{n:6,id:"claim-forms",name:"Claim submission",line:"The charges become a claim (CMS-1500 or UB-04, sent electronically as an 837 file) and go out to the payer."},
+{n:7,id:"clearinghouse",name:"Clearinghouse & rejections",line:"The clearinghouse scrubs the claim for errors, bounces rejections back to be fixed, and forwards clean claims to the payer."},
+{n:8,id:"adjudication",name:"Insurance adjudication",line:"The payer applies the member's benefits and its own rules and decides: paid, denied, partially paid or pended."},
+{n:9,id:"payment-posting",name:"Payment posting",line:"The EOB/ERA amounts (allowed, paid, adjustments, patient share) are posted to the account and the deposit is reconciled."},
+{n:10,id:"ar-followup",name:"Accounts receivable follow-up",line:"Every unpaid claim is tracked and chased with the payer by portal or phone until it is resolved."},
+{n:11,id:"denial-management",name:"Denial management",line:"Denied claims are corrected, resubmitted or appealed, and the root cause is fixed so the denial stops recurring."},
+{n:12,id:"credit-balance",name:"Credit balance",line:"Overpayments and duplicate payments are identified and refunded to the payer or the patient."},
+{n:13,id:"patient-collections",name:"Patient collections",line:"The patient's share is billed by statement, followed up, and referred to a collection agency if it stays unpaid."}
+];
+(function(){ const ov=BASICS_MODULES.find(m=>m.id==="m3").lessons.find(l=>l.id==="rcm-overview");
+  ov.flow={to:"Back to step 1 for the patient's next visit",steps:BASICS_CYCLE.map(c=>"**"+c.name+"** — "+c.line)}; })();

@@ -305,15 +305,20 @@ footer b{color:var(--ink-2)}
 .bhead h3{font-size:12px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);margin:0}
 .bhead span{font-size:12.5px;color:var(--ink-3);font-weight:600;font-variant-numeric:tabular-nums}
 .btn.sm{padding:6px 12px;font-size:12.5px}
-.cycle{display:flex;flex-wrap:wrap;gap:8px 4px;align-items:stretch;margin-bottom:8px}
-.cstep{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:7px 14px 7px 7px;
-  font:inherit;font-family:var(--font-display);font-size:13px;font-weight:700;color:var(--ink-2);cursor:pointer;transition:.14s;position:relative;text-align:left;line-height:1.2}
-.cstep i{font-style:normal;width:24px;height:24px;border-radius:50%;background:var(--blue-soft);color:var(--blue-deep);display:grid;place-items:center;font-size:11.5px;font-weight:800;flex:0 0 auto}
-.cstep:hover{border-color:var(--blue);color:var(--blue-deep);transform:translateY(-1px);box-shadow:var(--sh)}
+.cycle{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:10px;margin-bottom:8px}
+.cstep{display:flex;align-items:flex-start;gap:12px;background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;
+  font:inherit;color:var(--ink-2);cursor:pointer;transition:.14s;text-align:left;line-height:1.45;box-shadow:var(--sh)}
+.cstep i{font-style:normal;width:28px;height:28px;border-radius:50%;background:var(--blue-soft);color:var(--blue-deep);display:grid;place-items:center;
+  font-family:var(--font-display);font-size:12.5px;font-weight:800;flex:0 0 auto;margin-top:1px}
+.cstep .cs{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.cstep .cs b{font-family:var(--font-display);font-size:14px;font-weight:800;color:var(--ink);letter-spacing:-.1px}
+.cstep .cs small{font-size:13.2px;color:var(--ink-2);line-height:1.5}
+.cstep .arw{flex:0 0 auto;color:var(--ink-3);margin-top:6px;transition:.14s}
+.cstep:hover{border-color:var(--blue);box-shadow:var(--sh-md);transform:translateY(-1px)}
+.cstep:hover .arw{color:var(--blue);transform:translateX(3px)}
 .cstep.done i{background:var(--green);color:#fff}
-.cstep.on{background:var(--navy);border-color:var(--navy);color:#fff}
-.cstep.on i{background:#fff;color:var(--navy)}
-.cstep+.cstep::before{content:"";width:0;height:0;border-left:5px solid var(--line-2);border-top:4px solid transparent;border-bottom:4px solid transparent;position:absolute;left:-5px;top:50%;transform:translateY(-50%)}
+.cstep.on{border-color:var(--navy);background:#f5faf9}
+.cstep.on i{background:var(--navy);color:#fff}
 .tag.step{color:var(--orange-deep);background:var(--orange-soft)}
 .prose+.prose{margin-top:12px}
 ol.flow{margin:0;padding:0;list-style:none;counter-reset:fl}
@@ -381,6 +386,11 @@ details.les>summary .hitterm:empty{display:none}
 .ltags{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
 .lesfoot{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:22px;padding-top:16px;border-top:1px solid var(--line)}
 .lesfoot .copybtn{margin-left:auto}
+.markbtn{display:inline-flex;align-items:center;gap:7px;background:var(--green)}
+.markbtn:hover{background:#0f7a52}
+.markbtn.on{background:#fff;color:var(--green);border:1.5px solid var(--green)}
+details.les>summary .tick{cursor:pointer}
+details.les>summary .tick:hover{border-color:var(--green)}
 .lesfoot .done-msg{display:inline-flex;align-items:center;gap:6px;color:var(--green);font-weight:700;font-size:13.5px}
 .dayquiz{background:#fff;border:1.5px dashed var(--line-2);border-radius:var(--r);padding:16px 18px}
 .dq-head{display:flex;gap:10px;align-items:flex-start;margin-bottom:12px;color:var(--orange-deep)}
@@ -412,7 +422,7 @@ details.les>summary .hitterm:empty{display:none}
   .lesbody{padding:14px 12px 16px}
   .daybody{padding:8px}
   details.day>summary{padding:14px 14px}
-  .cstep{font-size:12px;padding:6px 11px 6px 6px}
+  .cycle{grid-template-columns:1fr}
   dl.terms{grid-template-columns:1fr}
 }
 @media print{.topbar,.chips,.searchbar,.hero,.alts,.copybtn,footer,.band,.cycle,.bhead,#basicsIndex,.gloss,.lnav{display:none!important}
@@ -665,9 +675,9 @@ details.les>summary .hitterm:empty{display:none}
       </button>
     </div>
     <div class="chips" id="bchips"></div>
-    <div class="bhead"><h3>The revenue cycle — click a step</h3><span id="bprog"></span></div>
+    <div class="bhead"><h3>The revenue cycle in 13 steps — tap a step to open its topic</h3><span id="bprog"></span></div>
     <div class="cycle" id="cycleMap"></div>
-    <div class="bhead"><h3>Course — Day 1 to Day 3</h3><span><button class="btn ghost sm" id="bCollapse">Collapse all</button></span></div>
+    <div class="bhead"><h3 id="bcourseh">Course</h3><span><button class="btn ghost sm" id="bReset">Reset progress</button> <button class="btn ghost sm" id="bCollapse">Collapse all</button></span></div>
     <div class="none" id="bnone" hidden><b>No topic matches that.</b> Try a shorter word, or clear the search.</div>
     <div class="tree" id="basicsTree"></div>
     <details class="gloss" id="glossary"><summary>Glossary A–Z <span class="cnt" id="glossCnt"></span></summary><div class="glossbody" id="glossBody"></div></details>
@@ -986,7 +996,8 @@ let B_CUR=null;
 /* progress is a per-viewer convenience only; storage may be unavailable */
 const B_KEY="gk_basics_read";
 function bRead(){ try{ return new Set(JSON.parse(localStorage.getItem(B_KEY)||"[]")); }catch(e){ return new Set(); } }
-function bMarkRead(id){ try{ const s=bRead(); s.add(id); localStorage.setItem(B_KEY,JSON.stringify(Array.from(s))); }catch(e){} }
+function bToggleRead(id){ try{ const s=bRead(); if(s.has(id)) s.delete(id); else s.add(id); localStorage.setItem(B_KEY,JSON.stringify(Array.from(s))); }catch(e){} refreshCounts(); }
+function bResetRead(){ try{ localStorage.removeItem(B_KEY); }catch(e){} refreshCounts(); toast("Progress cleared"); }
 
 function bScore(l,q){
   const ql=q.toLowerCase().trim(); if(!ql) return {s:0,term:null};
@@ -1036,7 +1047,7 @@ function lessonBody(l){
   if(l.terms&&l.terms.length) h+=head(IC.ask,"Key terms",l.terms.length)+'<dl class="terms">'+l.terms.map(x=>'<div><dt>'+esc(x[0])+'</dt><dd>'+fmt(x[1])+'</dd></div>').join("")+'</dl>';
   if(l.tips&&l.tips.length) h+=head(IC.check,"On the job")+'<ul class="list">'+l.tips.map(x=>'<li>'+fmt(x)+'</li>').join("")+'</ul>';
   if(l.remember) h+='<div class="remember">'+IC.spark+'<div><b>Remember</b>'+fmt(l.remember)+'</div></div>';
-  h+='<div class="lesfoot"><button class="btn ghost" data-close="1">Close this topic</button>'+
+  h+='<div class="lesfoot"><button class="btn markbtn" data-mark="1">'+IC.check+'Mark as read</button><button class="btn ghost" data-close="1">Close this topic</button>'+
     (next?'<button class="btn" data-go="'+next.id+'">Next: '+esc(next.title)+' →</button>':'<span class="done-msg">'+IC.check+' End of the course</span>')+
     '<button class="copybtn" data-copy="1">'+IC.copy+'Copy</button></div></div>';
   return h;
@@ -1047,6 +1058,7 @@ function ensureBody(d){
   d.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=>openLesson(b.dataset.go)));
   d.querySelector("[data-close]").addEventListener("click",()=>{ d.open=false; d.querySelector("summary").scrollIntoView({behavior:"smooth",block:"center"}); });
   d.querySelector("[data-copy]").addEventListener("click",()=>copy(lessonText(l)));
+  d.querySelector("[data-mark]").addEventListener("click",()=>bToggleRead(l.id));
 }
 function lesEl(id){ return document.querySelector('#basicsTree details.les[data-id="'+id+'"]'); }
 function openLesson(id){
@@ -1054,12 +1066,13 @@ function openLesson(id){
   showPanel("basicsPanel");
   if($("#bq").value.trim()){ $("#bq").value=""; applyFilter(""); }
   let p=d.parentElement; while(p&&p.id!=="basicsTree"){ if(p.tagName==="DETAILS") p.open=true; p=p.parentElement; }
-  ensureBody(d); d.open=true; B_CUR=id; bMarkRead(id); refreshCounts();
+  ensureBody(d); d.open=true; B_CUR=id; refreshCounts();
   setTimeout(()=>d.querySelector("summary").scrollIntoView({behavior:"smooth",block:"start"}),30);
 }
 function refreshCounts(){
   const read=bRead();
-  $$("#basicsTree details.les").forEach(d=>d.classList.toggle("done",read.has(d.dataset.id)));
+  $$("#basicsTree details.les").forEach(d=>{ const on=read.has(d.dataset.id); d.classList.toggle("done",on);
+    const b=d.querySelector("[data-mark]"); if(b){ b.innerHTML=IC.check+(on?"Read ✓ — tap to unmark":"Mark as read"); b.classList.toggle("on",on); } });
   $$("#basicsTree details.mod, #basicsTree details.day").forEach(d=>{
     const all=$$r("details.les",d).length, n=$$r("details.les",d).filter(x=>read.has(x.dataset.id)).length;
     const c=d.querySelector(":scope > summary .cnt"); c.textContent=n+"/"+all; c.classList.toggle("full",n===all&&all>0);
@@ -1072,8 +1085,8 @@ const $$r=(s,root)=>[].slice.call((root||document).querySelectorAll(s));
 
 function renderCycle(){
   const read=bRead();
-  $("#cycleMap").innerHTML=B_STEPS.map(l=>'<button class="cstep'+(read.has(l.id)?" done":"")+(B_CUR===l.id?" on":"")+'" data-go="'+l.id+'" title="'+esc(l.title)+'">'+
-    '<i>'+(read.has(l.id)&&B_CUR!==l.id?IC.check:l.step)+'</i><span>'+esc(B_STEP_LABEL[l.step]||l.title)+'</span></button>').join("");
+  $("#cycleMap").innerHTML=BASICS_CYCLE.map(c=>'<button class="cstep'+(read.has(c.id)?" done":"")+(B_CUR===c.id?" on":"")+'" data-go="'+c.id+'">'+
+    '<i>'+(read.has(c.id)&&B_CUR!==c.id?IC.check:c.n)+'</i><span class="cs"><b>'+esc(c.name)+'</b><small>'+esc(c.line)+'</small></span>'+IC.arw+'</button>').join("");
   $$("#cycleMap .cstep").forEach(b=>b.addEventListener("click",()=>openLesson(b.dataset.go)));
 }
 function buildTree(){
@@ -1081,12 +1094,14 @@ function buildTree(){
     const mods=BASICS_MODULES.filter(m=>m.day===day), nL=mods.reduce((a,m)=>a+m.lessons.length,0);
     return '<details class="day"'+(di===0?" open":"")+'><summary>'+IC.chev+'<span class="dtitle">'+esc(day)+'<small>'+mods.length+' modules · '+nL+' topics · quiz at the end</small></span><span class="cnt">0/'+nL+'</span></summary>'+
       '<div class="daybody">'+mods.map(m=>'<details class="mod" data-mod="'+m.id+'"><summary>'+IC.chev+'<span class="mtitle"><b>'+esc(m.title)+'</b><span class="blurb">'+esc(m.blurb)+'</span></span><span class="cnt">0/'+m.lessons.length+'</span></summary>'+
-        '<div class="modbody">'+m.lessons.map(l=>'<details class="les" data-id="'+l.id+'"><summary><span class="tick">'+IC.check+'</span><span class="ltitle">'+esc(l.title)+'</span>'+
+        '<div class="modbody">'+m.lessons.map(l=>'<details class="les" data-id="'+l.id+'"><summary><span class="tick" role="button" tabindex="0" title="Mark read / unread">'+IC.check+'</span><span class="ltitle">'+esc(l.title)+'</span>'+
           (l.step?'<em class="stp">Step '+l.step+'</em>':'')+'<em class="hitterm"></em>'+IC.chev+'</summary></details>').join("")+'</div></details>').join("")+
       '<div class="dayquiz" data-day="'+esc(day)+'"><div class="dq-head">'+IC.spark+'<div><b>'+esc(day)+' quiz</b><span>'+dayQuizSize(day)+' random questions from '+esc(day)+' — a different set every time you open it.</span></div></div>'+
       '<button class="btn" data-start="1">Start the '+esc(day)+' quiz</button><div class="dqarea"></div></div></div></details>';
   }).join("");
-  $$("#basicsTree details.les").forEach(d=>d.addEventListener("toggle",()=>{ if(d.open){ ensureBody(d); B_CUR=d.dataset.id; bMarkRead(d.dataset.id); refreshCounts(); } }));
+  $$("#basicsTree details.les").forEach(d=>d.addEventListener("toggle",()=>{ if(d.open){ ensureBody(d); B_CUR=d.dataset.id; refreshCounts(); } }));
+  // the tick in the list is a toggle too; it must not open or close the dropdown
+  $$("#basicsTree details.les > summary .tick").forEach(t=>t.addEventListener("click",e=>{ e.preventDefault(); e.stopPropagation(); bToggleRead(t.closest("details").dataset.id); }));
   $$("#basicsTree .dayquiz").forEach(box=>box.querySelector("[data-start]").addEventListener("click",()=>{ box.querySelector("[data-start]").hidden=true; mountDayQuiz(box.dataset.day,box.querySelector(".dqarea"),box); }));
   refreshCounts();
 }
@@ -1110,11 +1125,13 @@ $("#bq").addEventListener("input",()=>bQuery(false));
 $("#bq").addEventListener("keydown",e=>{ if(e.key==="Enter") bQuery(true); });
 $("#bclear").addEventListener("click",()=>{ $("#bq").value=""; applyFilter(""); $("#bq").focus(); });
 $("#bCollapse").addEventListener("click",()=>$$("#basicsTree details").forEach(d=>d.open=false));
-$("#basicsSub").textContent=B_LESSONS.length+" topics in "+BASICS_MODULES.length+" modules over three days — open a day, open a module, open a topic; a fresh quiz waits at the end of each day";
+$("#bReset").addEventListener("click",bResetRead);
+$("#bcourseh").textContent="Course — Day 1 to Day "+B_DAYS.length;
+$("#basicsSub").textContent=B_LESSONS.length+" topics in "+BASICS_MODULES.length+" modules over "+B_DAYS.length+" days — open a day, open a module, open a topic, and tick it when you have read it; a fresh quiz waits at the end of each day";
 
 /* ── day quizzes: random draw from that day's modules, new set every time ── */
 function dayPool(day){ const shorts=BASICS_MODULES.filter(m=>m.day===day).map(m=>m.short); return RCM_BANK.filter(x=>shorts.indexOf(x.t)>=0); }
-function dayQuizSize(day){ const n=BASICS_MODULES.filter(m=>m.day===day).reduce((a,m)=>a+m.lessons.length,0); return Math.min(20,Math.max(10,Math.round(n*0.9))); }
+function dayQuizSize(day){ const n=BASICS_MODULES.filter(m=>m.day===day).reduce((a,m)=>a+m.lessons.length,0); return Math.min(20,Math.max(10,Math.round(n*1.1))); }
 function mountQuiz(area,makeQs,onClose,label){
   const qs=makeQs();
   if(!qs.length){ area.innerHTML='<div class="none">Not enough material here to build a quiz.</div>'; return; }
