@@ -246,6 +246,14 @@ body.nohero .hero{display:none}
   font-weight:700;font-size:14px;color:var(--ink-2);padding:10px 18px;cursor:pointer;transition:.14s}
 .qmode:hover{border-color:var(--blue);color:var(--blue-deep)}
 .qmode.on{background:var(--blue);border-color:var(--blue);color:#fff}
+.qtype{background:#fff;border:1.5px solid var(--line-2);border-radius:8px;font:inherit;font-family:var(--font-display);font-weight:800;font-size:14.5px;color:var(--ink-2);padding:11px 20px;cursor:pointer;transition:.14s}
+.qtype:hover{border-color:var(--blue);color:var(--blue-deep)}
+.qtype.on{background:var(--navy);border-color:var(--navy);color:#fff}
+.qmodes.qtypes{margin-bottom:16px;flex-wrap:wrap}
+.qmodes.sub .qmode{font-size:13px;padding:8px 14px}
+.qsec[hidden]{display:none}
+#callArea .dq,#allArea .dq{margin-top:0}
+.dqgroup{display:flex;gap:8px;flex-wrap:wrap}
 .missrow{padding:10px 0;border-bottom:1px solid var(--line);font-size:14px;color:var(--ink-2);line-height:1.5}
 .missrow:last-child{border-bottom:0}
 .missrow .ans{display:block;color:var(--green);font-weight:700;margin-top:3px}
@@ -664,7 +672,6 @@ textarea.fbin{resize:vertical;min-height:110px;line-height:1.5}
         <button class="navtab" data-panel="browsePanel">All Denials</button>
         <button class="navtab" data-panel="basicsPanel">RCM Basics</button>
         <button class="navtab" data-panel="quizPanel">Quiz</button>
-        <button class="navtab" data-panel="scenarioPanel">Scenarios</button>
         <button class="navtab" data-panel="sopPanel">Purview SOPs</button>
       </div></div>
       <span class="navspacer"></span>
@@ -766,20 +773,40 @@ textarea.fbin{resize:vertical;min-height:110px;line-height:1.5}
   </div>
 
   <div id="quizPanel" class="panel">
-    <div class="band"><h2>Knowledge Quiz</h2><p>Test yourself on the denial scenarios and the RCM Basics course</p></div>
-    <div class="qmodes">
-      <button class="qmode on" data-mode="ar">AR &amp; Denials</button>
-      <button class="qmode" data-mode="rcm">RCM Basics</button>
+    <div class="band"><h2>Quiz</h2><p>Four ways to test yourself. <b>Theory</b>: the denial library and the RCM Basics course. <b>Call</b>: role play where the app plays the payer and you choose what to say. <b>Scenario</b>: cases with the numbers and the rules. <b>Everything</b>: a random mix of all three.</p></div>
+    <div class="qmodes qtypes">
+      <button class="qtype on" data-type="theory">Theory</button>
+      <button class="qtype" data-type="call">Call</button>
+      <button class="qtype" data-type="scenario">Scenario</button>
+      <button class="qtype" data-type="all">Everything</button>
     </div>
-    <div class="chips" id="quizFilters"></div>
-    <div id="quizArea"></div>
-  </div>
-
-  <div id="scenarioPanel" class="panel">
-    <div class="band"><h2>Scenario Quiz</h2><p>Work the numbers and the rules: billed vs allowed, deductible then coinsurance, in vs out of network, HMO/PPO rules, primary and secondary payers. Fresh numbers every round, and every answer shows the working. <b>Payer call role play</b>: the app plays the rep, you choose what to say, and every turn shows the model line.</p></div>
-    <div class="chips" id="scenFilters"></div>
-    <div class="scenstart" id="scenStart"><button class="btn" id="scenGo">Start a 10-question round</button></div>
-    <div id="scenArea"></div>
+    <div class="qsec" data-sec="theory">
+      <div class="qmodes sub">
+        <button class="qmode on" data-mode="ar">AR &amp; Denials</button>
+        <button class="qmode" data-mode="rcm">RCM Basics</button>
+      </div>
+      <div class="chips" id="quizFilters"></div>
+      <div id="quizArea"></div>
+    </div>
+    <div class="qsec" data-sec="call" hidden>
+      <div class="chips" id="callFilters"></div>
+      <div class="scenstart" id="callStart"><button class="btn" id="callGo">Start a call round</button></div>
+      <div id="callArea"></div>
+    <div class="scenex">
+      <b>How a payer call runs (the role play follows this shape)</b>
+      <ol>
+        <li><b>Identify</b>: your name, who you represent, NPI and tax ID; then the patient’s two identifiers and the member ID.</li>
+        <li><b>State the question</b> with the claim number, DOS and the denial code. No diagnosis unless the question is about it.</li>
+        <li><b>Ask what decides it</b>: the payer’s receipt date, the authorisation on file, the other coverage, the policy applied. Never ask which code would pay.</li>
+        <li><b>Agree the next step</b> and who owns it: reprocess, corrected claim, amended auth, reconsideration, offset, patient statement.</li>
+        <li><b>Read back and document</b>: every figure and date, the reference number, the rep’s name, the deadline.</li>
+      </ol>
+    </div>
+    </div>
+    <div class="qsec" data-sec="scenario" hidden>
+      <div class="chips" id="scenFilters"></div>
+      <div class="scenstart" id="scenStart"><button class="btn" id="scenGo">Start a 10-question round</button></div>
+      <div id="scenArea"></div>
     <div class="scenex">
       <b>How to work a payment scenario</b>
       <ol>
@@ -790,15 +817,10 @@ textarea.fbin{resize:vertical;min-height:110px;line-height:1.5}
         <li>Billed minus allowed: <b>in network</b> it is a contractual write-off; <b>out of network</b> it may be balance billed, except where Medicare, Medicaid or the No Surprises Act forbid it.</li>
       </ol>
     </div>
-    <div class="scenex">
-      <b>How a payer call runs (the role play follows this shape)</b>
-      <ol>
-        <li><b>Identify</b>: your name, who you represent, NPI and tax ID; then the patient’s two identifiers and the member ID.</li>
-        <li><b>State the question</b> with the claim number, DOS and the denial code. No diagnosis unless the question is about it.</li>
-        <li><b>Ask what decides it</b>: the payer’s receipt date, the authorisation on file, the other coverage, the policy applied. Never ask which code would pay.</li>
-        <li><b>Agree the next step</b> and who owns it: reprocess, corrected claim, amended auth, reconsideration, offset, patient statement.</li>
-        <li><b>Read back and document</b>: every figure and date, the reference number, the rep’s name, the deadline.</li>
-      </ol>
+    </div>
+    <div class="qsec" data-sec="all" hidden>
+      <div class="scenstart" id="allStart"><button class="btn" id="allGo">Deal a mixed round</button></div>
+      <div id="allArea"></div>
     </div>
   </div>
 
@@ -1054,7 +1076,7 @@ function renderAnswer(d,q,alts,weak){
   const secDo = (d.actions&&d.actions.length)?head(IC.todo,"What to do",d.actions.length)+
     '<ul class="list">'+d.actions.map(x=>'<li>'+hl(x,terms)+'</li>').join("")+'</ul>':'';
   h += intent==="ask" ? (secAsk+secDo+secMeans) : intent==="do" ? (secDo+secAsk+secMeans) : (secMeans+secAsk+secDo);
-  h+='<div class="srcrow"><button class="btn ghost dquiz">Quiz me on this denial</button><button class="copybtn">'+IC.copy+'Copy answer</button></div><div class="dqarea"></div>'+saagHtml(d)+'</div>';
+  h+='<div class="srcrow"><span class="dqgroup"><button class="btn ghost dquiz" data-kind="theory">Theory quiz</button><button class="btn ghost dquiz" data-kind="call">Call quiz</button><button class="btn ghost dquiz" data-kind="scenario">Scenario quiz</button></span><button class="copybtn">'+IC.copy+'Copy answer</button></div><div class="dqarea"></div>'+saagHtml(d)+'</div>';
   if(alts&&alts.length){
     h+='<div class="alts"><div class="lbl">'+IC.fam+'Related denials</div>'+
       alts.map(a=>'<button class="alt" data-name="'+esc(a.name)+'"><span>'+esc(a.name)+'</span>'+
@@ -1062,8 +1084,10 @@ function renderAnswer(d,q,alts,weak){
   }
   c.innerHTML=h;
   c.querySelector(".copybtn").addEventListener("click",()=>copy(plainText(d)));
-  c.querySelector(".dquiz").addEventListener("click",()=>{ c.querySelector(".dquiz").hidden=true;
-    mountQuiz(c.querySelector(".dqarea"),()=>buildDenialQuiz(d),()=>{ c.querySelector(".dquiz").hidden=false; },"this denial"); });
+  c.querySelectorAll(".dquiz").forEach(b=>b.addEventListener("click",()=>{
+    const btns=c.querySelectorAll(".dquiz"); btns.forEach(x=>x.hidden=true);
+    mountQuiz(c.querySelector(".dqarea"),()=>buildDenialKind(d,b.dataset.kind),()=>{ btns.forEach(x=>x.hidden=false); },"this denial");
+  }));
   saagWire(c,d);
   c.querySelectorAll(".alt").forEach(b=>b.addEventListener("click",()=>{
     const t=DATA.find(x=>x.name===b.dataset.name); if(t) show(t,b.dataset.name);
@@ -1115,11 +1139,12 @@ function logQuestion(q){}
    while the list is empty. */
 const FEEDBACK_TO=["shreya.k@purview-healthcare.com","sweety.t@purviewservices.com"];
 function fbContext(){
-  const panel=($(".panel.on")||{}).id, tabs={askPanel:"Ask",browsePanel:"All Denials",basicsPanel:"RCM Basics",quizPanel:"Quiz",scenarioPanel:"Scenarios",sopPanel:"Purview SOPs"};
+  const panel=($(".panel.on")||{}).id, tabs={askPanel:"Ask",browsePanel:"All Denials",basicsPanel:"RCM Basics",quizPanel:"Quiz",sopPanel:"Purview SOPs"};
   let where=tabs[panel]||"App";
   if(panel==="askPanel"){ const h=$("#answers .card .hit h2"); if(h) where+=" — "+h.textContent.trim(); }
   if(panel==="basicsPanel"&&typeof B_CUR!=="undefined"&&B_CUR&&B_BY_ID[B_CUR]) where+=" — "+B_BY_ID[B_CUR].mod.day+" / "+B_BY_ID[B_CUR].title;
-  if(panel==="quizPanel"&&typeof QZ!=="undefined") where+=" — "+(QZ.mode==="rcm"?"RCM Basics":"AR & Denials")+" / "+QZ.filter;
+  if(panel==="quizPanel"&&typeof Q_TYPE!=="undefined") where+=" — "+({theory:"Theory",call:"Call",scenario:"Scenario",all:"Everything"}[Q_TYPE]||Q_TYPE)+
+    (Q_TYPE==="theory"?" / "+(QZ.mode==="rcm"?"RCM Basics":"AR & Denials")+" / "+QZ.filter:Q_TYPE==="call"?" / "+CALL_FILTER:Q_TYPE==="scenario"?" / "+SCEN_FILTER:"");
   return where;
 }
 function fbText(){
@@ -1151,12 +1176,7 @@ function showPanel(id){
   $$(".navtab").forEach(b=>{ const on=b.dataset.panel===id; b.classList.toggle("on",on); if(on&&b.scrollIntoView) b.scrollIntoView({block:"nearest",inline:"nearest"}); });
   // Deal a fresh set every time the quiz is opened — but never wipe a round in progress,
   // since answering a question can send you to the Ask tab and back.
-  if(id==="scenarioPanel" && typeof startScenarios==="function" && !$("#scenArea").children.length) startScenarios();
-  if(id==="quizPanel" && typeof QZ!=="undefined"){
-    const untouched = QZ.i===0 && !QZ.answered;
-    const finished  = QZ.i>=QZ.qs.length;
-    if(untouched||finished) startQuizUI(QZ.mode,QZ.filter);
-  }
+  if(id==="quizPanel" && typeof showQuizType==="function") showQuizType(Q_TYPE);
 }
 $$(".navtab").forEach(b=>b.addEventListener("click",()=>showPanel(b.dataset.panel)));
 /* on narrow screens the tab strip scrolls; fade the right edge while more tabs are hidden */
@@ -1484,12 +1504,12 @@ $("#browseList").innerHTML=fams.map(f=>{
     '<div class="accbody">'+items.map(d=>'<button data-name="'+esc(d.name)+'"><span>'+esc(d.name)+'</span>'+
       (d.codes&&d.codes.length?'<em>'+esc(d.codes[0])+'</em>':'')+'</button>').join("")+
       '<div class="dayquiz" data-fam="'+esc(f)+'"><div class="dq-head">'+IC.spark+'<div><b>Quiz: '+esc(f)+'</b><span>10 random questions on these '+items.length+' denials — wording, meaning, what to ask, what to do, true or false, and call scenarios. A new set every time.</span></div></div>'+
-      '<button class="btn" data-start="1">Start the quiz</button><div class="dqarea"></div></div></div></details>';
+      '<span class="dqgroup"><button class="btn" data-start="theory">Theory quiz</button><button class="btn ghost" data-start="call">Call quiz</button><button class="btn ghost" data-start="scenario">Scenario quiz</button></span><div class="dqarea"></div></div></div></details>';
 }).join("");
-$$("#browseList .dayquiz").forEach(box=>box.querySelector("[data-start]").addEventListener("click",()=>{
-  box.querySelector("[data-start]").hidden=true;
-  mountQuiz(box.querySelector(".dqarea"),()=>buildRoundAR(box.dataset.fam),()=>{ box.querySelector("[data-start]").hidden=false; },box.dataset.fam+" denials");
-}));
+$$("#browseList .dayquiz").forEach(box=>box.querySelectorAll("[data-start]").forEach(b=>b.addEventListener("click",()=>{
+  const btns=box.querySelectorAll("[data-start]"); btns.forEach(x=>x.hidden=true);
+  mountQuiz(box.querySelector(".dqarea"),()=>buildFamilyKind(box.dataset.fam,b.dataset.start),()=>{ btns.forEach(x=>x.hidden=false); },box.dataset.fam);
+})));
 $$("#browseList .accbody button").forEach(b=>b.addEventListener("click",()=>{
   const t=DATA.find(x=>x.name===b.dataset.name); if(t) show(t);
 }));
@@ -1609,6 +1629,49 @@ function buildDenialQuiz(d){
   AR_SCEN.filter(sc=>sc.dn===d.name).forEach(sc=>qs.push(authored(sc)));
   return shuffle(qs);
 }
+/* Three quiz kinds for one denial: theory, call (role play), scenario (everything mixed). */
+function genItem(g,d){ const raw=GEN[g](d,DATA); return raw?{q:raw.q,options:raw.options,correct:raw.correct,cat:d.family,ex:raw.explain,d:d}:null; }
+function tfItems(d,n,have){ const out=[]; for(let k=0;k<n+3&&out.length<n;k++){ const raw=GEN.trueFalse(d,DATA); if(raw&&!have.some(x=>x.q===raw.q)&&!out.some(x=>x.q===raw.q)) out.push({q:raw.q,options:raw.options,correct:raw.correct,cat:d.family,ex:raw.explain,d:d}); } return out; }
+function buildDenialTheory(d){
+  const qs=[]; ["wording","meaning","whichDo"].forEach(g=>{ const x=genItem(g,d); if(x) qs.push(x); });
+  return shuffle(qs.concat(tfItems(d,2,qs)));
+}
+function scriptedFor(names){ return (typeof CALLS!=="undefined"?CALLS:[]).filter(c=>names.indexOf(c.dn)>=0); }
+function buildDenialCall(d){
+  let qs=[]; const sc=scriptedFor([d.name]); if(sc.length) qs=qs.concat(callTurns(pick(sc)));
+  qs=qs.concat(denialCall(d));
+  AR_SCEN.filter(x=>x.dn===d.name).forEach(x=>qs.push(authored(x)));
+  return qs;
+}
+const MONEY_FOR={"Coordination of benefits":"Primary & secondary (COB)","Eligibility & coverage":"Payment math","Status & payment":"Payment math","Liability & other":"Work & accident claims","Credentialing & provider":"In vs out of network","Authorization & referral":"HMO, PPO, POS, EPO","Coverage & medical policy":"Medicare & Medicaid"};
+function moneyItemFor(fam){ const f=MONEY_FOR[fam]; if(!f) return null; const gens=SCEN_GEN.filter(g=>g.fam===f); if(!gens.length) return null; const x=pick(gens).make(); x.cat=f; return x; }
+function flattenBlocks(blocks){ return shuffle(blocks).reduce((a,b)=>a.concat(b),[]); }
+function buildDenialScenario(d){
+  const theory=[]; ["wording","meaning","whichAsk","whichDo"].forEach(g=>{ const x=genItem(g,d); if(x) theory.push(x); });
+  const blocks=shuffle(theory).slice(0,3).concat(tfItems(d,1,theory)).map(x=>[x]);
+  AR_SCEN.filter(x=>x.dn===d.name).forEach(x=>blocks.push([authored(x)]));
+  const m=moneyItemFor(d.family); if(m) blocks.push([m]);
+  blocks.push(denialCall(d));
+  return flattenBlocks(blocks);
+}
+function buildDenialKind(d,kind){ return kind==="call"?buildDenialCall(d):kind==="scenario"?buildDenialScenario(d):buildDenialTheory(d); }
+/* the same three kinds for a whole category */
+function famDenials(fam){ return DATA.filter(d=>d.family===fam); }
+function buildFamilyCall(fam){
+  const ds=shuffle(famDenials(fam)).slice(0,2); let qs=[];
+  const sc=scriptedFor(famDenials(fam).map(d=>d.name));
+  if(sc.length&&Math.random()<0.5){ qs=qs.concat(callTurns(pick(sc))); ds.length=1; }
+  ds.forEach(d=>{ qs=qs.concat(denialCall(d)); });
+  return qs;
+}
+function buildFamilyScenario(fam){
+  const blocks=buildRoundAR(fam).slice(0,6).map(x=>[x]);
+  const m=moneyItemFor(fam); if(m) blocks.push([m]);
+  blocks.push(denialCall(pick(famDenials(fam))));
+  return flattenBlocks(blocks);
+}
+function buildFamilyKind(fam,kind){ return kind==="call"?buildFamilyCall(fam):kind==="scenario"?buildFamilyScenario(fam):buildRoundAR(fam); }
+
 // Code-recall questions ("which code goes with X") removed — the quiz tests understanding
 // and resolution, not code memorization. Codes still show inside every answer card.
 const GEN_ORDER=["wording","meaning","whichAsk","whichDo"];
@@ -1800,6 +1863,53 @@ function startScenarios(){
 }
 renderScenFilters();
 $("#scenGo").addEventListener("click",startScenarios);
+
+/* ── call quiz: role play, scripted calls and generated calls for any denial (calls.js) ── */
+let CALL_FILTER="All calls";
+function renderCallFilters(){
+  $("#callFilters").innerHTML=["All calls","Scripted calls"].concat(fams).map(f=>'<button class="chip'+(f===CALL_FILTER?" on":"")+'" data-f="'+esc(f)+'">'+esc(f)+'</button>').join("");
+  $$("#callFilters .chip").forEach(b=>b.addEventListener("click",()=>{ CALL_FILTER=b.dataset.f; renderCallFilters(); startCalls(); }));
+}
+function buildCallsFor(f){
+  if(f==="Scripted calls") return buildCallRound(8);
+  if(f==="All calls") return callTurns(pick(CALLS)).concat(denialCall(pick(DATA)));
+  return buildFamilyCall(f);
+}
+function startCalls(){
+  $("#callStart").hidden=true;
+  mountQuiz($("#callArea"),()=>buildCallsFor(CALL_FILTER),()=>{ $("#callStart").hidden=false; },CALL_FILTER==="All calls"?"the calls":CALL_FILTER);
+}
+renderCallFilters();
+$("#callGo").addEventListener("click",startCalls);
+
+/* ── everything: a random mix of theory, one call and scenario cases ── */
+function buildEverything(){
+  const blocks=[];
+  buildRoundAR("All").slice(0,3).forEach(x=>blocks.push([x]));
+  buildRoundRCM("All").slice(0,3).forEach(x=>blocks.push([x]));
+  buildScenarioRound("All",3).forEach(x=>blocks.push([x]));
+  blocks.push(Math.random()<0.5?callTurns(pick(CALLS)):denialCall(pick(DATA)));
+  return flattenBlocks(blocks);
+}
+function startAll(){
+  $("#allStart").hidden=true;
+  mountQuiz($("#allArea"),buildEverything,()=>{ $("#allStart").hidden=false; },"the mixed round");
+}
+$("#allGo").addEventListener("click",startAll);
+
+/* ── quiz types: Theory | Call | Scenario | Everything ── */
+let Q_TYPE="theory";
+function showQuizType(t){
+  Q_TYPE=t;
+  $$(".qtype").forEach(b=>b.classList.toggle("on",b.dataset.type===t));
+  $$(".qsec").forEach(s=>{ s.hidden=s.dataset.sec!==t; });
+  // Deal a fresh set when a type is opened, but never wipe a round in progress.
+  if(t==="theory"){ const untouched=QZ.i===0&&!QZ.answered, finished=QZ.i>=QZ.qs.length; if(untouched||finished) startQuizUI(QZ.mode,QZ.filter); }
+  if(t==="call"&&!$("#callArea").children.length) startCalls();
+  if(t==="scenario"&&!$("#scenArea").children.length) startScenarios();
+  if(t==="all"&&!$("#allArea").children.length) startAll();
+}
+$$(".qtype").forEach(b=>b.addEventListener("click",()=>showQuizType(b.dataset.type)));
 
 /* ── installable app wiring ─────────────────────────────
    Registers the offline service worker when served over https (or localhost),
