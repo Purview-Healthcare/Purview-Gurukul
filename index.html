@@ -806,7 +806,7 @@ function copy(t){
 const STOP=new Set(("a an the is are was were be been being do does did doing i my me we our you your it its this that these those "+
 "of for on in to from with without at by as and or but if then than so what how why when where which who whom whose can could should "+
 "would will shall may might must have has had get got getting need needs about into out up down over under again more most other some "+
-"any no not only own same too very just now here there claim claims denial denials denied deny denies code codes says say said payer "+
+"any no not only own same too very just now here there vs versus claim claims denial denials denied deny denies code codes says say said payer "+
 "insurance please help question questions").split(" "));
 function tok(s){return String(s||"").toLowerCase().replace(/[^a-z0-9\s-]/g," ").split(/\s+/).filter(w=>w&&w.length>1&&!STOP.has(w));}
 
@@ -1029,7 +1029,7 @@ function ask(){
   const bare=!!topTerm&&(ql===topTerm.toLowerCase()||ql===topTerm.toLowerCase().replace(/\s*\(.*\)\s*$/,"").trim()||ql===((topTerm.match(/\(([^)]+)\)/)||[])[1]||"").toLowerCase().replace(/[^a-z0-9]/g,""));   // "ERA", "COB", "deductible" on their own
   const defQ=!!topTerm&&!queryCodes(q).size&&(bare||(/^(what is|what are|what's|whats|define|definition of|meaning of|explain)\b/.test(ql)&&termInQuery(topTerm,q)));
   if(!r.length){ push(bStrong?basicsAnswer(q,b):renderNone(q,b)); }
-  else if(defQ||(!isConfident(r)&&bStrong&&b[0].s>r[0].s)){ const card=basicsAnswer(q,b); card.appendChild(denialLink(r[0].d)); push(card); }
+  else if(defQ||(!isConfident(r)&&bStrong&&b[0].s>r[0].s)||(b.length&&b[0].s>=100&&b[0].s>=2*r[0].s)){ const card=basicsAnswer(q,b); card.appendChild(denialLink(r[0].d)); push(card); }
   else{ const card=renderAnswer(r[0].d,q,r.slice(1,5).map(x=>x.d),!isConfident(r)); if(bStrong) card.appendChild(basicsLink(b[0].l)); push(card); }
   $("#q").value=""; $("#q").focus();
 }
@@ -1116,9 +1116,10 @@ function bScore(l,q){
   const terms=tok(ql); let sc=0, hitTerm=null;
   if(l.title.toLowerCase().includes(ql)) sc+=60;
   const wre=t=>new RegExp("(^|[^a-z0-9])"+t.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+"(?![a-z0-9])"), qlc=ql.replace(/[^a-z0-9 ]/g," ");
-  (l.terms||[]).forEach(x=>{ const tl=x[0].toLowerCase(), ab=(x[0].match(/\(([^)]+)\)/)||[])[1], abl=ab?ab.toLowerCase().replace(/[^a-z0-9]/g,""):"";
+  (l.terms||[]).forEach(x=>{ const tl=x[0].toLowerCase(), ab=(x[0].match(/\(([^)]+)\)/)||[])[1], abl=ab?ab.toLowerCase().replace(/[^a-z0-9]/g,""):"", base=tl.replace(/\s*\(.*\)\s*$/,"").trim();
     if(tl===ql){sc+=120;hitTerm=hitTerm||x[0];}
     else if(abl.length>1&&(ql===abl||wre(abl).test(qlc))){sc+=100;hitTerm=hitTerm||x[0];}   // "what is COB" hits "Coordination of benefits (COB)"
+    else if(base!==tl&&base.length>1&&(ql===base||wre(base).test(qlc))){sc+=100;hitTerm=hitTerm||x[0];}   // "what is UCR" hits "UCR (usual, customary and reasonable)"
     else if(ql.length>2&&wre(ql).test(tl)){sc+=50;hitTerm=hitTerm||x[0];}                  // the query is a whole word inside the term
     else if(tl.length>2&&wre(tl).test(ql)){sc+=40;hitTerm=hitTerm||x[0];} });              // the term appears, as whole words, in the query
   if(!terms.length) return {s:sc,term:hitTerm};
@@ -1282,7 +1283,17 @@ function mountDayQuiz(day,area,box){
   mountQuiz(area,()=>{ const pool=dayPool(day); return shuffle(pool).slice(0,Math.min(size,pool.length)).map(authored); },
     ()=>{ box.querySelector("[data-start]").hidden=false; },day);
 }
-buildTree(); renderCycle();
+function renderGlossary(){
+  const seen=new Set(), all=[];
+  B_LESSONS.forEach(l=>(l.terms||[]).forEach(x=>{ const k=x[0].toLowerCase(); if(seen.has(k)) return; seen.add(k); all.push({t:x[0],d:x[1],l:l}); }));
+  all.sort((a,b)=>a.t.localeCompare(b.t));
+  let cur="", h="";
+  all.forEach(x=>{ const L=/\d/.test(x.t[0])?"0–9":x.t[0].toUpperCase(); if(L!==cur){cur=L;h+='<div class="gl">'+esc(L)+'</div>';}
+    h+='<div class="g"><b>'+esc(x.t)+'</b><span>'+fmt(x.d)+'</span> <a href="#" data-go="'+x.l.id+'">'+esc(x.l.title)+' →</a></div>'; });
+  $("#glossBody").innerHTML=h; $("#glossCnt").textContent=all.length+" terms";
+  $$("#glossBody a[data-go]").forEach(a=>a.addEventListener("click",e=>{ e.preventDefault(); openLesson(a.dataset.go); }));
+}
+buildTree(); renderCycle(); renderGlossary();
 
 /* Ask-tab fallback: a question that is not about a denial gets the course's answer */
 function basicsAnswer(q,b){
