@@ -4,7 +4,7 @@
    arithmetic can be done in the head. Uses esc()/shuffle()/pick() from the
    app script at call time. */
 "use strict";
-const SCEN_FAMS=["Payment math","In vs out of network","HMO, PPO, POS, EPO","Primary & secondary (COB)","Medicare & Medicaid","Work & accident claims"];
+const SCEN_FAMS=["Payment math","In vs out of network","HMO, PPO, POS, EPO","Primary & secondary (COB)","Medicare & Medicaid","Work & accident claims","Payer call role play"];
 const $m=n=>"$"+Math.round(n).toLocaleString("en-US");
 const rint=(a,b,step)=>{ step=step||1; return a+step*Math.floor(Math.random()*(Math.floor((b-a)/step)+1)); };
 function sOpts(correct,wrongs,fmt){
@@ -136,6 +136,12 @@ const SCEN_GEN=[
 ];
 function buildScenarioRound(filter,n){
   n=n||10;
+  // Role play: whole calls, each four turns in order (calls.js).
+  if(typeof buildCallRound==="function"){
+    if(filter===CALL_FAM) return buildCallRound(8);
+    if(filter==="All"&&Math.random()<0.5){ const call=buildCallRound(1); return call.concat(buildScenarioRound("All-nocall",n-call.length)); }
+  }
+  if(filter==="All-nocall") filter="All";
   const gens=SCEN_GEN.filter(g=>filter==="All"||g.fam===filter);
   const qs=[]; const seen=new Set(); let guard=0;
   const order=[]; while(order.length<n*3){ order.push.apply(order,shuffle(gens)); }

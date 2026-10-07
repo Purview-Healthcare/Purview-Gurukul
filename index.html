@@ -438,6 +438,21 @@ details.les>summary .tick:hover{border-color:var(--green)}
 .reviewbody td a:hover{text-decoration:underline}
 .reviewbody .late{color:#b42318;font-weight:700}
 /* Purview SOPs placeholder */
+/* payer call role play transcript */
+.call{border:1px solid var(--line);border-radius:10px;background:#fff;margin-bottom:16px;overflow:hidden}
+.callhead{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--blue-soft);color:var(--blue-deep);font-family:var(--font-display);font-size:12.5px;font-weight:800}
+.callhead .turn{margin-left:auto;font-size:11px;font-weight:700;color:var(--ink-3);background:#fff;padding:3px 9px;border-radius:999px}
+.callsetup{padding:12px 14px;font-size:13.8px;line-height:1.55;color:var(--ink-2);border-bottom:1px solid var(--line);background:var(--page)}
+.callline{display:grid;grid-template-columns:52px 1fr;gap:10px;padding:9px 14px;font-size:14.2px;line-height:1.55;border-bottom:1px solid #eef4f3;color:var(--ink-2)}
+.callline i{font-style:normal;font-family:var(--font-display);font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);padding-top:3px}
+.callline.you{background:#f5faf9}.callline.you i{color:var(--green)}
+.callline.now{background:var(--orange-soft);border-bottom:0;color:var(--ink)}.callline.now i{color:var(--orange-deep)}.callline.now span{font-weight:700}
+.opt .optx{white-space:normal}
+/* group discussion before the day quiz */
+.discuss{background:#fff;border:1.5px solid var(--line);border-radius:var(--r);padding:16px 18px;margin-bottom:12px}
+.discuss .dq-head{color:var(--blue)}
+.discuss ol{margin:0;padding-left:20px;font-size:14.2px;line-height:1.6;color:var(--ink-2)}
+.discuss li{margin:5px 0}
 .sopnote{display:flex;gap:12px;align-items:flex-start;background:var(--orange-soft);border:1px solid var(--orange-line);border-radius:var(--r);padding:14px 18px;margin-bottom:18px;color:var(--orange-deep);font-size:14px;line-height:1.55}
 .sopnote svg{flex:0 0 auto;margin-top:2px}
 .sopnote b{font-family:var(--font-display)}
@@ -761,7 +776,7 @@ textarea.fbin{resize:vertical;min-height:110px;line-height:1.5}
   </div>
 
   <div id="scenarioPanel" class="panel">
-    <div class="band"><h2>Scenario Quiz</h2><p>Work the numbers and the rules: billed vs allowed, deductible then coinsurance, in vs out of network, HMO/PPO rules, primary and secondary payers. Fresh numbers every round, and every answer shows the working.</p></div>
+    <div class="band"><h2>Scenario Quiz</h2><p>Work the numbers and the rules: billed vs allowed, deductible then coinsurance, in vs out of network, HMO/PPO rules, primary and secondary payers. Fresh numbers every round, and every answer shows the working. <b>Payer call role play</b>: the app plays the rep, you choose what to say, and every turn shows the model line.</p></div>
     <div class="chips" id="scenFilters"></div>
     <div class="scenstart" id="scenStart"><button class="btn" id="scenGo">Start a 10-question round</button></div>
     <div id="scenArea"></div>
@@ -773,6 +788,16 @@ textarea.fbin{resize:vertical;min-height:110px;line-height:1.5}
         <li>Apply <b>coinsurance</b> to what is left: patient share and plan share. A flat <b>copay</b> replaces this step for visits that have one.</li>
         <li>Stop the patient's share at the <b>out-of-pocket maximum</b>.</li>
         <li>Billed minus allowed: <b>in network</b> it is a contractual write-off; <b>out of network</b> it may be balance billed, except where Medicare, Medicaid or the No Surprises Act forbid it.</li>
+      </ol>
+    </div>
+    <div class="scenex">
+      <b>How a payer call runs (the role play follows this shape)</b>
+      <ol>
+        <li><b>Identify</b>: your name, who you represent, NPI and tax ID; then the patient’s two identifiers and the member ID.</li>
+        <li><b>State the question</b> with the claim number, DOS and the denial code. No diagnosis unless the question is about it.</li>
+        <li><b>Ask what decides it</b>: the payer’s receipt date, the authorisation on file, the other coverage, the policy applied. Never ask which code would pay.</li>
+        <li><b>Agree the next step</b> and who owns it: reprocess, corrected claim, amended auth, reconsideration, offset, patient statement.</li>
+        <li><b>Read back and document</b>: every figure and date, the reference number, the rep’s name, the deadline.</li>
       </ol>
     </div>
   </div>
@@ -814,6 +839,7 @@ textarea.fbin{resize:vertical;min-height:110px;line-height:1.5}
 
 <script src="basics.js"></script>
 <script src="scenarios.js"></script>
+<script src="calls.js"></script>
 <script src="sources.js"></script>
 <script src="sops.js"></script>
 <script>
@@ -1261,6 +1287,7 @@ function buildTree(){
       '<div class="daybody">'+mods.map(m=>'<details class="mod" data-mod="'+m.id+'"><summary>'+IC.chev+'<span class="mtitle"><b>'+esc(m.title)+'</b><span class="blurb">'+esc(m.blurb)+'</span></span><span class="cnt">0/'+m.lessons.length+'</span></summary>'+
         '<div class="modbody">'+m.lessons.map(l=>'<details class="les" data-id="'+l.id+'"><summary><span class="tick" role="button" tabindex="0" title="Mark read / unread">'+IC.check+'</span><span class="ltitle">'+esc(l.title)+'</span>'+
           (l.step?'<em class="stp">Step '+l.step+'</em>':'')+'<em class="hitterm"></em>'+IC.chev+'</summary></details>').join("")+'</div></details>').join("")+
+      (typeof BASICS_DISCUSS!=="undefined"&&BASICS_DISCUSS[day]?'<div class="discuss"><div class="dq-head">'+IC.ask+'<div><b>Group discussion</b><span>For the trainer to run with the batch before the quiz. There is no single right answer; the reasoning is the point.</span></div></div><ol>'+BASICS_DISCUSS[day].map(x=>'<li>'+esc(x)+'</li>').join("")+'</ol></div>':'')+
       '<div class="dayquiz" data-day="'+esc(day)+'"><div class="dq-head">'+IC.spark+'<div><b>'+esc(day)+' quiz</b><span>'+dayQuizSize(day)+' random questions from '+esc(day)+' — a different set every time you open it.</span></div></div>'+
       '<button class="btn" data-start="1">Start the '+esc(day)+' quiz</button><div class="dqarea"></div></div></div></details>';
   }).join("");
@@ -1275,7 +1302,7 @@ function applyFilter(q){
   const res=q?bSearch(q):null, hit={}; if(res) res.forEach(x=>{ hit[x.l.id]=x; });
   $$("#basicsTree details.les").forEach(d=>{ const h=res?hit[d.dataset.id]:null; d.hidden=!!(res&&!h); d.querySelector(".hitterm").textContent=(h&&h.term)?h.term:""; });
   $$("#basicsTree details.mod").forEach(d=>{ const any=$$r("details.les",d).some(x=>!x.hidden); d.hidden=!!(res&&!any); if(res&&any) d.open=true; });
-  $$("#basicsTree details.day").forEach(d=>{ const any=$$r("details.mod",d).some(x=>!x.hidden); d.hidden=!!(res&&!any); if(res&&any) d.open=true; d.querySelector(".dayquiz").hidden=!!res; });
+  $$("#basicsTree details.day").forEach(d=>{ const any=$$r("details.mod",d).some(x=>!x.hidden); d.hidden=!!(res&&!any); if(res&&any) d.open=true; d.querySelector(".dayquiz").hidden=!!res; const dc=d.querySelector(".discuss"); if(dc) dc.hidden=!!res; });
   $("#bnone").hidden=!(res&&!res.length);
   $("#bclear").hidden=!q;
 }
@@ -1305,7 +1332,7 @@ function mountQuiz(area,makeQs,onClose,label){
     if(i>=qs.length) return result();
     const q=qs[i], pct=Math.round(i/qs.length*100);
     area.innerHTML='<div class="dq"><div class="qmeta"><span>Question '+(i+1)+' of '+qs.length+'</span><span class="cat">'+esc(q.cat||label)+'</span></div>'+
-      '<div class="qbar"><i style="width:'+pct+'%"></i></div><p class="qtext">'+q.q+'</p>'+
+      '<div class="qbar"><i style="width:'+pct+'%"></i></div>'+(q.pre?'<div class="qpre">'+q.pre+'</div>':'')+'<p class="qtext">'+q.q+'</p>'+
       '<div class="opts">'+q.options.map((o,k)=>'<button class="opt" data-i="'+k+'"><span class="ltr">'+"ABCD"[k]+'</span><span>'+esc(o)+'</span></button>').join("")+'</div>'+
       '<div class="dqfb"></div><div class="qnav"><button class="btn dqnext" style="display:none">'+(i===qs.length-1?"See results":"Next question")+'</button><span class="score">Score: '+score+' / '+i+'</span></div></div>';
     $$r(".opt",area).forEach(b=>b.addEventListener("click",()=>answer(+b.dataset.i)));

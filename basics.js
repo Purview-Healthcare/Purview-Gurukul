@@ -898,3 +898,33 @@ BASICS_QUIZ.push(
 {t:"US payers",q:"A 68-year-old still works for a company with 200 employees and is on its health plan. Which payer is primary?",correct:"The employer group health plan",wrongs:["Medicare","Whichever plan has the lower deductible","Medicaid"],ex:"Under the Medicare Secondary Payer rules, the group plan of an actively working beneficiary at an employer with 20 or more employees pays first."},
 {t:"US payers",q:"A workers’ compensation claim must carry which date that an ordinary claim does not?",correct:"The date of injury (DOI)",wrongs:["The patient’s date of birth","The date the policy was bought","The payer’s fiscal year end"],ex:"WC claims are indexed by date of injury, carry no patient cost sharing and go to the employer’s carrier, not the health plan."}
 );
+
+/* ── Group discussion prompts, one set per day, shown above the day quiz ───────
+   For the trainer to run with the batch. No single right answer; the reasoning is the point. */
+const BASICS_DISCUSS={
+ "Day 1":[
+  "In India the patient pays and then claims; in the US the provider bills and waits. Who is the provider’s customer for payment in each system, and how should that change the way we talk to a payer rep?",
+  "A colleague keeps a denial spreadsheet with patient names on a personal laptop to work from home. List everything wrong with that under HIPAA, and describe the compliant version.",
+  "It is 6 pm IST. Which payers can you call now, which must wait until after 7:30 pm, and how would you plan a day’s call list across the four US time zones?",
+  "The rep spells back ‘Delta’ and you heard ‘Bravo’. What do you say on the call, and what goes in the note?"],
+ "Day 2":[
+  "Jane has a $1,500 deductible, 20% coinsurance and a $4,000 out-of-pocket maximum. Work out what she pays on a $6,000 allowed surgery in January and on a $500 allowed visit in December.",
+  "HMO versus PPO: which denials would you expect more of under each, and which front-desk step prevents them?",
+  "A Marketplace patient’s eligibility shows ‘pending premium’ in month two of the grace period. Do you treat, bill, or wait? Who in the practice decides, and what do you tell the patient?",
+  "Assignment of benefits, release of information, financial agreement: which denial or collection problem appears when each one is missing from the registration packet?"],
+ "Day 3":[
+  "Pick one of the 13 steps. Name one error that can happen there, the denial it produces downstream, and the earliest point at which it could have been caught.",
+  "A clean-claim rate of 85% means 15 of every 100 claims come back. Which three steps would you audit first, and what would you look for in each?",
+  "The payer allowed $200, paid $160, and the remittance shows $40 PR-1. The patient already paid a $40 copay at the visit. What happened, and what do you post?",
+  "When is a corrected claim the right tool, when is an appeal, and when is neither (a write-off)? Give one real example of each."],
+ "Day 4":[
+  "A 70-year-old has Medicare and a retiree Blue Cross plan; a 68-year-old works at a 500-employee firm with Blue Cross. Who is primary for each, and why does ‘are you still working?’ decide it?",
+  "A card says ‘Molina Healthcare’. List what you would check before deciding whether it is Medicaid managed care, a Marketplace plan or Medicare Advantage, and where each claim goes.",
+  "Medicaid is ‘payer of last resort’ and ‘verified monthly’. What breaks in the front end if either rule is forgotten, and what does the denial look like?",
+  "Why can nobody balance bill a Medicare or Medicaid patient, and when can a commercial patient be balance billed?"],
+ "Day 5":[
+  "Explain deductible, coinsurance, copay and out-of-pocket maximum to a patient in four sentences without using the word ‘allowed’.",
+  "COB: subscriber first, birthday rule for children, Medicare by employment, Medicaid last. Build three family scenarios and work out the payer order for each.",
+  "An 837 goes out, the 999 is clean, and a 277CA comes back rejected. What happened at each step, and who fixes it?",
+  "A patient asks how an in-network and an out-of-network bill differ for the same $1,000 service. Sketch both EOBs side by side."]
+};
