@@ -127,6 +127,14 @@ svg{display:block;flex:0 0 auto}
   cursor:pointer;display:grid;place-items:center;transition:.14s}
 #go:hover{background:var(--blue-deep)}
 .chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}
+.moreq{flex:1 1 100%;margin-top:2px}
+.moreq summary{cursor:pointer;list-style:none;font-size:13px;font-weight:700;color:var(--blue);padding:4px 0}
+.moreq summary::-webkit-details-marker{display:none}
+.moreq summary::before{content:"+ ";font-weight:800}
+.moreq[open] summary::before{content:"– "}
+.moreq .mq{margin-top:10px}
+.moreq .mq b{display:block;font-family:var(--font-display);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-bottom:6px}
+.moreq .mq .chips{margin-bottom:4px}
 .chip{background:#fff;border:1px solid var(--line);color:var(--ink-2);font:inherit;font-size:13px;font-weight:600;
   padding:7px 14px;border-radius:999px;cursor:pointer;transition:.14s}
 .chip:hover{background:var(--navy);border-color:var(--navy);color:#fff}
@@ -762,7 +770,7 @@ textarea.fbin{resize:vertical;min-height:110px;line-height:1.5}
   <div id="askPanel" class="panel on">
     <div class="searchbar">
       <svg class="mag" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-      <input type="text" id="q" placeholder="Ask about a denial or any RCM term — CO-97, timely filing, what is coinsurance…" autocomplete="off" autofocus>
+      <input type="text" id="q" placeholder="Ask in plain words: what is a copay, why was this denied, who pays first…" autocomplete="off" autofocus>
       <button id="go" title="Ask" aria-label="Ask">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13"/><path d="m12 5 7 7-7 7"/></svg>
       </button>
@@ -790,7 +798,7 @@ textarea.fbin{resize:vertical;min-height:110px;line-height:1.5}
     <div class="band"><h2>RCM Basics</h2><p id="basicsSub"></p></div>
     <div class="searchbar bsearch">
       <svg class="mag" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-      <input type="text" id="bq" placeholder="Search a term or topic: deductible, COB, ICD-10, Medicare Part B…" autocomplete="off" aria-label="Search RCM Basics">
+      <input type="text" id="bq" placeholder="Search in plain words: copay, who pays first, ICD-10, Medicare…" autocomplete="off" aria-label="Search RCM Basics">
       <button id="bclear" title="Clear" aria-label="Clear search" hidden>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
       </button>
@@ -934,6 +942,31 @@ const STOP=new Set(("a an the is are was were be been being do does did doing i 
 "any no not only own same too very just now here there vs versus claim claims denial denials denied deny denies code codes says say said payer "+
 "insurance please help question questions").split(" "));
 function tok(s){return String(s||"").toLowerCase().replace(/[^a-z0-9\s-]/g," ").split(/\s+/).filter(w=>w&&w.length>1&&!STOP.has(w));}
+/* Plain-question helpers. New joiners ask "what is health insurance" or "who pays the doctor":
+   the course search keeps words like insurance, claim and payer (the denial search drops them
+   as noise), strips the question scaffolding, and matches aliases by phrase or by word set. */
+const STOP_B=new Set(("a an the is are was were be been being do does did doing i my me we our you your it its this that these those "+
+"of for on in to from with without at by as and or but if then than so what how why when where which who whom whose can could should "+
+"would will shall may might must have has had get got getting need needs about into up down over under again more most other some "+
+"any no not only own same too very just now here there vs versus please help question questions mean means meaning explain tell me define").split(" "));
+function stem(w){ if(w.length<=4) return w; return w.replace(/ied$/,"y").replace(/ies$/,"y").replace(/(ing|ed|es|s)$/,""); }
+function tokB(s){ return String(s||"").toLowerCase().replace(/[^a-z0-9\s]/g," ").split(/\s+/).filter(w=>w&&w.length>1&&!STOP_B.has(w)).map(stem); }
+const nz=s=>String(s||"").toLowerCase().replace(/[^a-z0-9]/g,"");
+function coreOf(ql){
+  return ql.replace(/\?+$/,"").replace(/^(what|who|which|how|why|when|where)\s+(is|are|was|were|does|do|did|can|should|would)\s+(a|an|the|my|our|this|i|we|you)?\s*/,"")
+    .replace(/^(define|definition of|meaning of|explain|tell me about|what does|what do you mean by|whats|what's)\s+(a|an|the)?\s*/,"")
+    .replace(/\s+(mean|means|meaning)$/,"").replace(/^(a|an|the)\s+/,"").trim();
+}
+/* alias match: exact (130), whole phrase in the question (90), or every alias word present (75) */
+function aliasScore(aliases,ql,core,qtoks){
+  let best=0, second=0;
+  (aliases||[]).forEach(k=>{ const kl=k.toLowerCase(); let s=0;
+    if(nz(kl)===nz(core)||nz(kl)===nz(ql)) s=130;
+    else if(new RegExp("(^|[^a-z0-9])"+kl.replace(/[^a-z0-9 ]/g," ").trim().replace(/[.*+?^${}()|[\]\\]/g,"\\$&").replace(/\s+/g,"[^a-z0-9]+")+"(?![a-z0-9])").test(ql)) s=90;
+    else { const kt=tokB(kl); if(kt.length>=2&&kt.every(t=>qtoks.has(t))) s=75; else if(kt.length>=4&&kt.filter(t=>qtoks.has(t)).length>=kt.length-1) s=50; }
+    if(s>best){ second=best; best=s; } else if(s>second) second=s; });
+  return best+0.5*second;   // two aliases hitting is stronger evidence than one
+}
 
 // Inverse document frequency: a word in one scenario ("hospice", "taxonomy") is worth far
 // more than one in forty ("patient", "provider").
@@ -946,7 +979,7 @@ const IDF=(function(){
 function idf(t){ return IDF[t]===undefined?1.2:IDF[t]; }
 
 function queryCodes(q){
-  const out=new Set(); const s=q.toUpperCase();
+  const out=new Set(); const s=q.toUpperCase().replace(/\b(ICD|UB|CMS|HCFA|CPT|X12|HCPCS|ANSI|POS|BOX)[\s-]?\d+[A-Z0-9-]*/g," ");   // "ICD-10", "UB-04", "CMS-1500" are not denial codes
   let m, re=/\b(?:CO|PR|OA|PI|CR)?[\s\-]?((?:MA|M|N|B)?\d{1,3})\b/g;
   while((m=re.exec(s))!==null){ out.add(m[1].replace(/^0+/,"")); }
   return out;
@@ -962,6 +995,7 @@ function score(item,q){
   if(name.includes(ql)||ql.includes(name)) sc+=90;
   (item.keywords||[]).forEach(k=>{ const kl=k.toLowerCase();
     if(kl.length>3&&ql.includes(kl)) sc+=34; else if(kl.length>3&&kl.includes(ql)&&ql.length>4) sc+=16; });
+  if(DENIAL_ALIASES[item.name]) sc+=aliasScore(DENIAL_ALIASES[item.name],ql,coreOf(ql)||ql,new Set(tokB(ql)));
   if(!terms.length) return sc;
   const nameT=new Set(tok(item.name)), kwT=new Set(tok((item.keywords||[]).join(" ")));
   const wordT=new Set(tok(item.denial_wording)), sumT=new Set(tok(item.summary));
@@ -980,6 +1014,38 @@ function score(item,q){
   sc*=(0.55+0.45*(matched/terms.length));
   return sc;
 }
+/* how a new joiner describes a denial before they know its name */
+const DENIAL_ALIASES={
+ "No claim on file":["insurance never got the claim","claim not received","they did not receive the claim","no record of the claim","they say no claim on file","claim not found"],
+ "Claim paid to patient":["insurance paid the patient","check went to the patient","paid the patient instead of us","patient got the check","payment went to the patient"],
+ "Timely filing expired":["claim sent late","filed too late","we were late","past the deadline","filing limit passed","sent after the deadline"],
+ "Information requested from patient":["insurance wants information from the patient","patient needs to call the insurance","waiting on the patient","patient has to send information"],
+ "Information requested from provider":["insurance wants more information","they want medical records","send records","need more information from us"],
+ "Other payer is primary":["another insurance should pay","they say another insurance is primary","other insurance","bill the other insurance first","patient has other insurance"],
+ "Coverage terminated":["insurance not active","patient is not active","patient not active","not active on the date of service","policy ended","coverage ended","patient not covered on that date","terminated","insurance expired","no longer covered"],
+ "Duplicate claim":["billed twice","sent twice","duplicate","same claim sent again","already submitted"],
+ "Bundled / Inclusive":["included in another service","part of another procedure","bundled","inclusive","paid with another code"],
+ "Authorization absent or missing":["needed permission","no permission from insurance","no auth","authorization missing","not authorized","needed approval first"],
+ "Medically not necessary":["not medically necessary","insurance says not needed","not necessary","medical necessity"],
+ "Non-covered — provider out of network":["doctor not in network","out of network doctor","provider not in network","not in their network"],
+ "Primary EOB required":["they want the primary eob","need primary explanation of benefits","secondary wants eob","send the primary eob"],
+ "Claim applied towards deductible":["went to deductible","applied to deductible","patient has to pay deductible","deductible not met"],
+ "Referral absent or missing":["no referral","referral missing","needs a referral from pcp","referral needed"],
+ "Patient cannot be identified":["patient not found","wrong member id","insurance cannot find the patient","id not matching","member not found"],
+ "Claim in process":["still processing","in process","claim pending","not processed yet"],
+ "Maximum benefit exhausted":["benefits used up","limit reached","maximum reached","visits exhausted","benefit limit"],
+ "Procedure inconsistent with modifier":["wrong modifier","modifier problem","modifier not matching"],
+ "Charge exceeds fee schedule":["charged more than allowed","billed amount higher than allowed","over the fee schedule"],
+ "Invalid place of service":["wrong place of service","pos wrong","place of service not matching"],
+ "Provider not certified or eligible":["doctor not credentialed","provider not enrolled","not credentialed with insurance","provider not eligible"],
+ "Claim paid and applied towards offset":["took money from another claim","offset","recouped","took back the payment"],
+ "Workers Compensation":["injured at work","work injury claim","workers comp","hurt at work"],
+ "No-fault carrier / auto":["car accident claim","auto accident","auto insurance should pay"],
+ "Pre-existing condition":["pre existing condition","condition before the policy"],
+ "Experimental or investigational":["experimental","investigational","not proven treatment"],
+ "Routine services not covered":["routine not covered","annual check up not covered","preventive not covered"],
+ "Secondary payment cannot be considered without primary":["secondary needs primary","ma04","primary payment information missing"]
+};
 function search(q){ return DATA.map(d=>({d:d,s:score(d,q)})).filter(x=>x.s>8).sort((a,b)=>b.s-a.s); }
 function isConfident(r){
   if(!r.length) return false;
@@ -1154,9 +1220,12 @@ function ask(){
   // "what is a deductible" is a glossary question even when a denial scenario carries the same word
   const ql=q.toLowerCase().trim(), topTerm=bStrong&&b[0].term?b[0].term:null;
   const bare=!!topTerm&&(ql===topTerm.toLowerCase()||ql===topTerm.toLowerCase().replace(/\s*\(.*\)\s*$/,"").trim()||ql===((topTerm.match(/\(([^)]+)\)/)||[])[1]||"").toLowerCase().replace(/[^a-z0-9]/g,""));   // "ERA", "COB", "deductible" on their own
-  const defQ=!!topTerm&&!queryCodes(q).size&&(bare||(/^(what is|what are|what's|whats|define|definition of|meaning of|explain)\b/.test(ql)&&termInQuery(topTerm,q)));
+  // a number counts as a denial code only when a denial actually carries it ("ICD-10" and "13 steps" are not codes)
+  const qcodes=queryCodes(q), codeQ=qcodes.size>0&&r.length>0&&(r[0].d.codes||[]).some(c=>qcodes.has(normCode(c)))&&
+    (/\b(co|pr|oa|pi|cr|ma|m|n|b)[\s-]?\d/i.test(q)||tokB(q).length<=2||/\b(code|codes|denial|denied|deny|reason|remark|carc|rarc)\b/i.test(q));   // a number in a sentence ("13 steps") is not a code
+  const defQ=!!topTerm&&!codeQ&&(bare||(/^(what is|what are|what's|whats|define|definition of|meaning of|explain)\b/.test(ql)&&termInQuery(topTerm,q)));
   if(!r.length){ push(bStrong?basicsAnswer(q,b):renderNone(q,b)); }
-  else if(defQ||(!queryCodes(q).size&&((!isConfident(r)&&bStrong&&b[0].s>r[0].s)||(b.length&&b[0].s>=100&&b[0].s>=1.5*r[0].s)))){ const card=basicsAnswer(q,b); card.appendChild(denialLink(r[0].d)); push(card); }
+  else if(defQ||(!codeQ&&((!isConfident(r)&&bStrong&&b[0].s>r[0].s)||(b.length&&b[0].s>=100&&b[0].s>=1.5*r[0].s)))){ const card=basicsAnswer(q,b); card.appendChild(denialLink(r[0].d)); push(card); }
   else{ const card=renderAnswer(r[0].d,q,r.slice(1,5).map(x=>x.d),!isConfident(r)); if(bStrong) card.appendChild(basicsLink(b[0].l)); push(card); }
   $("#q").value=""; $("#q").focus();
 }
@@ -1223,6 +1292,7 @@ $$(".navtab").forEach(b=>b.addEventListener("click",()=>showPanel(b.dataset.pane
    tree; the cycle map and the Ask tab open lessons in place.               */
 const B_LESSONS=[]; BASICS_MODULES.forEach(m=>m.lessons.forEach(l=>{ l.mod=m; B_LESSONS.push(l); }));
 const B_BY_ID={}; B_LESSONS.forEach(l=>{ B_BY_ID[l.id]=l; });
+if(typeof BASICS_ALIASES!=="undefined") B_LESSONS.forEach(l=>{ if(BASICS_ALIASES[l.id]) l.keywords=(l.keywords||[]).concat(BASICS_ALIASES[l.id]); });
 const B_DAYS=[]; BASICS_MODULES.forEach(m=>{ if(B_DAYS.indexOf(m.day)<0) B_DAYS.push(m.day); });
 const B_STEPS=B_LESSONS.filter(l=>l.step).sort((a,b)=>a.step-b.step);
 const B_STEP_LABEL={1:"Scheduling & pre-registration",2:"Eligibility & benefits",3:"Encounter",4:"Medical coding",5:"Demo & charge entry",
@@ -1238,20 +1308,26 @@ function bResetRead(){ try{ localStorage.removeItem(B_KEY); }catch(e){} refreshC
 
 function bScore(l,q){
   const ql=q.toLowerCase().trim(); if(!ql) return {s:0,term:null};
-  const terms=tok(ql); let sc=0, hitTerm=null;
-  if(l.title.toLowerCase().includes(ql)) sc+=60;
+  const core=coreOf(ql)||ql, qtoks=new Set(tokB(ql)), terms=tokB(ql); let sc=0, hitTerm=null;
   const wre=t=>new RegExp("(^|[^a-z0-9])"+t.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+"(?![a-z0-9])"), qlc=ql.replace(/[^a-z0-9 ]/g," ");
-  (l.keywords||[]).forEach(k=>{ const kl=k.toLowerCase().replace(/[^a-z0-9 ]/g," ").trim(); if(!kl) return; if(qlc.trim()===kl) sc+=130; else if(wre(kl).test(qlc)) sc+=90; });
+  // title: "medicare" against "Medicare: Parts A, B, C and D"
+  const tl0=l.title.toLowerCase(), thead=tl0.split(":")[0].trim();
+  if(nz(tl0)===nz(core)||nz(thead)===nz(core)) sc+=110; else if(tl0.includes(ql)) sc+=60;
+  // key terms, each alternative ("Payer / Payor", "UB-04 / CMS-1450") and abbreviation on its own
   (l.terms||[]).forEach(x=>{ const tl=x[0].toLowerCase(), ab=(x[0].match(/\(([^)]+)\)/)||[])[1], abl=ab?ab.toLowerCase().replace(/[^a-z0-9]/g,""):"", base=tl.replace(/\s*\(.*\)\s*$/,"").trim();
-    if(tl===ql){sc+=120;hitTerm=hitTerm||x[0];}
-    else if(abl.length>1&&(ql===abl||wre(abl).test(qlc))){sc+=100;hitTerm=hitTerm||x[0];}   // "what is COB" hits "Coordination of benefits (COB)"
-    else if(base!==tl&&base.length>1&&(ql===base||wre(base).test(qlc))){sc+=100;hitTerm=hitTerm||x[0];}   // "what is UCR" hits "UCR (usual, customary and reasonable)"
-    else if(ql.length>2&&wre(ql).test(tl)){sc+=50;hitTerm=hitTerm||x[0];}                  // the query is a whole word inside the term
-    else if(tl.length>2&&wre(tl).test(ql)){sc+=40;hitTerm=hitTerm||x[0];} });              // the term appears, as whole words, in the query
+    const alts=base.split(/\s*\/\s*/).filter(Boolean); let got=0;
+    alts.forEach(a=>{ const an=nz(a); if(!an) return;
+      if(an===nz(core)||an===nz(ql)) got=Math.max(got,120);
+      else if(an.length>=3&&nz(core).length>=3&&(an.startsWith(nz(core))||nz(core).startsWith(an))&&Math.min(an.length,nz(core).length)/Math.max(an.length,nz(core).length)>=0.6) got=Math.max(got,80);   // "icd 10" vs "ICD-10-CM"
+      else if(a.length>2&&wre(a.replace(/[^a-z0-9 ]/g," ").trim().replace(/\s+/g,"[^a-z0-9]+")).test(ql)) got=Math.max(got,50); });   // the term appears, as whole words, in the question
+    if(abl.length>1&&(nz(core)===abl||wre(abl).test(qlc))) got=Math.max(got,100);   // "what is COB" hits "Coordination of benefits (COB)"
+    if(!got&&ql.length>2&&wre(ql).test(tl)) got=50;                                  // the whole question is a word inside the term
+    if(got){ sc+=got; hitTerm=hitTerm||x[0]; } });
+  sc+=aliasScore(l.keywords,ql,core,qtoks);
   if(!terms.length) return {s:sc,term:hitTerm};
-  const T=new Set(tok(l.title)), L=new Set(tok(l.line)), K=new Set(tok((l.terms||[]).map(x=>x[0]).join(" "))),
-    D=new Set(tok((l.terms||[]).map(x=>x[1]).join(" "))),
-    Bd=new Set(tok((l.body||[]).join(" ")+" "+(l.tips||[]).join(" ")+" "+(l.remember||"")+" "+(l.compare?[].concat.apply([],l.compare.rows).join(" "):"")));
+  const T=new Set(tokB(l.title)), L=new Set(tokB(l.line)), K=new Set(tokB((l.terms||[]).map(x=>x[0]).join(" "))),
+    D=new Set(tokB((l.terms||[]).map(x=>x[1]).join(" "))),
+    Bd=new Set(tokB((l.body||[]).join(" ")+" "+(l.tips||[]).join(" ")+" "+(l.remember||"")+" "+(l.compare?[].concat.apply([],l.compare.rows).join(" "):"")));
   let matched=0;
   terms.forEach(t=>{ let hit=false, add=0;
     if(T.has(t)){add+=12;hit=true;} if(K.has(t)){add+=10;hit=true;} if(L.has(t)){add+=5;hit=true;}
@@ -1363,7 +1439,7 @@ function bQuery(openTop){
   const q=$("#bq").value.trim(); applyFilter(q);
   if(openTop&&q){ const r=bSearch(q); if(r.length){ const id=r[0].l.id; $("#bq").value=q; const d=lesEl(id); let p=d.parentElement; while(p&&p.id!=="basicsTree"){ if(p.tagName==="DETAILS") p.open=true; p=p.parentElement; } ensureBody(d); d.open=true; d.querySelector("summary").scrollIntoView({behavior:"smooth",block:"start"}); } else toast("No topic matches that"); }
 }
-const B_CHIPS=["copay, deductible, coinsurance","coordination of benefits","ICD-10-CM code structure","modifier 26 and TC","CMS-1500 and UB-04","Medicare Part B","HIPAA minimum necessary","phonetic alphabet"];
+const B_CHIPS=["what is a copay","what is a claim","who are the 3 Ps","what is Medicare","who pays first","what is a modifier","what is an EOB","what is HIPAA","how to spell on the phone"];
 $("#bchips").innerHTML=B_CHIPS.map(e=>'<button class="chip">'+esc(e)+'</button>').join("");
 $$("#bchips .chip").forEach(b=>b.addEventListener("click",()=>{ $("#bq").value=b.textContent; bQuery(true); }));
 $("#bq").addEventListener("input",()=>bQuery(false));
@@ -1545,8 +1621,17 @@ function basicsLink(l){
   return d;
 }
 
-const EXAMPLES=["CO-97","no auth on file","timely filing","paid to patient","what is a deductible","HMO vs PPO","what is a clearinghouse","Medicare Part B"];
-$("#chips").innerHTML=EXAMPLES.map(e=>'<button class="chip">'+esc(e)+'</button>').join("");
+/* Suggested questions in plain words, so a new joiner sees the kind of thing to ask */
+const EXAMPLE_GROUPS=[
+ {t:"Start here",qs:["What is health insurance?","Who pays the doctor in the US?","What is a claim?","What is a copay?","What is a deductible?","What is Medicare?","Why was this claim denied?","What is an EOB?"]},
+ {t:"Money words",qs:["What is coinsurance?","What is the allowed amount?","What is out of pocket maximum?","What is balance billing?","What is a write off?","What is a premium?","Billed vs allowed"]},
+ {t:"Insurance types",qs:["HMO or PPO, what is the difference?","What is Medicaid?","What is TRICARE?","What is a referral?","What is prior authorization?","Who pays first when the patient has two insurances?","Is Medicare primary or secondary?"]},
+ {t:"Claims and denials",qs:["The insurance paid the patient, not us","They say they never got the claim","Insurance says another insurance should pay","Claim sent late","Insurance says the patient is not active","They say we billed twice","No permission from the insurance","What is timely filing?"]},
+ {t:"On the phone",qs:["What do I say when I call the insurance?","How do I spell on the phone?","What time can I call the insurance?","What is a call reference number?","How do I check if the patient has insurance?"]}
+];
+const EXAMPLES=EXAMPLE_GROUPS[0].qs;
+$("#chips").innerHTML=EXAMPLES.map(e=>'<button class="chip">'+esc(e)+'</button>').join("")+
+  '<details class="moreq"><summary>More questions you can ask</summary>'+EXAMPLE_GROUPS.slice(1).map(g=>'<div class="mq"><b>'+esc(g.t)+'</b><div class="chips">'+g.qs.map(e=>'<button class="chip">'+esc(e)+'</button>').join("")+'</div></div>').join("")+'</details>';
 $$("#chips .chip").forEach(b=>b.addEventListener("click",()=>{ $("#q").value=b.textContent; ask(); }));
 
 const nQ=DATA.reduce((a,d)=>a+d.questions.length,0), nA=DATA.reduce((a,d)=>a+d.actions.length,0);
