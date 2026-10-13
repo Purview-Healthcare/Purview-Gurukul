@@ -778,10 +778,10 @@ textarea.fbin{resize:vertical;min-height:110px;line-height:1.5}
     <div class="navrow">
       <div class="tabsw"><div class="tabs">
         <button class="navtab on" data-panel="askPanel">Ask</button>
-        <button class="navtab" data-panel="browsePanel">All Denials</button>
         <button class="navtab" data-panel="basicsPanel">RCM Basics</button>
-        <button class="navtab" data-panel="quizPanel">Quiz</button>
+        <button class="navtab" data-panel="browsePanel">All Denials</button>
         <button class="navtab" data-panel="sopPanel">Purview SOPs</button>
+        <button class="navtab" data-panel="quizPanel">Quiz</button>
         <button class="navtab" data-panel="certPanel">Certification</button>
       </div></div>
       <span class="navspacer"></span>
@@ -832,7 +832,7 @@ textarea.fbin{resize:vertical;min-height:110px;line-height:1.5}
       <svg class="gkmark gkmark-hero" viewBox="0 0 100 100" width="56" height="56" aria-hidden="true"><use href="#gkmark" fill="url(#gkD)" color="#fff"/></svg>
       <h1>Purview <span>Gurukul</span></h1>
     </div>
-    <p>Ask about any denial — what it means, what to ask the payer on the call, and what to do next. New to billing? Start with the RCM Basics course.</p>
+    <p>Learn in this order: RCM Basics, then denials, then your process training, then certification. Ask anything in plain words on the way: what a term means, why a claim was denied, what to do next.</p>
     <div class="tiles" id="tiles"></div>
   </section>
 
@@ -847,10 +847,10 @@ textarea.fbin{resize:vertical;min-height:110px;line-height:1.5}
     <div class="chips" id="chips"></div>
     <div id="answers"></div>
     <div class="starter" id="starter">
-      <h3>Most common denials — click to open</h3>
-      <div class="grid" id="starterGrid"></div>
-      <h3 style="margin-top:26px">RCM Basics — start here</h3>
+      <h3>RCM Basics — start here</h3>
       <div class="grid" id="starterBasics"></div>
+      <h3 style="margin-top:26px">Most common denials — click to open</h3>
+      <div class="grid" id="starterGrid"></div>
     </div>
   </div>
 
@@ -876,12 +876,12 @@ textarea.fbin{resize:vertical;min-height:110px;line-height:1.5}
     <div class="bhead"><h3 id="bcourseh">Course</h3><span><span id="bprog"></span> <button class="btn ghost sm" id="bReset">Reset progress</button> <button class="btn ghost sm" id="bCollapse">Collapse all</button></span></div>
     <div class="none" id="bnone" hidden><b>No topic matches that.</b> Try a shorter word, or clear the search.</div>
     <div class="tree" id="basicsTree"></div>
-    <details class="gloss" id="glossary"><summary>Glossary A–Z: every key term from Days 1–5 in one list <span class="cnt" id="glossCnt"></span></summary><div class="glossbody" id="glossBody"></div></details>
+    <details class="gloss" id="glossary"><summary>Glossary A–Z: every key term from the course in one list <span class="cnt" id="glossCnt"></span></summary><div class="glossbody" id="glossBody"></div></details>
     <details class="gloss review" id="reviewBox"><summary>Keep it current: figures that change <span class="cnt" id="reviewCnt"></span></summary><div class="reviewbody" id="reviewBody"></div></details>
   </div>
 
   <div id="quizPanel" class="panel">
-    <div class="band"><h2>Quiz</h2><p>Four ways to test yourself. <b>Theory</b>: the denial library and the RCM Basics course. <b>Call</b>: role play where the app plays the payer and you choose what to say. <b>Scenario</b>: cases with the numbers and the rules. <b>Everything</b>: a random mix of all three.</p></div>
+    <div class="band"><h2>Quiz</h2><p>Four ways to test yourself. <b>Theory</b>: the RCM Basics course, the denial library and the Purview SOPs. <b>Call</b>: role play where the app plays the payer and you choose what to say. <b>Scenario</b>: cases with the numbers and the rules. <b>Everything</b>: a random mix of all three.</p></div>
     <div class="qmodes qtypes">
       <button class="qtype on" data-type="theory">Theory</button>
       <button class="qtype" data-type="call">Call</button>
@@ -890,8 +890,8 @@ textarea.fbin{resize:vertical;min-height:110px;line-height:1.5}
     </div>
     <div class="qsec" data-sec="theory">
       <div class="qmodes sub">
-        <button class="qmode on" data-mode="ar">AR &amp; Denials</button>
-        <button class="qmode" data-mode="rcm">RCM Basics</button>
+        <button class="qmode on" data-mode="rcm">RCM Basics</button>
+        <button class="qmode" data-mode="ar">AR &amp; Denials</button>
         <button class="qmode" data-mode="sop">Purview SOPs</button>
       </div>
       <div class="chips" id="quizFilters"></div>
@@ -943,7 +943,7 @@ textarea.fbin{resize:vertical;min-height:110px;line-height:1.5}
   </div>
 
   <div id="certPanel" class="panel">
-    <div class="band"><h2>Certification</h2><p>Each certificate has its own assessment. Pick one below, enter your name, and clear it at 80% or more. Process training has a separate assessment for each process: choose the process from the drop-down. QA certification comes after process training: at least 5 claims audited with an overall QA score of 95% or more. Print each certificate and get it signed.</p></div>
+    <div class="band"><h2>Certification</h2><p>Four steps, in this order: RCM Basics, Denial management, Process training, then QA certification. Each training step has its own assessment; clear it at 80% or more. Process training has a separate assessment for each process: choose the process from the drop-down. QA certification comes after that process’s training: at least 5 claims audited with an overall QA score of 95% or more. Print each certificate and get it signed.</p></div>
     <div class="certwho"><label for="certName">Your name</label><input class="fbin" id="certName" placeholder="Full name for your certificates" autocomplete="name"></div>
     <div class="certtiles" id="certTiles"></div>
     <div class="certproc" id="certProcRow" hidden><label for="certProc">Process</label><select id="certProc"></select><span>Each process has its own assessment, built from its playbook.</span></div>
@@ -1280,10 +1280,10 @@ function renderNone(q,b){
   const c=document.createElement("div"); c.className="card";
   const near=(b||[]).slice(0,3);
   c.innerHTML='<div class="card-q">'+IC.q+'<span>Asked <b>'+esc(q)+'</b></span></div>'+
-    '<div class="none"><b>Nothing here matches that.</b> This covers '+DATA.length+
-    ' denial scenarios and the RCM Basics course — it can\'t answer questions about client rules, snooze windows, or your own SOPs.'+
-    '<br><br>Try the denial code on its own (<code>CO-97</code>), a few words from the payer\'s wording '+
-    '(<code>not eligible</code>, <code>timely</code>, <code>no auth</code>), or a term from the course (<code>deductible</code>, <code>COB</code>).</div>'+
+    '<div class="none"><b>Nothing here matches that.</b> This covers the RCM Basics course, '+DATA.length+
+    ' denial scenarios'+(sopClients().length?' and the '+esc(listJoin(sopClients().map(x=>x.name)))+' process playbook'+(sopClients().length>1?'s':''):'')+'. It cannot look up your own claims or accounts.'+
+    '<br><br>Try a term from the course (<code>deductible</code>, <code>COB</code>), the denial code on its own (<code>CO-97</code>), '+
+    'or a few words from the payer\'s wording (<code>not eligible</code>, <code>timely</code>, <code>no auth</code>).</div>'+
     (near.length?'<div class="alts"><div class="lbl">'+IC.fam+'Closest lessons in RCM Basics</div>'+near.map(a=>'<button class="alt" data-go="'+a.l.id+'"><span>'+esc(a.l.title)+'</span><em>'+esc(a.l.mod.short)+'</em>'+IC.arw+'</button>').join("")+'</div>':'');
   c.querySelectorAll("[data-go]").forEach(x=>x.addEventListener("click",()=>openLesson(x.dataset.go)));
   return c;
@@ -1743,10 +1743,10 @@ buildSopTree();
 try{ localStorage.removeItem("gk_sop_key"); sessionStorage.removeItem("gk_sop_key"); }catch(e){}
 /* ── Certification ──────────────────────────────────────────────────────────
    One certificate per area, each with its own assessment and printout:
-     Denial management  20 questions: library theory across every category, call vignettes, one payer call
-     RCM Basics         20 questions across every module of the course, 4 of them payment scenarios
-     Process training   one per client playbook (picked from a drop-down), questions spread over its modules
-     QA certification   one per process: at least 5 audited claims at an overall 95% or more, after that process's training
+     1 RCM Basics         20 questions across every module of the course, 4 of them payment scenarios
+     2 Denial management  20 questions: library theory across every category, call vignettes, one payer call
+     3 Process training   one per client playbook (picked from a drop-down), questions spread over its modules
+     4 QA certification   one per process: at least 5 audited claims at an overall 95% or more, after that process's training
    Pass mark 80%. No backend: records live in this browser ("gk_cert") and the signed printout is the record. */
 const CERT_PASS=80, CERT_Q=20, CERT_SCEN=4, QA_MIN_CLAIMS=5, QA_MIN_SCORE=95;
 function certLoad(){
@@ -1807,12 +1807,12 @@ function buildProcCert(c){
   return shuffle(spreadPick(mods.map(m=>bank.filter(x=>x.t===m.short)),procQCount(c))).map(authored);
 }
 const CERT_DEFS=[
-  {k:"denials",kind:"train",title:"Denial management",label:"denial management",idp:"D",build:buildDenialCert,
-   about:()=>CERT_Q+" questions from the denial library: what each denial means, what to ask the payer, the right next step, and one short payer call.",
-   covers:()=>"what each denial means, the questions to ask the payer and the steps that resolve it, across "+DATA.length+" denials in "+fams.length+" categories, including a payer call"},
   {k:"rcm",kind:"train",title:"RCM Basics",label:"RCM Basics",idp:"R",build:buildRcmCert,
    about:()=>CERT_Q+" questions from the RCM Basics course, Day 1 to Day "+B_DAYS.length+", including "+CERT_SCEN+" payment scenarios.",
-   covers:()=>"the RCM Basics course, Day 1 to Day "+B_DAYS.length+": healthcare and insurance basics, the revenue cycle, US payers, coverage terms and coordination of benefits, with payment scenarios"}
+   covers:()=>"the RCM Basics course, Day 1 to Day "+B_DAYS.length+": healthcare and insurance basics, the revenue cycle, US payers, coverage terms and coordination of benefits, with payment scenarios"},
+  {k:"denials",kind:"train",title:"Denial management",label:"denial management",idp:"D",build:buildDenialCert,
+   about:()=>CERT_Q+" questions from the denial library: what each denial means, what to ask the payer, the right next step, and one short payer call.",
+   covers:()=>"what each denial means, the questions to ask the payer and the steps that resolve it, across "+DATA.length+" denials in "+fams.length+" categories, including a payer call"}
 ];
 sopClients().forEach(c=>{
   const mods=listJoin(c.modules.map(m=>m.short)), tag=c.short.toUpperCase().replace(/[^A-Z0-9]+/g,"");
@@ -1822,8 +1822,8 @@ sopClients().forEach(c=>{
   CERT_DEFS.push({k:"qa:"+c.id,kind:"qa",client:c,title:"QA certification: "+c.name,idp:"Q-"+tag});
 });
 const CERT_BY={}; CERT_DEFS.forEach(d=>{ CERT_BY[d.k]=d; });
-const CERT_TILES=[["denials","Training","Denial management"],["rcm","Training","RCM Basics"],["proc","Training · per process","Process training"],["qa","Quality · per process","QA certification"]];
-let CERT_TILE="denials", CERT_PROC=(sopClients()[0]||{}).id||"";
+const CERT_TILES=[["rcm","Step 1 · Training","RCM Basics"],["denials","Step 2 · Training","Denial management"],["proc","Step 3 · Each process","Process training"],["qa","Step 4 · Each process","QA certification"]];
+let CERT_TILE="rcm", CERT_PROC=(sopClients()[0]||{}).id||"";
 function certKey(tile){ return tile==="proc"||tile==="qa"?tile+":"+CERT_PROC:tile; }
 function certCurrent(){ return CERT_BY[certKey(CERT_TILE)]||null; }
 function qaStats(c,pid){ const q=c.qa[pid]||{}, rows=q.rows||[], n=rows.length; return {q:q,rows:rows,n:n,avg:n?rows.reduce((a,r)=>a+Number(r.score),0)/n:0}; }
@@ -2020,11 +2020,12 @@ $$("#chips .chip").forEach(b=>b.addEventListener("click",()=>{ $("#q").value=b.t
 const nQ=DATA.reduce((a,d)=>a+d.questions.length,0), nA=DATA.reduce((a,d)=>a+d.actions.length,0);
 const fams=[]; DATA.forEach(d=>{ if(fams.indexOf(d.family)<0) fams.push(d.family); }); fams.sort();
 $("#tiles").innerHTML=
+  '<div class="tile"><b>'+B_LESSONS.length+'</b><span>RCM Lessons</span></div>'+
   '<div class="tile"><b>'+DATA.length+'</b><span>Denial Scenarios</span></div>'+
   '<div class="tile"><b>'+nQ+'</b><span>Payer Questions</span></div>'+
   '<div class="tile"><b>'+nA+'</b><span>Action Steps</span></div>'+
   '<div class="tile"><b>'+fams.length+'</b><span>Categories</span></div>'+
-  '<div class="tile"><b>'+B_LESSONS.length+'</b><span>RCM Lessons</span></div>';
+  (S_LESSONS.length?'<div class="tile"><b>'+S_LESSONS.length+'</b><span>Process Topics</span></div>':'');
 $("#bandSub").textContent=DATA.length+" scenarios across "+fams.length+" categories — click any to open the full answer";
 
 // the denials AR teams hit most often, as a first-run shortcut
@@ -2041,7 +2042,8 @@ $("#starterGrid").innerHTML=COMMON.map(n=>{
 $$("#starterGrid .hcard").forEach(b=>b.addEventListener("click",()=>{
   const t=DATA.find(x=>x.name===b.dataset.name); if(t) show(t);
 }));
-const STARTER_BASICS=["rcm-overview","three-ps","cost-sharing","cob","managed-care","icd10","adjudication","medicare"];
+const STARTER_BASICS=["rcm-overview","three-ps","cost-sharing","cob","managed-care","icd10","adjudication","medicare"]
+  .filter(id=>B_BY_ID[id]).sort((a,b)=>{ const x=B_BY_ID[a], y=B_BY_ID[b]; return (B_DAYS.indexOf(x.mod.day)-B_DAYS.indexOf(y.mod.day))||(B_LESSONS.indexOf(x)-B_LESSONS.indexOf(y)); });   // in course order, Day 1 first
 $("#starterBasics").innerHTML=STARTER_BASICS.map(id=>{ const l=B_BY_ID[id]; if(!l) return "";
   const first=String(l.line).replace(/\*\*/g,"").slice(0,96);
   return '<button class="hcard" data-go="'+id+'"><div class="hc-top"><span class="hc-code">'+esc(l.mod.day)+'</span><b>'+esc(l.title)+'</b></div><p>'+esc(first)+(first.length>=96?"…":"")+'</p></button>';
@@ -2324,7 +2326,7 @@ function sopTopics(){ return sopClients().reduce((a,c)=>a.concat(c.modules.map(m
 function buildRoundSOP(filter){ const pool=(typeof SOP_QUIZ!=="undefined"?SOP_QUIZ:[]).filter(x=>filter==="All"||x.t===filter); return shuffle(pool).slice(0,10).map(authored); }
 function buildRound(mode,filter){ return mode==="rcm"?buildRoundRCM(filter):mode==="sop"?buildRoundSOP(filter):buildRoundAR(filter); }
 
-let QZ={mode:"ar",filter:"All",qs:[],i:0,score:0,answered:false,missed:[],picks:[]};
+let QZ={mode:"rcm",filter:"All",qs:[],i:0,score:0,answered:false,missed:[],picks:[]};
 
 function startQuiz(mode,filter){
   QZ={mode:mode,filter:filter,qs:buildRound(mode,filter),i:0,score:0,answered:false,missed:[],picks:[]};
@@ -2402,7 +2404,7 @@ function renderResult(){
   $("#backAsk").addEventListener("click",()=>showPanel("askPanel"));
 }
 $$(".qmode").forEach(b=>b.addEventListener("click",()=>startQuizUI(b.dataset.mode,"All")));
-startQuizUI("ar","All");
+startQuizUI("rcm","All");
 
 /* ── scenario quiz tab: generated cases from scenarios.js, rendered with the same widget as the day quizzes ── */
 let SCEN_FILTER="All";
