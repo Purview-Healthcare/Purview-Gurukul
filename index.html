@@ -324,6 +324,7 @@ footer b{color:var(--ink-2)}
 .bsearch #bq::placeholder{color:var(--ink-3)}
 #bclear{margin:5px 8px 5px 0;width:36px;height:36px;flex:0 0 auto;border:0;border-radius:999px;background:#e8f2f1;color:var(--ink-2);cursor:pointer;display:grid;place-items:center}
 #bclear:hover{background:var(--navy);color:#fff}
+#bclear[hidden]{display:none}
 .bhead{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:26px 0 12px}
 .bhead h3{font-size:12px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);margin:0}
 .bhead span{font-size:12.5px;color:var(--ink-3);font-weight:600;font-variant-numeric:tabular-nums}
@@ -479,10 +480,31 @@ details.day.sop>summary{background:linear-gradient(110deg,var(--navy),#1f6fa3)}
 .sopintro{margin:2px 6px 6px;font-size:14px;color:var(--ink-2);line-height:1.55}
 .tag.client{color:#fff;background:var(--navy)}
 /* certification */
-.certgrid{display:grid;grid-template-columns:1fr;gap:16px}
+.certwho{display:flex;align-items:center;gap:8px 14px;flex-wrap:wrap;background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh);padding:14px 18px;margin-bottom:14px}
+.certwho label{font-family:var(--font-display);font-weight:700;font-size:14.5px;color:var(--ink)}
+.certwho .fbin{flex:1 1 240px;min-width:0;margin:0}
+.certtiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:14px}
+.certtile{display:flex;flex-direction:column;align-items:flex-start;gap:3px;min-width:0;text-align:left;background:#fff;border:1.5px solid var(--line-2);border-radius:var(--r);padding:12px 14px;font:inherit;color:var(--ink);cursor:pointer;transition:.14s}
+.certtile:hover{border-color:var(--blue)}
+.certtile .ctk{font-size:10.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+.certtile b{font-family:var(--font-display);font-size:15px;line-height:1.3}
+.certtile .cts{display:flex;align-items:center;gap:5px;font-size:12.5px;line-height:1.35;color:var(--ink-3);margin-top:2px}
+.certtile .cts.ok{color:var(--green);font-weight:700}
+.certtile .cts.no{color:#b42318}
+.certtile .cts svg{flex:0 0 auto}
+.certtile.on{background:var(--navy);border-color:var(--navy);color:#fff}
+.certtile.on .ctk{color:#a9c7cf}
+.certtile.on .cts{color:#dbe9ea}
+.certtile.on .cts.ok{color:#8fe3bd}
+.certtile.on .cts.no{color:#ffb4ab}
+.certproc{display:flex;align-items:center;gap:8px 12px;flex-wrap:wrap;margin:0 0 14px}
+.certproc[hidden]{display:none}
+.certproc label{font-family:var(--font-display);font-weight:700;font-size:14.5px}
+.certproc select{flex:0 1 300px;min-width:0;border:1.5px solid var(--line-2);border-radius:8px;padding:9px 12px;font:inherit;font-size:14.5px;color:var(--ink);background:#fff}
+.certproc span{font-size:13px;color:var(--ink-3)}
 .certcard{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh);padding:18px 20px}
+.certpane[hidden]{display:none}
 .certh{display:flex;align-items:center;gap:12px;margin-bottom:8px;flex-wrap:wrap}
-.certh .step{width:28px;height:28px;border-radius:50%;background:var(--navy);color:#fff;display:grid;place-items:center;font-family:var(--font-display);font-weight:800;font-size:13px;flex:0 0 auto}
 .certh h3{margin:0;font-size:17px;flex:1}
 .certstat{font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:999px;background:#e8f2f1;color:var(--ink-3)}
 .certstat.ok{background:var(--green);color:#fff}.certstat.no{background:#fde8e8;color:#b42318}
@@ -494,16 +516,19 @@ details.day.sop>summary{background:linear-gradient(110deg,var(--navy),#1f6fa3)}
 .certrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:10px}
 .certrow .fbin{flex:1 1 200px;min-width:0;margin:0}
 .certrow .btn{display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
+.certrow .btn[hidden]{display:none}
+.certrow .btn:disabled{opacity:.5;cursor:not-allowed}
 .qalog{border:1px dashed var(--line-2);border-radius:8px;padding:12px 14px;margin-top:6px}
 .qahead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px;font-size:13.5px;color:var(--ink-2);flex-wrap:wrap}
 .qahead b{font-family:var(--font-display);color:var(--ink)}
-#qaTable{width:100%;border-collapse:collapse;font-size:13.5px}
-#qaTable th{text-align:left;font-family:var(--font-display);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);padding:6px 8px 6px 0;border-bottom:2px solid var(--line)}
-#qaTable td{padding:7px 8px 7px 0;border-bottom:1px solid #e8f2f1}
-#qaTable td.muted{color:var(--ink-3)}
-#qaTable .xrow{background:transparent;border:0;color:var(--ink-3);font-size:18px;cursor:pointer;line-height:1}
+.qatable{width:100%;border-collapse:collapse;font-size:13.5px}
+.qatable th{text-align:left;font-family:var(--font-display);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);padding:6px 8px 6px 0;border-bottom:2px solid var(--line)}
+.qatable td{padding:7px 8px 7px 0;border-bottom:1px solid #e8f2f1}
+.qatable td.muted{color:var(--ink-3)}
+.qatable .xrow{background:transparent;border:0;color:var(--ink-3);font-size:18px;cursor:pointer;line-height:1}
 .certnote{margin:14px 0 0;font-size:13px;color:var(--ink-3);line-height:1.5}
-#certTArea .dq{margin-top:14px}
+.carea .dq{margin-top:14px}
+@media(max-width:700px){.certtiles{grid-template-columns:1fr 1fr;gap:10px}.certtile{padding:11px 12px}.certcard{padding:16px 15px}}
 .sopnote{display:flex;gap:12px;align-items:flex-start;background:var(--orange-soft);border:1px solid var(--orange-line);border-radius:var(--r);padding:14px 18px;margin-bottom:18px;color:var(--orange-deep);font-size:14px;line-height:1.55}
 .sopnote svg{flex:0 0 auto;margin-top:2px}
 .sopnote b{font-family:var(--font-display)}
@@ -585,6 +610,7 @@ textarea.fbin{resize:vertical;min-height:110px;line-height:1.5}
   #printSheet .certsheet{border:6px double #1f3b57;padding:46px 40px;text-align:center;font-family:Georgia,"Times New Roman",serif;page-break-inside:avoid}
   #printSheet .certbrand{font-size:10.5pt;letter-spacing:.22em;text-transform:uppercase;color:#1f3b57}
   #printSheet .certsheet h1{font-size:27pt;margin:14px 0 2px;color:#0b8f84}
+  #printSheet .certarea{font-size:13pt;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#1f3b57;margin:2px 0 0}
   #printSheet .certof{font-size:12pt;color:#444;margin:16px 0 4px}
   #printSheet .certname{font-size:23pt;font-weight:700;margin:0 0 12px;border-bottom:1px solid #999;display:inline-block;padding:0 26px 4px}
   #printSheet .certsheet p{font-size:12pt;line-height:1.6;max-width:620px;margin:6px auto}
@@ -917,26 +943,11 @@ textarea.fbin{resize:vertical;min-height:110px;line-height:1.5}
   </div>
 
   <div id="certPanel" class="panel">
-    <div class="band"><h2>Certification</h2><p>Two certificates close the ABW training. The <b>training certificate</b> is earned by clearing the final assessment. The <b>quality certificate</b> is earned in production: at least five claims audited by QA with an overall score of 95% or more. Both print from this page and the trainer or QA reviewer signs the printout.</p></div>
-    <div class="certgrid">
-      <div class="certcard" id="certTraining">
-        <div class="certh"><span class="step">1</span><h3>Training certification</h3><span class="certstat" id="certTStat">Not started</span></div>
-        <p>Clear the <b>final assessment</b>: 30 questions, one at a time, drawn from the ABW project playbook, the RCM Basics course and the denial library. Pass mark <b>80%</b>. A new set every attempt, and you can retry.</p>
-        <ul class="certreq" id="certTReq"></ul>
-        <div class="certrow"><input class="fbin" id="certName" placeholder="Your full name (goes on the certificate)" aria-label="Your full name"><button class="btn" id="certTStart">Start the final assessment</button><button class="btn ghost" id="certTPrint" hidden>Print certificate</button></div>
-        <div id="certTArea"></div>
-      </div>
-      <div class="certcard" id="certQuality">
-        <div class="certh"><span class="step">2</span><h3>Quality certification</h3><span class="certstat" id="certQStat">Not started</span></div>
-        <p>Work at least <b>5 claims</b> in production. The QA reviewer audits them and records each score here. The certificate is issued when at least 5 claims are audited, the overall QA score is <b>95% or more</b>, and the training certificate has been cleared.</p>
-        <div class="qalog">
-          <div class="qahead"><b>QA record</b><span id="certQSum"></span></div>
-          <table id="qaTable"><thead><tr><th>Claim reference</th><th>Date audited</th><th>QA score</th><th></th></tr></thead><tbody></tbody></table>
-          <div class="certrow"><input class="fbin" id="qaRef" placeholder="Claim reference (no patient details)" aria-label="Claim reference"><input class="fbin" type="date" id="qaDate" aria-label="Date audited"><input class="fbin" type="number" id="qaScore" min="0" max="100" step="0.5" placeholder="Score %" aria-label="QA score"><button class="btn ghost" id="qaAdd">Add claim</button></div>
-          <div class="certrow"><input class="fbin" id="qaReviewer" placeholder="QA reviewer name" aria-label="QA reviewer name"><button class="btn ghost" id="qaPrintLog">Print QA record</button><button class="btn ghost" id="certQPrint" hidden>Print certificate</button></div>
-        </div>
-      </div>
-    </div>
+    <div class="band"><h2>Certification</h2><p>Each certificate has its own assessment. Pick one below, enter your name, and clear it at 80% or more. Process training has a separate assessment for each process: choose the process from the drop-down. QA certification comes after process training: at least 5 claims audited with an overall QA score of 95% or more. Print each certificate and get it signed.</p></div>
+    <div class="certwho"><label for="certName">Your name</label><input class="fbin" id="certName" placeholder="Full name for your certificates" autocomplete="name"></div>
+    <div class="certtiles" id="certTiles"></div>
+    <div class="certproc" id="certProcRow" hidden><label for="certProc">Process</label><select id="certProc"></select><span>Each process has its own assessment, built from its playbook.</span></div>
+    <div id="certPanes"></div>
     <p class="certnote">Records live on this device only; there is no backend. The signed printout is the record of certification, so keep it with the trainee’s file. Reset: clear the browser data for this site.</p>
   </div>
 </div>
@@ -1323,6 +1334,7 @@ function fbContext(){
   if(panel==="askPanel"){ const h=$("#answers .card .hit h2"); if(h) where+=" — "+h.textContent.trim(); }
   if(panel==="basicsPanel"&&typeof B_CUR!=="undefined"&&B_CUR&&B_BY_ID[B_CUR]) where+=" — "+B_BY_ID[B_CUR].mod.day+" / "+B_BY_ID[B_CUR].title;
   if(panel==="sopPanel"&&typeof S_CUR!=="undefined"&&S_CUR&&S_BY_ID[S_CUR]) where+=" — "+S_BY_ID[S_CUR].mod.client.short+" / "+S_BY_ID[S_CUR].title;
+  if(panel==="certPanel"&&typeof certCurrent==="function"){ const d=certCurrent(); if(d) where+=" — "+d.title; }
   if(panel==="quizPanel"&&typeof Q_TYPE!=="undefined") where+=" — "+({theory:"Theory",call:"Call",scenario:"Scenario",all:"Everything"}[Q_TYPE]||Q_TYPE)+
     (Q_TYPE==="theory"?" / "+(QZ.mode==="rcm"?"RCM Basics":QZ.mode==="sop"?"Purview SOPs":"AR & Denials")+" / "+QZ.filter:Q_TYPE==="call"?" / "+CALL_FILTER:Q_TYPE==="scenario"?" / "+SCEN_FILTER:"");
   return where;
@@ -1570,7 +1582,7 @@ function mountQuiz(area,makeQs,onClose,label,onDone){
       (missed.length?'<div class="misslist"><h4>Review these ('+missed.length+')</h4>'+missed.map(q=>'<div class="missrow">'+q.q+'<b class="ans">'+esc(q.options[q.correct])+'</b></div>').join("")+'</div>':'')+
       printRow()+'<div class="qnav"><button class="btn dqagain">New set of questions</button><button class="btn ghost dqclose">Close quiz</button></div></div>';
     wirePrintRow(area,"Quiz: "+label,picks,score);
-    area.querySelector(".dqagain").addEventListener("click",()=>mountQuiz(area,makeQs,onClose,label));
+    area.querySelector(".dqagain").addEventListener("click",()=>mountQuiz(area,makeQs,onClose,label,onDone));
     area.querySelector(".dqclose").addEventListener("click",()=>{ area.innerHTML=""; if(onClose) onClose(); });
   }
   render(); area.scrollIntoView({behavior:"smooth",block:"start"});
@@ -1679,7 +1691,7 @@ renderSops();
 
 /* ── Purview SOP playbooks: the course engine, second instance ─────────────
    Clients → modules → topics in #sopTree, progress in its own storage key, a
-   short assessment after each module and a final one per client. */
+   short assessment after each module and a practice round per client. */
 function openAny(id){ if(S_BY_ID[id]) openSop(id); else openLesson(id); }
 let S_CUR=null; const S_KEY="gk_sop_read";
 function sRead(){ try{ return new Set(JSON.parse(localStorage.getItem(S_KEY)||"[]")); }catch(e){ return new Set(); } }
@@ -1713,9 +1725,10 @@ function buildSopTree(){
       '<div class="daybody"><p class="sopintro">'+esc(c.blurb)+'</p>'+c.modules.map(m=>'<details class="mod" data-mod="'+m.id+'"><summary>'+IC.chev+'<span class="mtitle"><b>'+esc(m.title)+'</b><span class="blurb">'+esc(m.blurb)+'</span></span><span class="cnt">0/'+m.lessons.length+'</span></summary>'+
         '<div class="modbody">'+m.lessons.map(l=>'<details class="les" data-id="'+l.id+'"><summary><span class="tick" role="button" tabindex="0" title="Mark read / unread">'+IC.check+'</span><span class="ltitle">'+esc(l.title)+'</span><em class="hitterm"></em>'+IC.chev+'</summary></details>').join("")+
         '<div class="dayquiz" data-smod="'+esc(m.short)+'"><div class="dq-head">'+IC.spark+'<div><b>Assessment: '+esc(m.title)+'</b><span>'+sopQuizSize(sopPool(m.short))+' questions from this module, a new set every time. Print or copy the results at the end.</span></div></div><button class="btn" data-start="1">Start the assessment</button><div class="dqarea"></div></div></div></details>').join("")+
-      '<div class="dayquiz" data-sclient="'+esc(c.id)+'"><div class="dq-head">'+IC.spark+'<div><b>'+esc(c.short)+' final assessment</b><span>15 questions across every module of this playbook. Print the results for your trainer.</span></div></div><button class="btn" data-start="1">Start the final assessment</button><div class="dqarea"></div></div></div></details>'; }).join("");
+      '<div class="dayquiz" data-sclient="'+esc(c.id)+'"><div class="dq-head">'+IC.spark+'<div><b>'+esc(c.short)+' practice round: every module</b><span>15 questions across the whole playbook, a new set every time. The certificate for this process is earned in the Certification tab.</span></div></div><button class="btn" data-start="1">Start the practice round</button> <button class="btn ghost" data-cert="'+esc(c.id)+'">Go to certification</button><div class="dqarea"></div></div></div></details>'; }).join("");
   $$("#sopTree details.les").forEach(d=>d.addEventListener("toggle",()=>{ if(d.open){ ensureBody(d); S_CUR=d.dataset.id; refreshSopCounts(); } }));
   $$("#sopTree details.les > summary .tick").forEach(t=>t.addEventListener("click",e=>{ e.preventDefault(); e.stopPropagation(); sToggleRead(t.closest("details").dataset.id); }));
+  $$("#sopTree [data-cert]").forEach(b=>b.addEventListener("click",()=>certOpen("proc",b.dataset.cert)));
   $$("#sopTree .dayquiz").forEach(box=>box.querySelector("[data-start]").addEventListener("click",()=>{ box.querySelector("[data-start]").hidden=true;
     const area=box.querySelector(".dqarea"), done=()=>{ box.querySelector("[data-start]").hidden=false; };
     if(box.dataset.smod) mountQuiz(area,()=>{ const pool=sopPool(box.dataset.smod); return shuffle(pool).slice(0,sopQuizSize(pool)).map(authored); },done,"the "+box.dataset.smod+" module");
@@ -1724,56 +1737,168 @@ function buildSopTree(){
 }
 $("#sReset").addEventListener("click",sResetRead);
 $("#sCollapse").addEventListener("click",()=>$$("#sopTree details").forEach(d=>d.open=false));
-$("#sopSub").textContent=S_LESSONS.length?S_LESSONS.length+" topics in "+sopClients().reduce((a,c)=>a+c.modules.length,0)+" modules for "+sopClients().map(c=>c.name).join(", ")+" — open a module, open a topic, tick it when read; a short assessment waits after each module and a final one at the end. Names, contacts and account numbers stay in the client manuals, not on this page.":"Client playbooks and general Purview procedures.";
+$("#sopSub").textContent=S_LESSONS.length?S_LESSONS.length+" topics in "+sopClients().reduce((a,c)=>a+c.modules.length,0)+" modules for "+sopClients().map(c=>c.name).join(", ")+" — open a module, open a topic, tick it when read; a short assessment waits after each module and a practice round at the end. The certificate for each process is in the Certification tab. Names, contacts and account numbers stay in the client manuals, not on this page.":"Client playbooks and general Purview procedures.";
 buildSopTree();
 /* the playbook was briefly behind a passcode; clear any key a browser kept from then */
 try{ localStorage.removeItem("gk_sop_key"); sessionStorage.removeItem("gk_sop_key"); }catch(e){}
-/* ── Certification: training (final assessment) and quality (QA record) ─────
-   Rules: final assessment 30 questions (12 ABW playbook, 9 RCM Basics, 9 denials), pass at 80%;
-   quality needs at least 5 audited claims with an overall QA score of 95% or more, after training. */
-const CERT_PASS=80, CERT_N={sop:12,rcm:9,ar:9}, QA_MIN_CLAIMS=5, QA_MIN_SCORE=95;
-function certLoad(){ try{ return JSON.parse(localStorage.getItem("gk_cert")||"{}"); }catch(e){ return {}; } }
+/* ── Certification ──────────────────────────────────────────────────────────
+   One certificate per area, each with its own assessment and printout:
+     Denial management  20 questions: library theory across every category, call vignettes, one payer call
+     RCM Basics         20 questions across every module of the course, 4 of them payment scenarios
+     Process training   one per client playbook (picked from a drop-down), questions spread over its modules
+     QA certification   one per process: at least 5 audited claims at an overall 95% or more, after that process's training
+   Pass mark 80%. No backend: records live in this browser ("gk_cert") and the signed printout is the record. */
+const CERT_PASS=80, CERT_Q=20, CERT_SCEN=4, QA_MIN_CLAIMS=5, QA_MIN_SCORE=95;
+function certLoad(){
+  let c; try{ c=JSON.parse(localStorage.getItem("gk_cert")||"{}")||{}; }catch(e){ c={}; }
+  if(c.v!==2){
+    // The first layout had one combined final assessment and one QA log. The QA rows were ABW work, so they
+    // move to the first process; the old combined result is kept on file but no longer counts.
+    const old=c, first=(sopClients()[0]||{}).id;
+    c={v:2,name:old.name||"",train:{},last:{},qa:{}};
+    if(old.qa&&old.qa.rows&&first) c.qa[first]=old.qa;
+    if(old.training||old.lastAttempt) c.legacy={training:old.training||null,lastAttempt:old.lastAttempt||null};
+  }
+  c.train=c.train||{}; c.last=c.last||{}; c.qa=c.qa||{};
+  return c;
+}
 function certSave(c){ try{ localStorage.setItem("gk_cert",JSON.stringify(c)); }catch(e){} }
 function certDate(){ return new Date().toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"}); }
 function certId(p){ return "GK-"+p+"-"+Date.now().toString(36).toUpperCase().slice(-6); }
-function qaStats(c){ const rows=(c.qa&&c.qa.rows)||[]; const n=rows.length; const avg=n?rows.reduce((a,r)=>a+Number(r.score),0)/n:0; return {rows:rows,n:n,avg:avg}; }
+function listJoin(a){ return a.length<2?a.join(""):a.slice(0,-1).join(", ")+" and "+a[a.length-1]; }
+function capFirst(s){ return s.charAt(0).toUpperCase()+s.slice(1); }
+/* deal in turns: every group gives one item before any group gives a second */
+function spreadPick(groups,n){
+  const gs=groups.map(g=>shuffle(g)).filter(g=>g.length), out=[];
+  while(out.length<n&&gs.some(g=>g.length)) gs.forEach(g=>{ if(out.length<n&&g.length) out.push(g.shift()); });
+  return out;
+}
+/* Denial management: one payer call kept in order, four call vignettes, and theory spread over every category */
+function certCall(){
+  for(let t=0;t<6;t++){
+    if(CALLS.length&&Math.random()<0.5){ const s=pick(CALLS); return {qs:callTurns(s),dn:s.dn||""}; }
+    const d=pick(DATA), qs=denialCall(d); if(qs.length) return {qs:qs,dn:d.name};
+  }
+  return {qs:[],dn:""};
+}
+function buildDenialCert(){
+  const call=certCall();
+  const vign=spreadPick(shuffle(fams).map(f=>AR_SCEN.filter(s=>s.fam===f&&s.dn!==call.dn)),4).map(authored);
+  const need=Math.max(0,CERT_Q-call.qs.length-vign.length), theory=[];
+  const order=spreadPick(shuffle(fams).sort((a,b)=>famDenials(b).length-famDenials(a).length).map(f=>famDenials(f).filter(d=>d.name!==call.dn)),DATA.length);
+  for(const d of order){
+    if(theory.length>=need) break;
+    for(const g of shuffle(GEN_ORDER)){ const x=genItem(g,d); if(x&&!theory.some(y=>y.q===x.q)){ theory.push(x); break; } }
+  }
+  return flattenBlocks(theory.concat(vign).map(x=>[x]).concat(call.qs.length?[call.qs]:[]));
+}
+/* RCM Basics: every module of the course (the biggest modules take the extra questions) plus payment scenarios */
+function buildRcmCert(){
+  const scen=shuffle(SCEN_FAMS).sort((a,b)=>(b==="Payment math")-(a==="Payment math")).slice(0,CERT_SCEN).map(f=>buildScenarioRound(f,1)[0]).filter(Boolean);   // payment math always, three other families at random
+  const mods=shuffle(BASICS_MODULES).sort((a,b)=>b.lessons.length-a.lessons.length);
+  const theory=spreadPick(mods.map(m=>RCM_BANK.filter(x=>x.t===m.short)),CERT_Q-scen.length).map(authored);
+  return shuffle(theory.concat(scen));
+}
+/* Process training: the client's own question bank, spread over its modules */
+function procBank(c){ return sopBank().filter(x=>x.c?x.c===c.id:c.modules.some(m=>m.short===x.t)); }
+function procQCount(c){ return Math.min(CERT_Q,procBank(c).length); }
+function buildProcCert(c){
+  const bank=procBank(c), mods=shuffle(c.modules).sort((a,b)=>b.lessons.length-a.lessons.length);
+  return shuffle(spreadPick(mods.map(m=>bank.filter(x=>x.t===m.short)),procQCount(c))).map(authored);
+}
+const CERT_DEFS=[
+  {k:"denials",kind:"train",title:"Denial management",label:"denial management",idp:"D",build:buildDenialCert,
+   about:()=>CERT_Q+" questions from the denial library: what each denial means, what to ask the payer, the right next step, and one short payer call.",
+   covers:()=>"what each denial means, the questions to ask the payer and the steps that resolve it, across "+DATA.length+" denials in "+fams.length+" categories, including a payer call"},
+  {k:"rcm",kind:"train",title:"RCM Basics",label:"RCM Basics",idp:"R",build:buildRcmCert,
+   about:()=>CERT_Q+" questions from the RCM Basics course, Day 1 to Day "+B_DAYS.length+", including "+CERT_SCEN+" payment scenarios.",
+   covers:()=>"the RCM Basics course, Day 1 to Day "+B_DAYS.length+": healthcare and insurance basics, the revenue cycle, US payers, coverage terms and coordination of benefits, with payment scenarios"}
+];
+sopClients().forEach(c=>{
+  const mods=listJoin(c.modules.map(m=>m.short)), tag=c.short.toUpperCase().replace(/[^A-Z0-9]+/g,"");
+  CERT_DEFS.push({k:"proc:"+c.id,kind:"train",client:c,title:"Process training: "+c.name,label:c.name+" process",idp:"P-"+tag,build:()=>buildProcCert(c),
+    about:()=>procQCount(c)?procQCount(c)+" questions from the "+c.name+" playbook, spread across its "+c.modules.length+" modules: "+mods+".":"This process has no assessment questions yet.",
+    covers:()=>"the "+c.name+" playbook: "+mods});
+  CERT_DEFS.push({k:"qa:"+c.id,kind:"qa",client:c,title:"QA certification: "+c.name,idp:"Q-"+tag});
+});
+const CERT_BY={}; CERT_DEFS.forEach(d=>{ CERT_BY[d.k]=d; });
+const CERT_TILES=[["denials","Training","Denial management"],["rcm","Training","RCM Basics"],["proc","Training · per process","Process training"],["qa","Quality · per process","QA certification"]];
+let CERT_TILE="denials", CERT_PROC=(sopClients()[0]||{}).id||"";
+function certKey(tile){ return tile==="proc"||tile==="qa"?tile+":"+CERT_PROC:tile; }
+function certCurrent(){ return CERT_BY[certKey(CERT_TILE)]||null; }
+function qaStats(c,pid){ const q=c.qa[pid]||{}, rows=q.rows||[], n=rows.length; return {q:q,rows:rows,n:n,avg:n?rows.reduce((a,r)=>a+Number(r.score),0)/n:0}; }
+function certStatus(c,d){
+  if(d.kind==="qa"){
+    const s=qaStats(c,d.client.id), trained=!!c.train["proc:"+d.client.id], more=QA_MIN_CLAIMS-s.n, avg=s.avg.toFixed(1)+"%";
+    let cls="", long, short;
+    if(trained&&more<=0&&s.avg>=QA_MIN_SCORE){ cls="ok"; long="Cleared · "+avg+" over "+s.n+" claims"; short="Cleared "+avg; }
+    else if(s.n&&s.avg<QA_MIN_SCORE){ cls="no"; long="Overall "+avg+", below "+QA_MIN_SCORE+"%"; short="Below "+QA_MIN_SCORE+"%"; }
+    else if(s.n&&more>0){ long=more+" more claim"+(more===1?"":"s")+" needed"; short=s.n+" of "+QA_MIN_CLAIMS+" claims"; }
+    else if(s.n){ long="Clear the process training first"; short="Needs process training"; }
+    else { long="Not started"; short=trained?"Not started":"After process training"; }
+    return {ok:cls==="ok",cls:cls,long:long,short:short,s:s,trained:trained};
+  }
+  const t=c.train[d.k], l=c.last[d.k];
+  if(t) return {ok:true,cls:"ok",t:t,long:"Cleared · "+t.pct+"% on "+t.date,short:"Cleared "+t.pct+"%"};
+  if(l) return {ok:false,cls:"no",long:"Not cleared · last attempt "+l.pct+"%",short:"Last try "+l.pct+"%"};
+  return {ok:false,cls:"",long:"Not started",short:"Not started"};
+}
+function certReqHTML(reqs){ return reqs.map(r=>'<li class="'+(r[1]?"ok":"")+'">'+(r[1]?IC.check:'<span style="width:15px;display:inline-block"></span>')+esc(r[0])+'</li>').join(""); }
+function certPaneHTML(d){
+  const head='<div class="certh"><h3>'+esc(d.title)+'</h3><span class="certstat"></span></div>';
+  if(d.kind==="qa") return '<div class="certcard certpane" data-k="'+esc(d.k)+'" hidden>'+head+
+    '<p>Work at least <b>'+QA_MIN_CLAIMS+' claims</b> in production on '+esc(d.client.name)+'. The QA reviewer audits them and records each score here. The certificate is issued when at least '+QA_MIN_CLAIMS+' claims are audited, the overall QA score is <b>'+QA_MIN_SCORE+'% or more</b>, and the '+esc(d.client.name)+' process training is cleared.</p>'+
+    '<ul class="certreq"></ul><div class="qalog"><div class="qahead"><b>QA record</b><span class="qasum"></span></div>'+
+    '<table class="qatable"><thead><tr><th>Claim reference</th><th>Date audited</th><th>QA score</th><th></th></tr></thead><tbody></tbody></table>'+
+    '<div class="certrow"><input class="fbin qaref" placeholder="Claim reference (no patient details)" aria-label="Claim reference"><input class="fbin qadate" type="date" aria-label="Date audited"><input class="fbin qascore" type="number" min="0" max="100" step="0.5" placeholder="Score %" aria-label="QA score"><button class="btn ghost qaadd">Add claim</button></div>'+
+    '<div class="certrow"><input class="fbin qarev" placeholder="QA reviewer name" aria-label="QA reviewer name"><button class="btn ghost qalogprint">'+IC.print+'Print QA record</button><button class="btn ghost cprint" hidden>'+IC.print+'Print certificate</button></div></div></div>';
+  const has=!d.client||procQCount(d.client)>0;
+  return '<div class="certcard certpane" data-k="'+esc(d.k)+'" hidden>'+head+
+    '<p>'+esc(d.about())+(has?' Pass mark <b>'+CERT_PASS+'%</b>. One question at a time, a new set every attempt, and you can retry.':'')+'</p>'+
+    '<ul class="certreq"></ul><div class="certrow"><button class="btn cstart"'+(has?'':' disabled')+'>Start the assessment</button><button class="btn ghost cprint" hidden>'+IC.print+'Print certificate</button></div><div class="carea"></div></div>';
+}
 function certRefresh(){
-  const c=certLoad(), t=c.training;
-  const name=$("#certName").value.trim()||c.name||"";
-  const st=$("#certTStat");
-  if(t){ st.textContent="Cleared · "+t.pct+"% on "+t.date; st.className="certstat ok"; }
-  else if(c.lastAttempt){ st.textContent="Not cleared · last attempt "+c.lastAttempt.pct+"%"; st.className="certstat no"; }
-  else { st.textContent="Not started"; st.className="certstat"; }
-  $("#certTPrint").hidden=!t;
-  const reqs=[["Your name entered",!!name],["Final assessment cleared at "+CERT_PASS+"% or more",!!t]];
-  $("#certTReq").innerHTML=reqs.map(r=>'<li class="'+(r[1]?"ok":"")+'">'+(r[1]?IC.check:'<span style="width:15px;display:inline-block"></span>')+esc(r[0])+'</li>').join("");
-  const q=qaStats(c), ok=q.n>=QA_MIN_CLAIMS&&q.avg>=QA_MIN_SCORE&&!!t;
-  $("#certQSum").textContent=q.n+" claim"+(q.n===1?"":"s")+" audited · overall "+(q.n?q.avg.toFixed(1)+"%":"–");
-  const qs=$("#certQStat");
-  qs.textContent=ok?"Cleared":!q.n?"Not started":q.n<QA_MIN_CLAIMS?(QA_MIN_CLAIMS-q.n)+" more claim"+(QA_MIN_CLAIMS-q.n===1?"":"s")+" needed":q.avg<QA_MIN_SCORE?"Overall below "+QA_MIN_SCORE+"%":"Clear the training certificate first";
-  qs.className="certstat"+(ok?" ok":q.n?" no":"");
-  $("#certQPrint").hidden=!ok;
-  $("#qaTable tbody").innerHTML=q.rows.length?q.rows.map((r,i)=>'<tr><td>'+esc(r.ref)+'</td><td>'+esc(r.date)+'</td><td>'+esc(r.score)+'%</td><td><button class="xrow" data-i="'+i+'" title="Remove this row">×</button></td></tr>').join(""):'<tr><td colspan="4" class="muted">No claims recorded yet.</td></tr>';
-  $$("#qaTable .xrow").forEach(b=>b.addEventListener("click",()=>{ const cc=certLoad(); cc.qa.rows.splice(+b.dataset.i,1); certSave(cc); certRefresh(); }));
-  if(c.qa&&c.qa.reviewer&&!$("#qaReviewer").value) $("#qaReviewer").value=c.qa.reviewer;
-  if(c.name&&!$("#certName").value) $("#certName").value=c.name;
-  if(!$("#qaDate").value) $("#qaDate").value=new Date().toISOString().slice(0,10);
+  const c=certLoad(), name=$("#certName").value.trim()||c.name||"";
+  $$("#certTiles .certtile").forEach(b=>{
+    const d=CERT_BY[certKey(b.dataset.t)], st=d?certStatus(c,d):{cls:"",short:"No process yet"}, el=b.querySelector(".cts");
+    el.className="cts "+st.cls; el.innerHTML=(st.cls==="ok"?IC.check:"")+esc((d&&d.client?d.client.short+" · ":"")+st.short);
+  });
+  $$("#certPanes .certpane").forEach(p=>{
+    const d=CERT_BY[p.dataset.k], st=certStatus(c,d), pill=p.querySelector(".certstat");
+    pill.textContent=st.long; pill.className="certstat "+st.cls;
+    p.querySelector(".cprint").hidden=!st.ok;
+    if(d.kind!=="qa"){ p.querySelector(".certreq").innerHTML=certReqHTML([["Your name entered",!!name],["Assessment cleared at "+CERT_PASS+"% or more",st.ok]]); return; }
+    const s=st.s;
+    p.querySelector(".certreq").innerHTML=certReqHTML([[d.client.name+" process training cleared",st.trained],["At least "+QA_MIN_CLAIMS+" claims audited ("+s.n+" so far)",s.n>=QA_MIN_CLAIMS],["Overall QA score "+QA_MIN_SCORE+"% or more"+(s.n?" ("+s.avg.toFixed(1)+"% now)":""),s.n>0&&s.avg>=QA_MIN_SCORE]]);
+    p.querySelector(".qasum").textContent=s.n+" claim"+(s.n===1?"":"s")+" audited · overall "+(s.n?s.avg.toFixed(1)+"%":"–");
+    p.querySelector(".qatable tbody").innerHTML=s.rows.length?s.rows.map((r,i)=>'<tr><td>'+esc(r.ref)+'</td><td>'+esc(r.date)+'</td><td>'+esc(r.score)+'%</td><td><button class="xrow" data-i="'+i+'" title="Remove this row" aria-label="Remove this row">×</button></td></tr>').join(""):'<tr><td colspan="4" class="muted">No claims recorded yet.</td></tr>';
+    const rev=p.querySelector(".qarev"); if(s.q.reviewer&&!rev.value) rev.value=s.q.reviewer;
+    const dt=p.querySelector(".qadate"); if(!dt.value) dt.value=new Date().toISOString().slice(0,10);
+  });
 }
-function buildFinalAssessment(){
-  const sop=shuffle(sopBank()).slice(0,CERT_N.sop).map(authored);
-  const rcm=shuffle(RCM_BANK).slice(0,CERT_N.rcm).map(authored);
-  const ar=buildRoundAR("All").slice(0,CERT_N.ar);
-  return shuffle(sop.concat(rcm,ar));
+function certShow(tile){
+  CERT_TILE=tile;
+  $$("#certTiles .certtile").forEach(b=>{ const on=b.dataset.t===tile; b.classList.toggle("on",on); b.setAttribute("aria-pressed",on?"true":"false"); });
+  $("#certProcRow").hidden=!(tile==="proc"||tile==="qa");
+  if(CERT_PROC) $("#certProc").value=CERT_PROC;
+  const k=certKey(tile);
+  $$("#certPanes .certpane").forEach(p=>{ p.hidden=p.dataset.k!==k; });
+  certRefresh();
 }
-function certStart(){
+/* open a certificate from elsewhere in the app, e.g. the end of a client playbook */
+function certOpen(tile,pid){ if(pid) CERT_PROC=pid; showPanel("certPanel"); certShow(tile); scrollTo({top:0,behavior:"smooth"}); }
+function certStart(d,p){
   const name=$("#certName").value.trim(); if(!name){ $("#certName").focus(); toast("Enter your name first; it goes on the certificate"); return; }
-  const c=certLoad(); c.name=name; certSave(c);
-  $("#certTStart").hidden=true;
-  mountQuiz($("#certTArea"),buildFinalAssessment,()=>{ $("#certTStart").hidden=false; },"the final assessment",(score,n)=>{
-    const pct=Math.round(score/n*100), cc=certLoad(); cc.name=name;
-    if(pct>=CERT_PASS){ cc.training={name:name,date:certDate(),score:score,n:n,pct:pct,id:certId("T")}; toast("Final assessment cleared: training certificate issued"); }
-    else { cc.lastAttempt={date:certDate(),score:score,n:n,pct:pct}; toast("Not cleared this time. Review and try again"); }
-    certSave(cc); certRefresh();
+  const c0=certLoad(); c0.name=name; certSave(c0);
+  const btn=p.querySelector(".cstart"); btn.hidden=true;
+  mountQuiz(p.querySelector(".carea"),d.build,()=>{ btn.hidden=false; },"the "+d.label+" assessment",(score,n)=>{
+    const pct=Math.round(score/n*100), c=certLoad(), nm=$("#certName").value.trim()||name, prev=c.train[d.k];
+    c.name=nm; c.last[d.k]={date:certDate(),score:score,n:n,pct:pct};
+    if(pct>=CERT_PASS){
+      if(!prev||pct>prev.pct) c.train[d.k]={name:nm,date:certDate(),score:score,n:n,pct:pct,id:certId(d.idp)};
+      toast(!prev?capFirst(d.label)+" cleared: certificate issued":pct>prev.pct?"Cleared again with a higher score; the certificate now shows "+pct+"%":"Cleared again; the certificate keeps your best score");
+    } else toast(prev?"Below "+CERT_PASS+"% this time; your certificate from "+prev.date+" stands":"Not cleared this time. Review and try again");
+    certSave(c); certRefresh();
   });
 }
 function printHTML(html){
@@ -1781,40 +1906,61 @@ function printHTML(html){
   const done=()=>{ document.body.classList.remove("printing"); removeEventListener("afterprint",done); document.removeEventListener("click",done); };
   addEventListener("afterprint",done); setTimeout(()=>{ window.print(); setTimeout(()=>document.addEventListener("click",done),400); },30);
 }
-function certPrintTraining(){
-  const c=certLoad(), t=c.training; if(!t) return;
-  printHTML('<div class="certsheet"><div class="certbrand">Purview Gurukul · Purview Healthcare</div><h1>Certificate of Training</h1><p class="certof">This certifies that</p><p class="certname">'+esc(t.name)+'</p>'+
-    '<p>has cleared the final assessment for the <b>ABW Medical project</b> with a score of <b>'+t.pct+'%</b> ('+t.score+' of '+t.n+' questions) on '+esc(t.date)+', covering the ABW client playbook, RCM basics and denial management. Pass mark '+CERT_PASS+'%.</p>'+
-    '<p class="certid">Certificate no. '+esc(t.id)+'</p><div class="certsign"><div>Trainer signature</div><div>Date</div></div><p class="certfoot">Issued from Purview Gurukul. Valid with the trainer’s signature.</p></div>');
+function certSheet(kind,area,name,body,idline,signs,foot){
+  return '<div class="certsheet"><div class="certbrand">Purview Gurukul · Purview Healthcare</div><h1>'+kind+'</h1><p class="certarea">'+esc(area)+'</p><p class="certof">This certifies that</p><p class="certname">'+esc(name)+'</p>'+body+
+    '<p class="certid">'+idline+'</p><div class="certsign">'+signs.map(s=>'<div>'+esc(s)+'</div>').join("")+'</div><p class="certfoot">'+esc(foot)+'</p></div>';
 }
-function certPrintQuality(){
-  const c=certLoad(), q=qaStats(c), t=c.training; if(!(q.n>=QA_MIN_CLAIMS&&q.avg>=QA_MIN_SCORE&&t)) return;
-  const reviewer=$("#qaReviewer").value.trim()||(c.qa&&c.qa.reviewer)||"";
-  if(!c.qa.id){ c.qa.id=certId("Q"); c.qa.reviewer=reviewer; c.qa.issued=certDate(); certSave(c); }
-  printHTML('<div class="certsheet"><div class="certbrand">Purview Gurukul · Purview Healthcare</div><h1>Certificate of Quality</h1><p class="certof">This certifies that</p><p class="certname">'+esc(t.name)+'</p>'+
-    '<p>has completed <b>'+q.n+' audited production claims</b> for the <b>ABW Medical project</b> with an overall QA score of <b>'+q.avg.toFixed(1)+'%</b>, meeting the standard of at least '+QA_MIN_CLAIMS+' claims and '+QA_MIN_SCORE+'% or more, after clearing the training assessment on '+esc(t.date)+'.</p>'+
-    (reviewer?'<p>QA reviewer: <b>'+esc(reviewer)+'</b></p>':'')+'<p class="certid">Certificate no. '+esc(c.qa.id)+' · issued '+esc(c.qa.issued)+'</p><div class="certsign"><div>QA reviewer signature</div><div>Team lead signature</div></div><p class="certfoot">Issued from Purview Gurukul. Valid with the signatures above.</p></div>');
+function certPrint(d,p){
+  const c=certLoad(), st=certStatus(c,d); if(!st.ok) return;
+  if(d.kind!=="qa"){ const t=st.t;
+    printHTML(certSheet("Certificate of Training",d.client?d.client.name+" process":d.title,t.name,
+      '<p>has cleared the <b>'+esc(d.label)+'</b> assessment with a score of <b>'+t.pct+'%</b> ('+t.score+' of '+t.n+' questions) on '+esc(t.date)+', covering '+esc(d.covers())+'. Pass mark '+CERT_PASS+'%.</p>',
+      'Certificate no. '+esc(t.id),["Trainer signature","Date"],"Issued from Purview Gurukul. Valid with the trainer’s signature."));
+    return; }
+  const pid=d.client.id, t=c.train["proc:"+pid], q=c.qa[pid], s=st.s, reviewer=p.querySelector(".qarev").value.trim()||q.reviewer||"";
+  if(!q.id){ q.id=certId(d.idp); q.reviewer=reviewer; q.issued=certDate(); certSave(c); }
+  printHTML(certSheet("Certificate of Quality",d.client.name+" process",t.name,
+    '<p>has completed <b>'+s.n+' audited production claims</b> for the <b>'+esc(d.client.name)+'</b> process with an overall QA score of <b>'+s.avg.toFixed(1)+'%</b>, meeting the standard of at least '+QA_MIN_CLAIMS+' claims at '+QA_MIN_SCORE+'% or more, after clearing the '+esc(d.client.name)+' process training on '+esc(t.date)+'.</p>'+(reviewer?'<p>QA reviewer: <b>'+esc(reviewer)+'</b></p>':''),
+    'Certificate no. '+esc(q.id)+' · issued '+esc(q.issued),["QA reviewer signature","Team lead signature"],"Issued from Purview Gurukul. Valid with the signatures above."));
 }
-function certPrintLog(){
-  const c=certLoad(), q=qaStats(c), name=$("#certName").value.trim()||c.name||"", reviewer=$("#qaReviewer").value.trim()||(c.qa&&c.qa.reviewer)||"";
-  printHTML('<div class="qasheet"><div class="phead"><span><b>Purview Gurukul</b> · QA record for quality certification</span><span>'+esc(certDate())+'</span></div><h1>QA record'+(name?': '+esc(name):'')+'</h1><p class="pmeta">ABW Medical project · '+q.n+' claims audited · overall '+(q.n?q.avg.toFixed(1)+'%':'–')+' · standard: at least '+QA_MIN_CLAIMS+' claims at '+QA_MIN_SCORE+'% or more'+(reviewer?' · QA reviewer: '+esc(reviewer):'')+'</p>'+
-    '<table><thead><tr><th>#</th><th>Claim reference</th><th>Date audited</th><th>QA score</th></tr></thead><tbody>'+q.rows.map((r,i)=>'<tr><td>'+(i+1)+'</td><td>'+esc(r.ref)+'</td><td>'+esc(r.date)+'</td><td>'+esc(r.score)+'%</td></tr>').join("")+'</tbody></table>'+
+function qaPrintLog(d,p){
+  const c=certLoad(), s=qaStats(c,d.client.id), name=$("#certName").value.trim()||c.name||"", reviewer=p.querySelector(".qarev").value.trim()||s.q.reviewer||"";
+  printHTML('<div class="qasheet"><div class="phead"><span><b>Purview Gurukul</b> · QA record for quality certification</span><span>'+esc(certDate())+'</span></div><h1>QA record'+(name?': '+esc(name):'')+'</h1><p class="pmeta">'+esc(d.client.name)+' process · '+s.n+' claims audited · overall '+(s.n?s.avg.toFixed(1)+'%':'–')+' · standard: at least '+QA_MIN_CLAIMS+' claims at '+QA_MIN_SCORE+'% or more'+(reviewer?' · QA reviewer: '+esc(reviewer):'')+'</p>'+
+    '<table><thead><tr><th>#</th><th>Claim reference</th><th>Date audited</th><th>QA score</th></tr></thead><tbody>'+s.rows.map((r,i)=>'<tr><td>'+(i+1)+'</td><td>'+esc(r.ref)+'</td><td>'+esc(r.date)+'</td><td>'+esc(r.score)+'%</td></tr>').join("")+'</tbody></table>'+
     '<div class="certsign"><div>QA reviewer signature</div><div>Trainee signature</div></div></div>');
 }
-$("#certTStart").addEventListener("click",certStart);
-$("#certTPrint").addEventListener("click",certPrintTraining);
-$("#certQPrint").addEventListener("click",certPrintQuality);
-$("#qaPrintLog").addEventListener("click",certPrintLog);
-$("#certName").addEventListener("change",()=>{ const c=certLoad(); c.name=$("#certName").value.trim(); certSave(c); certRefresh(); });
-$("#qaReviewer").addEventListener("change",()=>{ const c=certLoad(); c.qa=c.qa||{rows:[]}; c.qa.reviewer=$("#qaReviewer").value.trim(); certSave(c); });
-$("#qaAdd").addEventListener("click",()=>{
-  const ref=$("#qaRef").value.trim(), date=$("#qaDate").value, score=parseFloat($("#qaScore").value);
-  if(!ref){ $("#qaRef").focus(); toast("Enter the claim reference"); return; }
-  if(!(score>=0&&score<=100)){ $("#qaScore").focus(); toast("Enter a QA score between 0 and 100"); return; }
-  const c=certLoad(); c.qa=c.qa||{rows:[]}; c.qa.rows.push({ref:ref,date:date||new Date().toISOString().slice(0,10),score:score}); c.qa.reviewer=$("#qaReviewer").value.trim()||c.qa.reviewer||""; certSave(c);
-  $("#qaRef").value=""; $("#qaScore").value=""; certRefresh();
-});
-certRefresh();
+function qaAdd(d,p){
+  const ref=p.querySelector(".qaref").value.trim(), date=p.querySelector(".qadate").value, score=parseFloat(p.querySelector(".qascore").value);
+  if(!ref){ p.querySelector(".qaref").focus(); toast("Enter the claim reference"); return; }
+  if(!(score>=0&&score<=100)){ p.querySelector(".qascore").focus(); toast("Enter a QA score between 0 and 100"); return; }
+  const c=certLoad(), pid=d.client.id; c.qa[pid]=c.qa[pid]||{}; c.qa[pid].rows=c.qa[pid].rows||[];
+  c.qa[pid].rows.push({ref:ref,date:date||new Date().toISOString().slice(0,10),score:score});
+  c.qa[pid].reviewer=p.querySelector(".qarev").value.trim()||c.qa[pid].reviewer||"";
+  certSave(c); p.querySelector(".qaref").value=""; p.querySelector(".qascore").value=""; certRefresh();
+}
+function certBuild(){
+  const tiles=CERT_TILES.filter(t=>(t[0]!=="proc"&&t[0]!=="qa")||sopClients().length);
+  $("#certTiles").innerHTML=tiles.map(t=>'<button class="certtile" data-t="'+t[0]+'" aria-pressed="false"><span class="ctk">'+esc(t[1])+'</span><b>'+esc(t[2])+'</b><span class="cts"></span></button>').join("");
+  $("#certProc").innerHTML=sopClients().map(c=>'<option value="'+esc(c.id)+'">'+esc(c.name)+'</option>').join("");
+  $("#certPanes").innerHTML=CERT_DEFS.map(certPaneHTML).join("");
+  $$("#certTiles .certtile").forEach(b=>b.addEventListener("click",()=>certShow(b.dataset.t)));
+  $("#certProc").addEventListener("change",()=>{ CERT_PROC=$("#certProc").value; certShow(CERT_TILE); });
+  $$("#certPanes .certpane").forEach(p=>{
+    const d=CERT_BY[p.dataset.k];
+    p.querySelector(".cprint").addEventListener("click",()=>certPrint(d,p));
+    if(d.kind!=="qa"){ p.querySelector(".cstart").addEventListener("click",()=>certStart(d,p)); return; }
+    p.querySelector(".qaadd").addEventListener("click",()=>qaAdd(d,p));
+    p.querySelector(".qalogprint").addEventListener("click",()=>qaPrintLog(d,p));
+    p.querySelector(".qarev").addEventListener("change",()=>{ const c=certLoad(), pid=d.client.id; c.qa[pid]=c.qa[pid]||{rows:[]}; c.qa[pid].reviewer=p.querySelector(".qarev").value.trim(); certSave(c); });
+    p.querySelector(".qatable").addEventListener("click",e=>{ const x=e.target.closest(".xrow"); if(!x) return;
+      const c=certLoad(), q=c.qa[d.client.id]; if(q&&q.rows){ q.rows.splice(+x.dataset.i,1); certSave(c); certRefresh(); } });
+  });
+  $("#certName").addEventListener("change",()=>{ const c=certLoad(); c.name=$("#certName").value.trim(); certSave(c); try{ if(c.name) localStorage.setItem("gk_name",c.name); }catch(e){} certRefresh(); });
+  let nm=certLoad().name||""; if(!nm){ try{ nm=localStorage.getItem("gk_name")||""; }catch(e){} }
+  $("#certName").value=nm;
+  certShow(CERT_TILE);
+}
+certBuild();
 
 /* Ask tab: SOP topics answer when they clearly match; a weak match is discounted so client rules do not hijack general questions */
 function sSearch(q){
