@@ -93,10 +93,19 @@ const SCEN_GEN=[
   return Object.assign(o,{q:"Both parents were born on "+DOW_M[m-1]+" "+d+" (different years). The mother's plan has covered her since "+y1+", the father's plan since "+y2+". Which is primary for their child?",ex:"When parents share a birthday, the plan that has covered a parent for the longer time is primary."}); }},
 {fam:"Primary & secondary (COB)",make(){ const o=sOpts("Plan A — the plan that covers the patient as the subscriber (employee) is primary",["Plan B — dependent coverage pays first","Whichever plan has the lower deductible","The plan that received the claim first"]);
   return Object.assign(o,{q:"The patient is the <b>employee/subscriber</b> on Plan A and a <b>dependent</b> on a spouse's Plan B. Which plan is primary for the patient?",ex:"COB rule: your own employer coverage is primary over coverage you hold as someone's dependent. Bill Plan A first and send Plan B the claim with Plan A's EOB."}); }},
-{fam:"Primary & secondary (COB)",make(){ const A1=rint(100,400,10), D=rint(0,A1-40,10), c=20; const R=D+(A1-D)*c/100, P1=A1-R; const A2=pick([A1,A1-10,A1+10,A1-20]); const pay=Math.min(R,Math.max(0,A2-P1));
-  const o=sOpts(pay,[R,A2,Math.max(0,A2-P1)===pay?A2-P1+10:A2-P1,0],$m);
-  return Object.assign(o,{q:"Primary plan: allowed <b>"+$m(A1)+"</b>, paid <b>"+$m(P1)+"</b>, patient responsibility "+$m(R)+" ("+$m(D)+" deductible + "+c+"% coinsurance). The secondary plan's own allowed amount is <b>"+$m(A2)+"</b> and it coordinates on a non-duplication basis. How much does the <b>secondary</b> pay?",
-    ex:"The secondary pays the patient responsibility left by the primary, but never more than its own allowed amount minus what the primary already paid. Cap = "+$m(A2)+" − "+$m(P1)+" = "+$m(Math.max(0,A2-P1))+". Patient responsibility = "+$m(R)+". Secondary pays the smaller: "+$m(pay)+". Anything left is the patient's."}); }},
+{fam:"Primary & secondary (COB)",make(){
+  // Both plans allow the same amount. The primary applies its deductible and 20% coinsurance; the secondary has met its deductible.
+  const A=rint(150,500,50), D1=pick([0,0,50,100]), c2=pick([10,20,20,30]);
+  const left=D1+(A-D1)*0.2, P1=A-left, alone=A*(100-c2)/100;
+  const std=Math.min(left,alone), nondup=Math.max(0,alone-P1), mob=left*(100-c2)/100;
+  const method=pick(["standard","nondup","mob"]), pay=method==="standard"?std:method==="nondup"?nondup:mob;
+  const name={standard:"standard COB",nondup:"non-duplication of benefits",mob:"maintenance of benefits"}[method];
+  const o=sOpts(pay,[std,nondup,mob,left,alone],$m);
+  const why=method==="standard"?"Standard COB: the secondary pays what the primary left ("+$m(left)+"), but never more than it would have paid alone ("+(100-c2)+"% of "+$m(A)+" = "+$m(alone)+"). The smaller is "+$m(std)+"."
+    :method==="nondup"?"Non-duplication: what the secondary would have paid alone ("+(100-c2)+"% of "+$m(A)+" = "+$m(alone)+") minus what the primary paid ("+$m(P1)+") = "+(alone-P1>0?$m(alone-P1):"nothing")+". It never pays less than $0, so it pays "+$m(nondup)+"."
+    :"Maintenance of benefits: the allowed amount minus the primary payment leaves "+$m(left)+"; the secondary applies its own "+(100-c2)+"% and pays "+$m(mob)+".";
+  return Object.assign(o,{q:"Both plans allow <b>"+$m(A)+"</b>. The primary applies "+(D1?$m(D1)+" of deductible and ":"")+"20% coinsurance, so it pays <b>"+$m(P1)+"</b> and leaves <b>"+$m(left)+"</b>. The secondary’s deductible is met and, as the only plan, it would pay "+(100-c2)+"%. It coordinates by <b>"+name+"</b>. How much does the <b>secondary</b> pay?",
+    ex:why+" The patient owes "+$m(left-pay)+". Same claim under the other rules: standard COB "+$m(std)+", non-duplication "+$m(nondup)+", maintenance of benefits "+$m(mob)+"."}); }},
 {fam:"Primary & secondary (COB)",make(){ const o=sOpts("Resubmit the secondary claim with the primary's EOB/remittance attached (or the primary's payment data in the 837)",["Appeal with medical records","Bill the patient the full balance","Resubmit to the primary"]);
   return Object.assign(o,{q:"A secondary claim returns with remark <b>MA04: secondary payment cannot be considered without the identity and payment information of the primary payer</b>. What is the fix?",ex:"Secondary payers adjudicate from the primary's adjudication. Send the primary EOB (or the COB segments of the electronic claim) showing allowed, paid and patient responsibility."}); }},
 {fam:"Primary & secondary (COB)",make(){ const o=sOpts("Aetna is primary; Medicaid pays last, and the patient cannot be balance billed",["Medicaid is primary because it is government coverage","Both pay 50%","Medicaid only, since the patient qualifies for it"]);
