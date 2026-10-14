@@ -11,3 +11,4 @@ Static training app for Purview Healthcare's RCM teams, published with GitHub Pa
 - `sops.js` – general Purview SOP placeholders.
 - `sops-abw.js` – the ABW Medical client playbook and its assessment questions (names, contacts and account numbers deliberately left out).
 - `sw.js` – offline cache; bump `VER` on every release.
+- `tools/feedback-relay.gs` – the Google Apps Script that emails feedback straight to the maintainers. Setup steps are at the top of the file; put its web app URL in `FEEDBACK_RELAY` in `index.html`. Until then, Feedback opens the user's own mail app.

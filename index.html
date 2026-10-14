@@ -552,6 +552,17 @@ details.day.sop>summary{background:linear-gradient(110deg,var(--navy),#1f6fa3)}
 textarea.fbin{resize:vertical;min-height:110px;line-height:1.5}
 .fbrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:16px}
 .fbto{font-size:12px;color:var(--ink-3);margin-left:auto;word-break:break-all}
+.fbpair{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}
+@media(max-width:520px){.fbpair{grid-template-columns:1fr}}
+.fbnote{margin:10px 0 0;font-size:12.5px;color:var(--ink-3)}
+.fberr{margin-top:12px;padding:10px 12px;border-radius:8px;background:#fdeceb;border-left:4px solid #c23934;color:#8f2823;font-size:13.5px;line-height:1.5}
+.fberr[hidden],.fbdone[hidden],#fbForm[hidden]{display:none}
+.fbdone{text-align:center;padding:18px 6px 6px}
+.fbdone .fbok{width:52px;height:52px;border-radius:50%;background:#e9f6f0;color:var(--green);display:grid;place-items:center;margin:0 auto 10px}
+.fbdone b{display:block;font-family:var(--font-display);font-size:18px;color:var(--ink)}
+.fbdone p{margin:6px 0 0;color:var(--ink-2);font-size:14px;line-height:1.5}
+.fbdone .fbrow{justify-content:center}
+#fbSend:disabled{opacity:.6;cursor:progress}
 @media(min-width:701px){.fbwrap{align-items:center}}
 
 @media(max-width:700px){
@@ -955,6 +966,7 @@ textarea.fbin{resize:vertical;min-height:110px;line-height:1.5}
 <div class="fbwrap" id="fbWrap" hidden>
   <div class="fbcard" role="dialog" aria-modal="true" aria-labelledby="fbTitle">
     <div class="fbhead"><h2 id="fbTitle">Send feedback</h2><button class="fbx" id="fbClose" aria-label="Close">&times;</button></div>
+    <div id="fbForm">
     <p class="fbsub">Found a mistake, a confusing topic, or something missing? It goes by email to the team that maintains Gurukul.</p>
     <label class="fbl">What is it about?</label>
     <div class="chips fbtypes" id="fbTypes">
@@ -968,12 +980,24 @@ textarea.fbin{resize:vertical;min-height:110px;line-height:1.5}
     <input type="text" id="fbCtx" class="fbin" readonly>
     <label class="fbl" for="fbMsg">Your feedback</label>
     <textarea id="fbMsg" class="fbin" rows="5" placeholder="What did you expect, and what did you see? Quote the exact line if it is a content error."></textarea>
-    <label class="fbl" for="fbName">Your name (optional)</label>
-    <input type="text" id="fbName" class="fbin" placeholder="So the team can reply to you">
+    <div class="fbpair">
+      <div><label class="fbl" for="fbName">Your name (optional)</label><input type="text" id="fbName" class="fbin" autocomplete="name"></div>
+      <div><label class="fbl" for="fbEmail">Your email (optional)</label><input type="email" id="fbEmail" class="fbin" autocomplete="email" placeholder="So the team can reply"></div>
+    </div>
+    <p class="fbnote">Never include patient names, member IDs or claim numbers.</p>
+    <div class="fberr" id="fbErr" role="alert" hidden></div>
     <div class="fbrow">
-      <button class="btn" id="fbSend">Open in email</button>
+      <button class="btn" id="fbSend" hidden>Send feedback</button>
+      <button class="btn" id="fbMail">Open in email</button>
       <button class="btn ghost" id="fbCopy">Copy instead</button>
       <span class="fbto" id="fbTo"></span>
+    </div>
+    </div>
+    <div class="fbdone" id="fbDone" hidden>
+      <div class="fbok"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></div>
+      <b>Sent. Thank you.</b>
+      <p id="fbDoneTo"></p>
+      <div class="fbrow"><button class="btn" id="fbAgain">Send another</button><button class="btn ghost" id="fbDoneClose">Close</button></div>
     </div>
   </div>
 </div>
@@ -1324,10 +1348,14 @@ $("#q").addEventListener("keydown",e=>{ if(e.key==="Enter") ask(); });
 function logQuestion(q){}
 
 /* ── feedback by email ───────────────────────
-   No backend, so feedback travels as a pre-filled email from the user's own mail
-   app. Fill FEEDBACK_TO with the maintainers' addresses; the button stays hidden
-   while the list is empty. */
+   "Send feedback" posts the message to a small Google Apps Script web app
+   (tools/feedback-relay.gs) that emails it straight to the maintainers and
+   stores nothing. Set FEEDBACK_RELAY to that web app's URL (it ends in /exec).
+   While it is empty, or if a send fails, the form falls back to a pre-filled
+   email in the user's own mail app, or to copying the text. The Feedback button
+   stays hidden while FEEDBACK_TO is empty. */
 const FEEDBACK_TO=["shreya.k@purview-healthcare.com","sweety.t@purviewservices.com"];
+const FEEDBACK_RELAY="";
 function fbContext(){
   const panel=($(".panel.on")||{}).id, tabs={askPanel:"Ask",browsePanel:"All Denials",basicsPanel:"RCM Basics",quizPanel:"Quiz",sopPanel:"Purview SOPs",certPanel:"Certification"};
   let where=tabs[panel]||"App";
@@ -1339,28 +1367,65 @@ function fbContext(){
     (Q_TYPE==="theory"?" / "+(QZ.mode==="rcm"?"RCM Basics":QZ.mode==="sop"?"Purview SOPs":"AR & Denials")+" / "+QZ.filter:Q_TYPE==="call"?" / "+CALL_FILTER:Q_TYPE==="scenario"?" / "+SCEN_FILTER:"");
   return where;
 }
+function fbType(){ const c=$("#fbTypes .chip.on"); return c?c.dataset.t:"Feedback"; }
+function fbData(){ return {type:fbType(),where:$("#fbCtx").value,name:$("#fbName").value.trim(),email:$("#fbEmail").value.trim(),page:location.href,message:$("#fbMsg").value.trim(),website:""}; }
+function fbSubject(){ return "Gurukul feedback: "+fbType()+" — "+$("#fbCtx").value; }
 function fbText(){
-  const type=($("#fbTypes .chip.on")||{}).dataset?$("#fbTypes .chip.on").dataset.t:"Feedback";
-  return "Type: "+type+"\nWhere: "+$("#fbCtx").value+"\nFrom: "+($("#fbName").value.trim()||"(not given)")+"\nPage: "+location.href+"\n\n"+$("#fbMsg").value.trim()+"\n";
+  const d=fbData();
+  return "Type: "+d.type+"\nWhere: "+d.where+"\nFrom: "+(d.name||"(not given)")+(d.email?" <"+d.email+">":"")+"\nPage: "+d.page+"\n\n"+d.message+"\n";
 }
-function fbOpen(){ $("#fbCtx").value=fbContext(); $("#fbWrap").hidden=false; $("#fbTo").textContent="To: "+FEEDBACK_TO.join(", "); setTimeout(()=>$("#fbMsg").focus(),50); }
+function fbMailto(){ return "mailto:"+FEEDBACK_TO.join(",")+"?subject="+encodeURIComponent(fbSubject())+"&body="+encodeURIComponent(fbText()); }
+function fbReady(){
+  if($("#fbMsg").value.trim().length<3){ $("#fbMsg").focus(); toast("Write a line of feedback first"); return false; }
+  const em=$("#fbEmail").value.trim();
+  if(em&&!/^[^\s@<>,;]+@[^\s@<>,;]+\.[^\s@<>,;]+$/.test(em)){ $("#fbEmail").focus(); toast("Check the email address, or leave it empty"); return false; }
+  return true;
+}
+/* direct send when the relay is set; otherwise the user's own mail app */
+function fbMode(){
+  const direct=!!FEEDBACK_RELAY;
+  $("#fbSend").hidden=!direct; $("#fbMail").hidden=direct; $("#fbMail").className=direct?"btn ghost":"btn";
+  $("#fbErr").hidden=true;
+}
+function fbOpen(){
+  $("#fbCtx").value=fbContext(); $("#fbForm").hidden=false; $("#fbDone").hidden=true; fbMode();
+  $("#fbWrap").hidden=false; $("#fbTo").textContent="To: "+FEEDBACK_TO.join(", ");
+  try{ if(!$("#fbName").value) $("#fbName").value=localStorage.getItem("gk_name")||""; }catch(e){}
+  setTimeout(()=>$("#fbMsg").focus(),50);
+}
 function fbClose(){ $("#fbWrap").hidden=true; }
+async function fbSendDirect(){
+  if(!fbReady()) return;
+  const b=$("#fbSend"); b.disabled=true; b.textContent="Sending…"; $("#fbErr").hidden=true;
+  let ok=false, why="";
+  try{
+    const ctl=new AbortController(), timer=setTimeout(()=>ctl.abort(),20000);
+    const r=await fetch(FEEDBACK_RELAY,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(fbData()),redirect:"follow",signal:ctl.signal});
+    clearTimeout(timer);
+    const j=await r.json().catch(()=>null);
+    ok=!!(r.ok&&j&&j.ok===true); if(!ok) why=(j&&j.error)||"http";
+  }catch(e){ why="network"; }
+  b.disabled=false; b.textContent="Send feedback";
+  if(ok){
+    try{ const n=$("#fbName").value.trim(); if(n) localStorage.setItem("gk_name",n); }catch(e){}
+    $("#fbMsg").value=""; $("#fbForm").hidden=true; $("#fbDone").hidden=false;
+    $("#fbDoneTo").textContent="It went by email to "+listJoin(FEEDBACK_TO)+".";
+    return;
+  }
+  $("#fbErr").innerHTML="<b>Not sent.</b> "+(why==="busy"?"Too many messages in the last few minutes. Try again shortly, or":"The feedback service could not be reached. Nothing is lost:")+" use <b>Open in email</b> or <b>Copy instead</b> below.";
+  $("#fbErr").hidden=false; $("#fbMail").hidden=false;
+}
 if(FEEDBACK_TO.length){ $("#fbOpen").hidden=false; }
 $("#fbOpen").addEventListener("click",fbOpen);
 $("#fbClose").addEventListener("click",fbClose);
 $("#fbWrap").addEventListener("click",e=>{ if(e.target===$("#fbWrap")) fbClose(); });
 addEventListener("keydown",e=>{ if(e.key==="Escape"&&!$("#fbWrap").hidden) fbClose(); });
 $$("#fbTypes .chip").forEach(b=>b.addEventListener("click",()=>{ $$("#fbTypes .chip").forEach(x=>x.classList.toggle("on",x===b)); }));
-$("#fbSend").addEventListener("click",()=>{
-  if(!$("#fbMsg").value.trim()){ $("#fbMsg").focus(); toast("Write a line of feedback first"); return; }
-  const type=$("#fbTypes .chip.on").dataset.t;
-  const href="mailto:"+FEEDBACK_TO.join(",")+"?subject="+encodeURIComponent("Gurukul feedback: "+type+" — "+$("#fbCtx").value)+"&body="+encodeURIComponent(fbText());
-  location.href=href; toast("Opening your email app"); setTimeout(fbClose,600);
-});
-$("#fbCopy").addEventListener("click",()=>{
-  if(!$("#fbMsg").value.trim()){ $("#fbMsg").focus(); toast("Write a line of feedback first"); return; }
-  copy("To: "+FEEDBACK_TO.join(", ")+"\nSubject: Gurukul feedback: "+$("#fbTypes .chip.on").dataset.t+"\n\n"+fbText());
-});
+$("#fbSend").addEventListener("click",fbSendDirect);
+$("#fbMail").addEventListener("click",()=>{ if(!fbReady()) return; location.href=fbMailto(); toast("Opening your email app"); setTimeout(fbClose,600); });
+$("#fbCopy").addEventListener("click",()=>{ if(!fbReady()) return; copy("To: "+FEEDBACK_TO.join(", ")+"\nSubject: "+fbSubject()+"\n\n"+fbText()); });
+$("#fbAgain").addEventListener("click",()=>{ $("#fbDone").hidden=true; $("#fbForm").hidden=false; fbMode(); setTimeout(()=>$("#fbMsg").focus(),50); });
+$("#fbDoneClose").addEventListener("click",fbClose);
 
 function showPanel(id){
   $$(".panel").forEach(p=>p.classList.toggle("on",p.id===id));
