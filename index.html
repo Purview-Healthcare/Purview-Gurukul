@@ -528,6 +528,27 @@ details.day.sop>summary{background:linear-gradient(110deg,var(--navy),#1f6fa3)}
 .qatable .xrow{background:transparent;border:0;color:var(--ink-3);font-size:18px;cursor:pointer;line-height:1}
 .certnote{margin:14px 0 0;font-size:13px;color:var(--ink-3);line-height:1.5}
 .carea .dq{margin-top:14px}
+/* certification lock */
+.certlock{max-width:560px;margin:0 auto;background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh);padding:24px 24px 20px}
+.certlock[hidden],#certBody[hidden],.clstep[hidden],.certaccess[hidden]{display:none}
+.clhead{display:flex;align-items:center;gap:12px;margin-bottom:4px}
+.clic{width:42px;height:42px;border-radius:12px;background:var(--navy);color:#fff;display:grid;place-items:center;flex:0 0 auto}
+.certlock h3{margin:0;font-size:18px}
+.clsub{margin:10px 0 0;color:var(--ink-2);font-size:14.5px;line-height:1.55}
+.clrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.clrow .fbin{flex:1 1 220px;min-width:0;margin:0}
+.clrow .btn{white-space:nowrap}
+.clrow .btn:disabled{opacity:.6;cursor:progress}
+.clsent{margin:12px 0 0;padding:10px 12px;border-radius:8px;background:#e9f6f0;border-left:4px solid var(--green);color:#0c5c3e;font-size:14px;line-height:1.5}
+#clCode{letter-spacing:.3em;font-variant-numeric:tabular-nums;font-size:17px}
+#clCode::placeholder{letter-spacing:normal;font-size:14.5px}
+.cllinks{margin:10px 0 0;font-size:13.5px;color:var(--ink-3)}
+.linkbtn{background:none;border:0;padding:0;font:inherit;color:var(--blue-deep);font-weight:700;cursor:pointer;text-decoration:underline}
+.linkbtn:disabled{color:var(--ink-3);cursor:default;text-decoration:none;font-weight:600}
+.clnote{margin:14px 0 0;font-size:12.5px;color:var(--ink-3);line-height:1.5}
+.certaccess{display:flex;align-items:center;gap:8px 12px;flex-wrap:wrap;margin:0 0 14px;padding:9px 14px;border-radius:8px;background:#e9f6f0;border:1px solid #bfe3d2;color:#0c5c3e;font-size:13.5px}
+.certaccess svg{flex:0 0 auto}
+.certaccess .linkbtn{margin-left:auto}
 @media(max-width:700px){.certtiles{grid-template-columns:1fr 1fr;gap:10px}.certtile{padding:11px 12px}.certcard{padding:16px 15px}}
 .sopnote{display:flex;gap:12px;align-items:flex-start;background:var(--orange-soft);border:1px solid var(--orange-line);border-radius:var(--r);padding:14px 18px;margin-bottom:18px;color:var(--orange-deep);font-size:14px;line-height:1.55}
 .sopnote svg{flex:0 0 auto;margin-top:2px}
@@ -967,11 +988,30 @@ textarea.fbin{resize:vertical;min-height:110px;line-height:1.5}
 
   <div id="certPanel" class="panel">
     <div class="band"><h2>Certification</h2><p>Four steps, in this order: RCM Basics, Denial management, Process training, then QA certification. Each training step has its own assessment; clear it at 80% or more. Process training has a separate assessment for each process: choose the process from the drop-down. QA certification comes after that process’s training: at least 5 claims audited with an overall QA score of 95% or more. Print each certificate and get it signed.</p></div>
+    <div class="certlock" id="certLock" hidden>
+      <div class="clhead"><span class="clic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span><h3>Certification is locked</h3></div>
+      <div class="clstep" id="clStep1">
+        <p class="clsub">Enter your email ID. A one-time password (OTP) will be sent to it.</p>
+        <label class="fbl" for="clEmail">Email ID</label>
+        <div class="clrow"><input type="email" id="clEmail" class="fbin" autocomplete="email" placeholder="name@purview-healthcare.com"><button class="btn" id="clSend">Send OTP</button></div>
+      </div>
+      <div class="clstep" id="clStep2" hidden>
+        <p class="clsent" id="clSent"></p>
+        <label class="fbl" for="clCode">Enter OTP</label>
+        <div class="clrow"><input type="text" id="clCode" class="fbin" inputmode="numeric" autocomplete="one-time-code" placeholder="6-digit OTP"><button class="btn" id="clVerify">Verify and open</button></div>
+        <p class="cllinks"><button class="linkbtn" id="clResend">Send OTP again</button> · <button class="linkbtn" id="clChange">Use a different email ID</button></p>
+      </div>
+      <div class="fberr" id="clErr" role="alert" hidden></div>
+      <p class="clnote">Only approved email IDs can open Certification. If the OTP does not arrive within a minute, check your spam or junk folder.</p>
+    </div>
+    <div id="certBody">
+    <div class="certaccess" id="certAccess" hidden><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 7.5-2"/></svg><span>Open for <b id="certAccessWho"></b> on this device until <b id="certAccessUntil"></b>.</span><button class="linkbtn" id="certLockNow">Lock now</button></div>
     <div class="certwho"><label for="certName">Your name</label><input class="fbin" id="certName" placeholder="Full name for your certificates" autocomplete="name"></div>
     <div class="certtiles" id="certTiles"></div>
     <div class="certproc" id="certProcRow" hidden><label for="certProc">Process</label><select id="certProc"></select><span>Each process has its own assessment, built from its playbook.</span></div>
     <div id="certPanes"></div>
     <p class="certnote">Records live on this device only; there is no backend. The signed printout is the record of certification, so keep it with the trainee’s file. Reset: clear the browser data for this site.</p>
+    </div>
   </div>
 </div>
 
@@ -1370,22 +1410,39 @@ $("#q").addEventListener("keydown",e=>{ if(e.key==="Enter") ask(); });
 /* no backend: questions are not logged */
 function logQuestion(q){}
 
+/* ── the Gurukul email script ───────────────
+   SCRIPT_URL is the web app URL (it ends in /exec) of the Google Apps Script in
+   tools/gurukul-email.gs. It does the two jobs that need email: it sends feedback
+   straight to the maintainers, and it sends and checks the one-time password that
+   opens the Certification page for approved email IDs. While SCRIPT_URL is empty,
+   feedback falls back to the user's own mail app and Certification stays locked. */
+const SCRIPT_URL="";
+/* one call to the script; never throws, and answers {ok:false,error:...} on trouble */
+async function callScript(payload,ms){
+  if(!SCRIPT_URL) return {ok:false,error:"not-set"};
+  try{
+    const ctl=new AbortController(), timer=setTimeout(()=>ctl.abort(),ms||20000);
+    const r=await fetch(SCRIPT_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(payload),redirect:"follow",signal:ctl.signal});
+    clearTimeout(timer);
+    const j=await r.json().catch(()=>null);
+    if(r.ok&&j&&typeof j==="object") return j;
+    return {ok:false,error:(j&&j.error)||"http"};
+  }catch(e){ return {ok:false,error:"network"}; }
+}
+
 /* ── feedback by email ───────────────────────
-   "Send feedback" posts the message to a small Google Apps Script web app
-   (tools/feedback-relay.gs) that emails it straight to the maintainers and
-   stores nothing. Set FEEDBACK_RELAY to that web app's URL (it ends in /exec).
-   While it is empty, or if a send fails, the form falls back to a pre-filled
-   email in the user's own mail app, or to copying the text. The Feedback button
-   stays hidden while FEEDBACK_TO is empty. */
+   "Send feedback" posts the message to the email script, which mails it to the
+   maintainers and stores nothing. While SCRIPT_URL is empty, or if a send fails,
+   the form falls back to a pre-filled email in the user's own mail app, or to
+   copying the text. The Feedback button stays hidden while FEEDBACK_TO is empty. */
 const FEEDBACK_TO=["shreya.k@purview-healthcare.com","sweety.t@purviewservices.com"];
-const FEEDBACK_RELAY="";
 function fbContext(){
   const panel=($(".panel.on")||{}).id, tabs={askPanel:"Ask",browsePanel:"All Denials",basicsPanel:"RCM Basics",quizPanel:"Quiz",sopPanel:"Purview SOPs",certPanel:"Certification"};
   let where=tabs[panel]||"App";
   if(panel==="askPanel"){ const h=$("#answers .card .hit h2"); if(h) where+=" — "+h.textContent.trim(); }
   if(panel==="basicsPanel"&&typeof B_CUR!=="undefined"&&B_CUR&&B_BY_ID[B_CUR]) where+=" — "+B_BY_ID[B_CUR].mod.day+" / "+B_BY_ID[B_CUR].title;
   if(panel==="sopPanel"&&typeof S_CUR!=="undefined"&&S_CUR&&S_BY_ID[S_CUR]) where+=" — "+S_BY_ID[S_CUR].mod.client.short+" / "+S_BY_ID[S_CUR].title;
-  if(panel==="certPanel"&&typeof certCurrent==="function"){ const d=certCurrent(); if(d) where+=" — "+d.title; }
+  if(panel==="certPanel"){ if(typeof certAccess==="function"&&!certAccess()) where+=" — locked"; else if(typeof certCurrent==="function"){ const d=certCurrent(); if(d) where+=" — "+d.title; } }
   if(panel==="quizPanel"&&typeof Q_TYPE!=="undefined") where+=" — "+({theory:"Theory",call:"Call",scenario:"Scenario",all:"Everything"}[Q_TYPE]||Q_TYPE)+
     (Q_TYPE==="theory"?" / "+(QZ.mode==="rcm"?"RCM Basics":QZ.mode==="sop"?"Purview SOPs":"AR & Denials")+" / "+QZ.filter:Q_TYPE==="call"?" / "+CALL_FILTER:Q_TYPE==="scenario"?" / "+SCEN_FILTER:"");
   return where;
@@ -1445,7 +1502,7 @@ function fbReady(withShots){
 }
 /* direct send when the relay is set; otherwise the user's own mail app */
 function fbMode(){
-  const direct=!!FEEDBACK_RELAY;
+  const direct=!!SCRIPT_URL;
   $("#fbSend").hidden=!direct; $("#fbMail").hidden=direct; $("#fbMail").className=direct?"btn ghost":"btn";
   $("#fbShots").hidden=!direct; $("#fbShotsMail").hidden=direct;
   $("#fbErr").hidden=true;
@@ -1460,15 +1517,8 @@ function fbClose(){ $("#fbWrap").hidden=true; }
 async function fbSendDirect(){
   if(!fbReady(true)) return;
   const b=$("#fbSend"); b.disabled=true; b.textContent="Sending…"; $("#fbErr").hidden=true;
-  let ok=false, why="";
-  try{
-    const ctl=new AbortController(), timer=setTimeout(()=>ctl.abort(),FB_FILES.length?90000:20000);
-    const payload=Object.assign(fbData(),{attachments:FB_FILES.map(f=>({name:f.name,type:f.type,data:f.data.slice(f.data.indexOf(",")+1)}))});
-    const r=await fetch(FEEDBACK_RELAY,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(payload),redirect:"follow",signal:ctl.signal});
-    clearTimeout(timer);
-    const j=await r.json().catch(()=>null);
-    ok=!!(r.ok&&j&&j.ok===true); if(!ok) why=(j&&j.error)||"http";
-  }catch(e){ why="network"; }
+  const payload=Object.assign(fbData(),{attachments:FB_FILES.map(f=>({name:f.name,type:f.type,data:f.data.slice(f.data.indexOf(",")+1)}))});
+  const j=await callScript(payload,FB_FILES.length?90000:20000), ok=j.ok===true, why=j.error||"";
   b.disabled=false; b.textContent="Send feedback";
   if(ok){
     try{ const n=$("#fbName").value.trim(); if(n) localStorage.setItem("gk_name",n); }catch(e){}
@@ -1516,6 +1566,7 @@ function showPanel(id){
   // Deal a fresh set every time the quiz is opened — but never wipe a round in progress,
   // since answering a question can send you to the Ask tab and back.
   if(id==="quizPanel" && typeof showQuizType==="function") showQuizType(Q_TYPE);
+  if(id==="certPanel" && typeof certLockRefresh==="function") certLockRefresh();
 }
 $$(".navtab").forEach(b=>b.addEventListener("click",()=>showPanel(b.dataset.panel)));
 /* on narrow screens the tab strip scrolls; fade the right edge while more tabs are hidden */
@@ -2108,6 +2159,78 @@ function certBuild(){
   certShow(CERT_TILE);
 }
 certBuild();
+/* ── Certification lock: approved email IDs only, opened by a one-time password ──
+   The page asks for an email ID. The email script sends a 6-digit OTP if that ID
+   is on its approved list (kept only in the script's settings, not in this public
+   code) and checks it when it is typed in. Then Certification stays open on this
+   device for the hours the script allows (12), or until "Lock now". */
+const CERT_ACCESS_KEY="gk_cert_access";
+function certAccess(){ try{ const a=JSON.parse(localStorage.getItem(CERT_ACCESS_KEY)||"null"); return a&&a.email&&a.until>Date.now()?a:null; }catch(e){ return null; } }
+function certLockRefresh(){
+  const a=certAccess();
+  $("#certLock").hidden=!!a; $("#certBody").hidden=!a; $("#certAccess").hidden=!a;
+  if(a){ $("#certAccessWho").textContent=a.email; $("#certAccessUntil").textContent=new Date(a.until).toLocaleString("en-GB",{weekday:"short",hour:"2-digit",minute:"2-digit"}); }
+}
+let CL_EMAIL="", CL_TIMER=null;
+const CL_MSG={
+  "not-set":"The OTP email service is not set up yet, so an OTP cannot be sent. Please contact the Gurukul admin.",
+  "no-list":"The approved email list is not set up yet. Please contact the Gurukul admin.",
+  "not-allowed":"This email ID is not approved for Certification. Check the spelling, or ask your trainer to add it.",
+  "bad-email":"Enter your full email ID, like name@purview-healthcare.com.",
+  "wait":"An OTP was sent less than a minute ago. Check your inbox, or ask again in a minute.",
+  "limit":"Too many OTPs for this email ID in the last hour. Try again later.",
+  "busy":"Too many OTP requests just now. Try again in a few minutes.",
+  "expired":"That OTP has expired or was already used. Send a new OTP.",
+  "too-many":"Too many wrong tries. Send a new OTP.",
+  "network":"Could not reach the OTP service. Check your connection and try again.",
+  "http":"The OTP service did not answer. Try again in a minute."
+};
+function clErr(msg){ const e=$("#clErr"); e.textContent=msg||""; e.hidden=!msg; }
+function clStep(n){ $("#clStep1").hidden=n!==1; $("#clStep2").hidden=n!==2; clErr(""); setTimeout(()=>{ const f=$(n===1?"#clEmail":"#clCode"); if(f&&!$("#certLock").hidden) f.focus(); },40); }
+function clCountdown(sec){
+  clearInterval(CL_TIMER); const b=$("#clResend"); let s=sec;
+  const tick=()=>{ if(s<=0){ clearInterval(CL_TIMER); b.disabled=false; b.textContent="Send OTP again"; return; } b.disabled=true; b.textContent="Send OTP again in "+s+" s"; s--; };
+  tick(); CL_TIMER=setInterval(tick,1000);
+}
+async function clSendOtp(again){
+  const email=(again?CL_EMAIL:$("#clEmail").value).trim().toLowerCase();
+  if(!/^[^\s@<>,;]+@[^\s@<>,;]+\.[^\s@<>,;]+$/.test(email)){ clErr(CL_MSG["bad-email"]); $("#clEmail").focus(); return; }
+  if(!SCRIPT_URL){ clErr(CL_MSG["not-set"]); return; }
+  const b=again?$("#clResend"):$("#clSend"), label=b.textContent; b.disabled=true; if(!again) b.textContent="Sending…"; clErr("");
+  const j=await callScript({action:"otp-send",email:email},20000);
+  if(!again){ b.disabled=false; b.textContent=label; }
+  if(j.ok){
+    CL_EMAIL=email; $("#clSent").innerHTML="OTP has been shared to your email <b>"+esc(email)+"</b>. It works for "+(j.minutes||10)+" minutes.";
+    $("#clCode").value=""; clStep(2); clCountdown(60); if(again) toast("A new OTP is on its way");
+    return;
+  }
+  if(again) b.disabled=false;
+  clErr(CL_MSG[j.error]||CL_MSG.http);
+}
+async function clVerifyOtp(){
+  const code=$("#clCode").value.replace(/\D/g,"");
+  if(code.length!==6){ clErr("Enter the 6-digit OTP from the email."); $("#clCode").focus(); return; }
+  const b=$("#clVerify"); b.disabled=true; b.textContent="Checking…"; clErr("");
+  const j=await callScript({action:"otp-verify",email:CL_EMAIL,code:code},20000);
+  b.disabled=false; b.textContent="Verify and open";
+  if(j.ok){
+    try{ localStorage.setItem(CERT_ACCESS_KEY,JSON.stringify({email:j.email||CL_EMAIL,until:Date.now()+(j.hours||12)*3600000})); }catch(e){}
+    clearInterval(CL_TIMER); $("#clCode").value=""; clStep(1); certLockRefresh(); certRefresh(); toast("Certification is open");
+    return;
+  }
+  clErr(j.error==="wrong"?"That OTP is not right. "+(j.left===1?"1 try":(j.left||0)+" tries")+" left.":(CL_MSG[j.error]||CL_MSG.http));
+  if(j.error==="expired"||j.error==="too-many") $("#clCode").value="";
+}
+function certLockNow(){ try{ localStorage.removeItem(CERT_ACCESS_KEY); }catch(e){} CL_EMAIL=""; clearInterval(CL_TIMER); clStep(1); certLockRefresh(); toast("Certification is locked on this device"); }
+$("#clSend").addEventListener("click",()=>clSendOtp(false));
+$("#clEmail").addEventListener("keydown",e=>{ if(e.key==="Enter") clSendOtp(false); });
+$("#clVerify").addEventListener("click",clVerifyOtp);
+$("#clCode").addEventListener("keydown",e=>{ if(e.key==="Enter") clVerifyOtp(); });
+$("#clCode").addEventListener("input",()=>{ const v=$("#clCode").value.replace(/\D/g,"").slice(0,6); if(v!==$("#clCode").value) $("#clCode").value=v; });
+$("#clResend").addEventListener("click",()=>clSendOtp(true));
+$("#clChange").addEventListener("click",()=>{ clearInterval(CL_TIMER); clStep(1); });
+$("#certLockNow").addEventListener("click",certLockNow);
+certLockRefresh();
 
 /* Ask tab: SOP topics answer when they clearly match; a weak match is discounted so client rules do not hijack general questions */
 function sSearch(q){
