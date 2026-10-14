@@ -563,6 +563,18 @@ textarea.fbin{resize:vertical;min-height:110px;line-height:1.5}
 .fbdone p{margin:6px 0 0;color:var(--ink-2);font-size:14px;line-height:1.5}
 .fbdone .fbrow{justify-content:center}
 #fbSend:disabled{opacity:.6;cursor:progress}
+.fbshots[hidden],.fbphi[hidden],#fbShotsMail[hidden]{display:none}
+.fbdrop{display:flex;align-items:center;gap:8px 12px;flex-wrap:wrap;border:1.5px dashed var(--line-2);border-radius:8px;padding:10px 12px;font-size:13px;line-height:1.45;color:var(--ink-3);background:#fbfdfd;transition:.14s}
+.fbdrop.over{border-color:var(--blue);background:var(--blue-soft)}
+.fbdrop b{color:var(--ink-2)}
+.fbthumbs{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.fbthumbs:empty{display:none}
+.fbthumb{position:relative;width:120px;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#fff}
+.fbthumb img{display:block;width:100%;height:78px;object-fit:cover;object-position:top left;background:#f1f7f7}
+.fbthumb span{display:block;font-size:11px;color:var(--ink-3);padding:4px 7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fbthumb button{position:absolute;top:4px;right:4px;width:24px;height:24px;border-radius:50%;border:0;background:rgba(11,27,38,.78);color:#fff;font-size:16px;line-height:1;cursor:pointer}
+.fbphi{display:flex;gap:8px;align-items:flex-start;margin-top:10px;padding:9px 11px;border-radius:8px;background:var(--amber-soft);border:1px solid var(--amber-line);font-size:13px;color:var(--amber);line-height:1.45;cursor:pointer}
+.fbphi input{margin:2px 0 0;flex:0 0 auto;width:16px;height:16px}
 @media(min-width:701px){.fbwrap{align-items:center}}
 
 @media(max-width:700px){
@@ -980,6 +992,17 @@ textarea.fbin{resize:vertical;min-height:110px;line-height:1.5}
     <input type="text" id="fbCtx" class="fbin" readonly>
     <label class="fbl" for="fbMsg">Your feedback</label>
     <textarea id="fbMsg" class="fbin" rows="5" placeholder="What did you expect, and what did you see? Quote the exact line if it is a content error."></textarea>
+    <label class="fbl">Screenshots (optional)</label>
+    <div class="fbshots" id="fbShots" hidden>
+      <div class="fbdrop" id="fbDrop">
+        <button type="button" class="btn ghost sm" id="fbPick">+ Add a screenshot</button>
+        <span>or press <b>Ctrl+V</b> to paste a snip, or drag an image here. Up to 3.</span>
+        <input type="file" id="fbFile" accept="image/*" multiple hidden>
+      </div>
+      <div class="fbthumbs" id="fbThumbs"></div>
+      <label class="fbphi" id="fbPhiRow" hidden><input type="checkbox" id="fbPhi"><span>I checked my screenshots: no patient names, member IDs or claim numbers are visible.</span></label>
+    </div>
+    <p class="fbnote" id="fbShotsMail">To share a screenshot, attach it in your email app after it opens.</p>
     <div class="fbpair">
       <div><label class="fbl" for="fbName">Your name (optional)</label><input type="text" id="fbName" class="fbin" autocomplete="name"></div>
       <div><label class="fbl" for="fbEmail">Your email (optional)</label><input type="email" id="fbEmail" class="fbin" autocomplete="email" placeholder="So the team can reply"></div>
@@ -1375,8 +1398,47 @@ function fbText(){
   return "Type: "+d.type+"\nWhere: "+d.where+"\nFrom: "+(d.name||"(not given)")+(d.email?" <"+d.email+">":"")+"\nPage: "+d.page+"\n\n"+d.message+"\n";
 }
 function fbMailto(){ return "mailto:"+FEEDBACK_TO.join(",")+"?subject="+encodeURIComponent(fbSubject())+"&body="+encodeURIComponent(fbText()); }
-function fbReady(){
+/* screenshots: picked, pasted (a Snipping Tool snip is on the clipboard) or dropped; each is
+   redrawn on a canvas, at most 2000 px on its longer side, as PNG, or as JPG when the PNG is large */
+let FB_FILES=[];
+const FB_MAX_FILES=3, FB_MAX_SIDE=2000, FB_MAX_CHARS=2200000;
+function fbShrink(file,n){
+  return new Promise((resolve,reject)=>{
+    const url=URL.createObjectURL(file), img=new Image();
+    img.onload=()=>{
+      const draw=(w,h)=>{ const c=document.createElement("canvas"); c.width=w; c.height=h; const x=c.getContext("2d"); x.fillStyle="#fff"; x.fillRect(0,0,w,h); x.drawImage(img,0,0,w,h); return c; };
+      const k=Math.min(1,FB_MAX_SIDE/Math.max(img.naturalWidth,img.naturalHeight));
+      let w=Math.max(1,Math.round(img.naturalWidth*k)), h=Math.max(1,Math.round(img.naturalHeight*k)), c=draw(w,h);
+      let type="image/png", data=c.toDataURL(type);
+      if(data.length>FB_MAX_CHARS){ type="image/jpeg"; data=c.toDataURL(type,0.85); }
+      if(data.length>FB_MAX_CHARS) data=c.toDataURL(type,0.65);
+      while(data.length>FB_MAX_CHARS&&Math.max(w,h)>400){ w=Math.round(w*0.8); h=Math.round(h*0.8); c=draw(w,h); data=c.toDataURL(type,0.65); }   // a photo, not a screenshot: smaller until it fits
+      URL.revokeObjectURL(url);
+      const given=(file.name&&!/^image\.(png|jpe?g)$/i.test(file.name))?file.name.replace(/\.[^.]+$/,"").replace(/[^\w .-]+/g,"").trim().slice(0,40):"";
+      resolve({name:(given||"screenshot-"+n)+(type==="image/png"?".png":".jpg"),type:type,data:data,w:w,h:h,bytes:Math.round((data.length-data.indexOf(",")-1)*3/4)});
+    };
+    img.onerror=()=>{ URL.revokeObjectURL(url); reject(new Error("unreadable")); };
+    img.src=url;
+  });
+}
+async function fbAddFiles(list){
+  const all=Array.from(list||[]), imgs=all.filter(f=>/^image\//.test(f.type||""));
+  if(all.length&&!imgs.length){ toast("Only images can be attached: PNG or JPG"); return; }
+  for(const f of imgs){
+    if(FB_FILES.length>=FB_MAX_FILES){ toast("Up to "+FB_MAX_FILES+" screenshots per message"); break; }
+    try{ FB_FILES.push(await fbShrink(f,FB_FILES.length+1)); }catch(e){ toast("That image could not be read. Use PNG or JPG"); }
+  }
+  fbDrawThumbs();
+}
+function fbKB(n){ return n>=1048576?(n/1048576).toFixed(1)+" MB":Math.max(1,Math.round(n/1024))+" KB"; }
+function fbDrawThumbs(){
+  $("#fbThumbs").innerHTML=FB_FILES.map((f,i)=>'<div class="fbthumb"><img src="'+f.data+'" alt="Screenshot '+(i+1)+'"><span>'+f.w+'×'+f.h+' · '+fbKB(f.bytes)+'</span><button type="button" data-i="'+i+'" aria-label="Remove screenshot '+(i+1)+'" title="Remove">×</button></div>').join("");
+  $("#fbPhiRow").hidden=!FB_FILES.length; if(!FB_FILES.length) $("#fbPhi").checked=false;
+}
+function fbClearFiles(){ FB_FILES=[]; fbDrawThumbs(); }
+function fbReady(withShots){
   if($("#fbMsg").value.trim().length<3){ $("#fbMsg").focus(); toast("Write a line of feedback first"); return false; }
+  if(withShots&&FB_FILES.length&&!$("#fbPhi").checked){ $("#fbPhi").focus(); toast("Tick the box to confirm the screenshots show no patient details"); return false; }
   const em=$("#fbEmail").value.trim();
   if(em&&!/^[^\s@<>,;]+@[^\s@<>,;]+\.[^\s@<>,;]+$/.test(em)){ $("#fbEmail").focus(); toast("Check the email address, or leave it empty"); return false; }
   return true;
@@ -1385,6 +1447,7 @@ function fbReady(){
 function fbMode(){
   const direct=!!FEEDBACK_RELAY;
   $("#fbSend").hidden=!direct; $("#fbMail").hidden=direct; $("#fbMail").className=direct?"btn ghost":"btn";
+  $("#fbShots").hidden=!direct; $("#fbShotsMail").hidden=direct;
   $("#fbErr").hidden=true;
 }
 function fbOpen(){
@@ -1395,12 +1458,13 @@ function fbOpen(){
 }
 function fbClose(){ $("#fbWrap").hidden=true; }
 async function fbSendDirect(){
-  if(!fbReady()) return;
+  if(!fbReady(true)) return;
   const b=$("#fbSend"); b.disabled=true; b.textContent="Sending…"; $("#fbErr").hidden=true;
   let ok=false, why="";
   try{
-    const ctl=new AbortController(), timer=setTimeout(()=>ctl.abort(),20000);
-    const r=await fetch(FEEDBACK_RELAY,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(fbData()),redirect:"follow",signal:ctl.signal});
+    const ctl=new AbortController(), timer=setTimeout(()=>ctl.abort(),FB_FILES.length?90000:20000);
+    const payload=Object.assign(fbData(),{attachments:FB_FILES.map(f=>({name:f.name,type:f.type,data:f.data.slice(f.data.indexOf(",")+1)}))});
+    const r=await fetch(FEEDBACK_RELAY,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(payload),redirect:"follow",signal:ctl.signal});
     clearTimeout(timer);
     const j=await r.json().catch(()=>null);
     ok=!!(r.ok&&j&&j.ok===true); if(!ok) why=(j&&j.error)||"http";
@@ -1408,8 +1472,9 @@ async function fbSendDirect(){
   b.disabled=false; b.textContent="Send feedback";
   if(ok){
     try{ const n=$("#fbName").value.trim(); if(n) localStorage.setItem("gk_name",n); }catch(e){}
-    $("#fbMsg").value=""; $("#fbForm").hidden=true; $("#fbDone").hidden=false;
-    $("#fbDoneTo").textContent="It went by email to "+listJoin(FEEDBACK_TO)+".";
+    const shots=FB_FILES.length;
+    $("#fbMsg").value=""; fbClearFiles(); $("#fbForm").hidden=true; $("#fbDone").hidden=false;
+    $("#fbDoneTo").textContent="It went by email to "+listJoin(FEEDBACK_TO)+(shots?", with "+shots+" screenshot"+(shots>1?"s":""):"")+".";
     return;
   }
   $("#fbErr").innerHTML="<b>Not sent.</b> "+(why==="busy"?"Too many messages in the last few minutes. Try again shortly, or":"The feedback service could not be reached. Nothing is lost:")+" use <b>Open in email</b> or <b>Copy instead</b> below.";
@@ -1422,7 +1487,24 @@ $("#fbWrap").addEventListener("click",e=>{ if(e.target===$("#fbWrap")) fbClose()
 addEventListener("keydown",e=>{ if(e.key==="Escape"&&!$("#fbWrap").hidden) fbClose(); });
 $$("#fbTypes .chip").forEach(b=>b.addEventListener("click",()=>{ $$("#fbTypes .chip").forEach(x=>x.classList.toggle("on",x===b)); }));
 $("#fbSend").addEventListener("click",fbSendDirect);
-$("#fbMail").addEventListener("click",()=>{ if(!fbReady()) return; location.href=fbMailto(); toast("Opening your email app"); setTimeout(fbClose,600); });
+$("#fbMail").addEventListener("click",()=>{ if(!fbReady()) return; location.href=fbMailto(); toast(FB_FILES.length?"Opening your email app. Attach your screenshots there before you send":"Opening your email app"); setTimeout(fbClose,FB_FILES.length?2500:600); });
+$("#fbPick").addEventListener("click",()=>$("#fbFile").click());
+$("#fbFile").addEventListener("change",()=>{ fbAddFiles($("#fbFile").files); $("#fbFile").value=""; });
+$("#fbThumbs").addEventListener("click",e=>{ const b=e.target.closest("button[data-i]"); if(!b) return; FB_FILES.splice(+b.dataset.i,1); fbDrawThumbs(); });
+/* a snip on the clipboard: Ctrl+V anywhere in the open form */
+document.addEventListener("paste",e=>{
+  if($("#fbWrap").hidden||$("#fbForm").hidden||$("#fbShots").hidden) return;
+  const files=Array.from((e.clipboardData&&e.clipboardData.items)||[]).filter(it=>it.kind==="file"&&/^image\//.test(it.type)).map(it=>it.getAsFile()).filter(Boolean);
+  if(!files.length) return;
+  e.preventDefault(); fbAddFiles(files);
+});
+/* drop an image anywhere on the form; the dashed box lights up */
+(function(){ const card=$(".fbcard"), drop=$("#fbDrop"); let depth=0;
+  card.addEventListener("dragenter",e=>{ if($("#fbShots").hidden) return; e.preventDefault(); depth++; drop.classList.add("over"); });
+  card.addEventListener("dragover",e=>{ if($("#fbShots").hidden) return; e.preventDefault(); });
+  card.addEventListener("dragleave",()=>{ if(--depth<=0){ depth=0; drop.classList.remove("over"); } });
+  card.addEventListener("drop",e=>{ if($("#fbShots").hidden) return; e.preventDefault(); depth=0; drop.classList.remove("over"); fbAddFiles(e.dataTransfer&&e.dataTransfer.files); });
+})();
 $("#fbCopy").addEventListener("click",()=>{ if(!fbReady()) return; copy("To: "+FEEDBACK_TO.join(", ")+"\nSubject: "+fbSubject()+"\n\n"+fbText()); });
 $("#fbAgain").addEventListener("click",()=>{ $("#fbDone").hidden=true; $("#fbForm").hidden=false; fbMode(); setTimeout(()=>$("#fbMsg").focus(),50); });
 $("#fbDoneClose").addEventListener("click",fbClose);
