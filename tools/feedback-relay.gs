@@ -1,9 +1,10 @@
 /* Purview Gurukul: feedback relay (Google Apps Script web app)
    ------------------------------------------------------------
    The Gurukul site is static, so it cannot send email by itself. This tiny web
-   app receives a feedback message from the site and emails it straight to the
-   maintainers below. It stores nothing: no sheet, no log, no copy. The
-   recipients are fixed here, so the web app cannot be used to email anyone else.
+   app receives a feedback message from the site, with up to three screenshots,
+   and emails it straight to the maintainers below. It stores nothing: no sheet,
+   no log, no copy. The recipients are fixed here, so the web app cannot be used
+   to email anyone else, and only PNG or JPG images go through as attachments.
 
    One-time setup, by the owner of the Google account that should send the mail
    (about five minutes):
@@ -30,6 +31,9 @@ const TO = ["shreya.k@purview-healthcare.com", "sweety.t@purviewservices.com"];
 const MAX_MESSAGE = 4000;      // characters
 const BURST_LIMIT = 20;        // messages from everyone together...
 const BURST_WINDOW = 600;      // ...in any 10 minutes (seconds)
+const MAX_FILES = 3;           // screenshots per message
+const MAX_FILE_BYTES = 4 * 1024 * 1024;
+const MAX_TOTAL_BYTES = 8 * 1024 * 1024;
 
 function doGet() {
   return json_({ ok: true, service: "gurukul-feedback" });
@@ -53,12 +57,14 @@ function doPost(e) {
     const email = line_(d.email, 120);
     const page = line_(d.page, 300);
     const replyTo = /^[^\s@<>,;]+@[^\s@<>,;]+\.[^\s@<>,;]+$/.test(email) ? email : "";
+    const files = screenshots_(d.attachments);
 
     const body =
       "Type: " + type + "\n" +
       "Where: " + (where || "-") + "\n" +
       "From: " + (name || "(not given)") + (replyTo ? " <" + replyTo + ">" : "") + "\n" +
-      "Page: " + (page || "-") + "\n\n" +
+      "Page: " + (page || "-") + "\n" +
+      (files.length ? "Screenshots: " + files.length + " attached\n" : "") + "\n" +
       message + "\n\n" +
       "Sent from the Feedback button in Purview Gurukul." + (replyTo ? " Reply to this email to answer the sender." : "") + "\n";
 
@@ -69,11 +75,33 @@ function doPost(e) {
       name: "Purview Gurukul"
     };
     if (replyTo) mail.replyTo = replyTo;
+    if (files.length) mail.attachments = files;
     MailApp.sendEmail(mail);
     return json_({ ok: true });
   } catch (err) {
     return json_({ ok: false, error: "send failed" });
   }
+}
+
+/* up to MAX_FILES real PNG or JPG images, each checked by its first bytes, within the size limits */
+function screenshots_(list) {
+  if (!Array.isArray(list)) return [];
+  const out = [];
+  let total = 0;
+  list.slice(0, MAX_FILES).forEach(function (f, i) {
+    if (!f || typeof f.data !== "string") return;
+    let bytes;
+    try { bytes = Utilities.base64Decode(f.data.replace(/^data:[^,]*,/, "")); } catch (err) { return; }
+    if (!bytes || !bytes.length || bytes.length > MAX_FILE_BYTES || total + bytes.length > MAX_TOTAL_BYTES) return;
+    const u = function (k) { return (bytes[k] + 256) % 256; };
+    const png = bytes.length > 8 && u(0) === 0x89 && u(1) === 0x50 && u(2) === 0x4e && u(3) === 0x47;
+    const jpg = bytes.length > 3 && u(0) === 0xff && u(1) === 0xd8 && u(2) === 0xff;
+    if (!png && !jpg) return;
+    total += bytes.length;
+    const base = line_(f.name, 60).replace(/\.[a-z0-9]+$/i, "").replace(/[^\w .-]+/g, "").trim() || ("screenshot-" + (i + 1));
+    out.push(Utilities.newBlob(bytes, png ? "image/png" : "image/jpeg", base + (png ? ".png" : ".jpg")));
+  });
+  return out;
 }
 
 /* one line of plain text: no line breaks or control characters, trimmed and capped */
