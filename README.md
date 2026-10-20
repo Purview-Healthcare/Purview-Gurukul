@@ -10,5 +10,6 @@ Static training app for Purview Healthcare's RCM teams, published with GitHub Pa
 - `sources.js` – official source links per topic and the quarterly review schedule.
 - `sops.js` – general Purview SOP placeholders.
 - `sops-abw.js` – the ABW Medical client playbook and its assessment questions (names, contacts and account numbers deliberately left out).
+- `sops-hagion.js` – the Hagion (Joppa Trading and Medical Supplies) client playbook and its assessment questions, from the Process Flow SOP, the NikoHealth Navigation SOP and the Update Tracker (staff names, phone numbers and screenshots with patient details left out). It adds itself to the client list, so it also appears as a process in Certification.
 - `sw.js` – offline cache; bump `VER` on every release.
 - `tools/gurukul-email.gs` – the Google Apps Script that does Gurukul's email: it sends feedback (with up to three screenshots) straight to the maintainers, and it sends and checks the one-time password that opens the Certification page for approved email IDs. The approved list is kept in the script's Script Properties (`CERT_EMAILS`), not in this public code. Setup steps are at the top of the file; put its web app URL in `SCRIPT_URL` in `index.html`. Until then, Feedback opens the user's own mail app and Certification stays locked.
