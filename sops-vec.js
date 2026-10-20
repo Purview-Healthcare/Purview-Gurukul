@@ -42,14 +42,14 @@ SOP_CLIENTS.push(
   remember:"Submit → acknowledged → adjudicated → ERA/EOB → posted → reviewed. Not right → follow up → correct, reprocess or appeal.",
   source:SRC_AR},
  {id:"vec-allocation",title:"VEC allocation and follow-up timelines",
-  keywords:["vec allocation","vec age bucket","outstanding ar report vec","vec follow up tat","vec tat","vec follow up days","vec claim in process","vec set to pay","pa filed","email inquiry sent","vec paper claim","vec daily allocation","vec reallocation"],
+  keywords:["vec allocation","vec age bucket","outstanding ar report vec","vec follow up tat","vec tat","vec follow up days","vec claim in process","vec set to pay","pa filed","vec prior authorization filed","email inquiry sent","vec paper claim","vec daily allocation","vec reallocation"],
   line:"Sort the outstanding AR report by age bucket and work the oldest buckets first. Each status has its own follow-up time: vision payers are quick (2 to 15 days), medical payers mostly 20 days, and client assistance 7 days for both.",
-  compare:{title:"Follow-up timelines (days)",head:["Status","Vision payers","Medical payers"],rows:[["Claim Filed","5","20"],["Claim In Process","7","20"],["Set To Pay","7","20"],["Appeal Sent","14","20"],["MR Sent","14","20"],["Email Inquiry Sent","7","—"],["Paper Claim","15","20"],["PA Filed","2","—"],["Client Assistance","7","7"],["Corrected Claim","5","20"]]},
+  compare:{title:"Follow-up timelines (days)",head:["Status","Vision payers","Medical payers"],rows:[["Claim Filed","5","20"],["Claim In Process","7","20"],["Set To Pay","7","20"],["Appeal Sent","14","20"],["MR Sent","14","20"],["Email Inquiry Sent","7","—"],["Paper Claim","15","20"],["PA Filed (prior authorization filed)","2","—"],["Client Assistance","7","7"],["Corrected Claim","5","20"]]},
   body:[
    "**Weekly, then daily.** The weekly allocation is pulled from the outstanding AR report and sorted by age bucket, with priority on the older buckets. It is assigned to the team day by day; production is matched against the allocation to find what is still pending, and that is reallocated as needed.",
-   "**Why the timelines differ.** Vision plans process quickly, so a vision claim in process is checked again in a week, and a PA Filed status in 2 days. Medical payers take longer, so most medical statuses wait 20 days."
+   "**Why the timelines differ.** Vision plans process quickly, so a vision claim in process is checked again in a week, and a filed prior authorization (PA Filed) in 2 days. Medical payers take longer, so most medical statuses wait 20 days."
   ],
-  tips:["‘Set To Pay’ means the payer has approved payment: follow it up until the money arrives and is posted."],
+  tips:["‘Set To Pay’ means the payer has approved payment: follow it up until the money arrives and is posted.","‘PA Filed’ means a prior authorization has been filed with the vision plan: check it again in 2 days."],
   remember:"Oldest age buckets first. Vision: 2–15 days by status. Medical: 20 days. Client assistance: 7 days.",
   source:SRC_AR}
 ]},
@@ -191,7 +191,7 @@ const Q=[
 {t:"VEC basics",q:"How is the outstanding AR report sorted for allocation?",correct:"By age bucket, older buckets first",wrongs:["By payer name, A to Z","By balance, smallest first","By date of service, newest first"],ex:"Priority goes to follow-up on claims in the higher age buckets."},
 {t:"VEC basics",q:"A vision claim is In Process. When is the next follow-up?",correct:"7 days",wrongs:["2 days","14 days","20 days"],ex:"Vision payers: Claim In Process 7 days; medical payers: 20 days."},
 {t:"VEC basics",q:"A medical claim is In Process. When is the next follow-up?",correct:"20 days",wrongs:["7 days","5 days","14 days"],ex:"Medical payers: most statuses follow up at 20 days."},
-{t:"VEC basics",q:"A vision claim’s status is PA Filed. Follow up in:",correct:"2 days",wrongs:["5 days","7 days","15 days"],ex:"Vision payers: PA Filed is followed up in 2 days."},
+{t:"VEC basics",q:"A prior authorization has been filed with a vision plan (PA Filed). Follow up in:",correct:"2 days",wrongs:["5 days","7 days","15 days"],ex:"Vision payers: PA Filed (prior authorization filed) is followed up in 2 days."},
 {t:"VEC basics",q:"The client assistance follow-up, for vision and medical claims:",correct:"7 days for both",wrongs:["2 days for vision, 20 for medical","14 days for both","20 days for both"],ex:"Client Assistance is 7 days for vision and medical payers alike."},
 {t:"VEC basics",q:"A claim shows paid. Before closing it, AR checks:",correct:"That it was paid correctly, with no underpayment or denied line",wrongs:["Only that some payment has posted against the claim in TriZetto","That the patient was sent a statement for the remaining copay","That EV uploaded the vision benefits and the Auth for the visit"],ex:"Payment review: verify the payment is correct, not underpaid, and that no line is denied."},
 
