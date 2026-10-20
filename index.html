@@ -651,17 +651,18 @@ textarea.fbin{resize:vertical;min-height:110px;line-height:1.5}
   #printSheet .popts li.picked em{color:#c0392b}
   #printSheet .pex{margin:5px 0 0;font-size:10pt;color:#333}
   #printSheet .pfoot{margin-top:18px;font-size:9.5pt;color:#555;border-top:1px solid #999;padding-top:8px}
-  #printSheet .certsheet{border:6px double #1f3b57;padding:40px 48px;text-align:center;font-family:Georgia,"Times New Roman",serif;page-break-inside:avoid;box-sizing:border-box;min-height:184mm;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  #printSheet .certsheet{border:6px double #1f3b57;padding:28px 48px;text-align:center;font-family:Georgia,"Times New Roman",serif;page-break-inside:avoid;box-sizing:border-box;min-height:182mm;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  #printSheet .certlogo{height:14mm;width:45.57mm;margin:0 0 3mm;flex:0 0 auto}
   #printSheet .certbrand{font-size:10.5pt;letter-spacing:.22em;text-transform:uppercase;color:#1f3b57}
-  #printSheet .certsheet h1{font-size:30pt;margin:14px 0 2px;color:#0b8f84}
+  #printSheet .certsheet h1{font-size:30pt;margin:8px 0 2px;color:#0b8f84}
   #printSheet .certarea{font-size:13pt;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#1f3b57;margin:2px 0 0}
-  #printSheet .certof{font-size:12pt;color:#444;margin:16px 0 4px}
+  #printSheet .certof{font-size:12pt;color:#444;margin:12px 0 4px}
   #printSheet .certname{font-size:26pt;font-weight:700;margin:0 0 12px;border-bottom:1px solid #999;padding:0 30px 4px}
   #printSheet .certsheet p:not([class]){font-size:12.5pt;line-height:1.6;max-width:640px;margin:6px auto}
-  #printSheet .certid{font-size:10pt;color:#666;margin-top:16px}
-  #printSheet .certsign{display:flex;justify-content:space-around;gap:30px;margin-top:46px;align-self:stretch}
+  #printSheet .certid{font-size:10pt;color:#666;margin-top:12px}
+  #printSheet .certsign{display:flex;justify-content:space-around;gap:30px;margin-top:34px;align-self:stretch}
   #printSheet .certsign div{border-top:1px solid #333;padding-top:6px;min-width:190px;font-size:10.5pt;color:#333}
-  #printSheet .certfoot{font-size:9.5pt;color:#666;margin-top:22px}
+  #printSheet .certfoot{font-size:9.5pt;color:#666;margin-top:16px}
   #printSheet .qasheet table{width:100%;border-collapse:collapse;font-size:11pt;margin:12px 0}
   #printSheet .qasheet th,#printSheet .qasheet td{border:1px solid #999;padding:6px 8px;text-align:left}}
 
@@ -2106,8 +2107,21 @@ function printHTML(html,page){
   const done=()=>{ document.body.classList.remove("printing"); if(pg) pg.remove(); removeEventListener("afterprint",done); document.removeEventListener("click",done); };
   addEventListener("afterprint",done); setTimeout(()=>{ window.print(); setTimeout(()=>document.addEventListener("click",done),400); },30);
 }
+/* The Purview Healthcare logo for printouts, as one SVG: the top bar's mark, with its gradient
+   renamed because the top bar is hidden while printing, and the wordmark as SVG text with a
+   gradient fill (CSS gradient text can show hairline edges in PDFs). Units are the mark's
+   (16 per top-bar pixel); the text widths are Poppins's own, held fixed so a stand-in font
+   keeps the same layout. */
+function pvLogo(){
+  const m=$("#pvFallback .hexmark"); if(!m) return "";
+  const font=' style="font-family:var(--font-display)" lengthAdjust="spacingAndGlyphs"';
+  return '<svg class="certlogo" viewBox="0 0 2500 768" role="img" aria-label="Purview Healthcare">'+m.innerHTML.replace(/\bpvg\b/g,"pvgPrint")+
+    '<defs><linearGradient id="pvgPrintT" gradientUnits="userSpaceOnUse" x1="914" y1="0" x2="2489" y2="0"><stop offset="0" stop-color="#3ee08f"/><stop offset="1" stop-color="#25c6ea"/></linearGradient></defs>'+
+    '<text x="914" y="358" font-weight="800" font-size="336" fill="#0b1b26" textLength="1575"'+font+'>PURVIEW</text>'+
+    '<text x="914" y="660" font-weight="600" font-size="240" fill="url(#pvgPrintT)" textLength="1429"'+font+'>Heal+hcare</text></svg>';
+}
 function certSheet(kind,area,name,body,idline,signs,foot){
-  return '<div class="certsheet"><div class="certbrand">Purview Gurukul · Purview Healthcare</div><h1>'+kind+'</h1><p class="certarea">'+esc(area)+'</p><p class="certof">This certifies that</p><p class="certname">'+esc(name)+'</p>'+body+
+  return '<div class="certsheet">'+pvLogo()+'<div class="certbrand">Purview Gurukul</div><h1>'+kind+'</h1><p class="certarea">'+esc(area)+'</p><p class="certof">This certifies that</p><p class="certname">'+esc(name)+'</p>'+body+
     '<p class="certid">'+idline+'</p><div class="certsign">'+signs.map(s=>'<div>'+esc(s)+'</div>').join("")+'</div><p class="certfoot">'+esc(foot)+'</p></div>';
 }
 const CERT_PAGE="size:A4 landscape;margin:12mm";   // certificates print landscape, one per page
