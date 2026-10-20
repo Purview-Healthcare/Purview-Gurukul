@@ -1417,7 +1417,7 @@ function logQuestion(q){}
    straight to the maintainers, and it sends and checks the one-time password that
    opens the Certification page for approved email IDs. While SCRIPT_URL is empty,
    feedback falls back to the user's own mail app and Certification stays locked. */
-const SCRIPT_URL="";
+const SCRIPT_URL="https://script.google.com/macros/s/AKfycbwI4dQ0pgnVAzcpgaqqKfNJLCDKAt2v8bCyQjM0_S7HIvEJB681o3Z66ytPkGlX_Wgu/exec";
 /* one call to the script; never throws, and answers {ok:false,error:...} on trouble */
 async function callScript(payload,ms){
   if(!SCRIPT_URL) return {ok:false,error:"not-set"};
