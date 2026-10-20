@@ -1006,7 +1006,7 @@ textarea.fbin{resize:vertical;min-height:110px;line-height:1.5}
     </div>
     <div id="certBody">
     <div class="certaccess" id="certAccess" hidden><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 7.5-2"/></svg><span>Open for <b id="certAccessWho"></b> on this device until <b id="certAccessUntil"></b>.</span><button class="linkbtn" id="certLockNow">Lock now</button></div>
-    <div class="certwho"><label for="certName">Your name</label><input class="fbin" id="certName" placeholder="Full name for your certificates" autocomplete="name"></div>
+    <div class="certwho"><label for="certName">Your name</label><input class="fbin" id="certName" placeholder="Full name for your certificates" autocomplete="off"></div>
     <div class="certtiles" id="certTiles"></div>
     <div class="certproc" id="certProcRow" hidden><label for="certProc">Process</label><select id="certProc"></select><span>Each process has its own assessment, built from its playbook.</span></div>
     <div id="certPanes"></div>
@@ -2057,7 +2057,7 @@ function certPaneHTML(d){
     '<ul class="certreq"></ul><div class="certrow"><button class="btn cstart"'+(has?'':' disabled')+'>Start the assessment</button><button class="btn ghost cprint" hidden>'+IC.print+'Print certificate</button></div><div class="carea"></div></div>';
 }
 function certRefresh(){
-  const c=certLoad(), name=$("#certName").value.trim()||c.name||"";
+  const c=certLoad(), name=$("#certName").value.trim();
   $$("#certTiles .certtile").forEach(b=>{
     const d=CERT_BY[certKey(b.dataset.t)], st=d?certStatus(c,d):{cls:"",short:"No process yet"}, el=b.querySelector(".cts");
     el.className="cts "+st.cls; el.innerHTML=(st.cls==="ok"?IC.check:"")+esc((d&&d.client?d.client.short+" · ":"")+st.short);
@@ -2123,7 +2123,7 @@ function certPrint(d,p){
     'Certificate no. '+esc(q.id)+' · issued '+esc(q.issued),["QA reviewer signature","Team lead signature"],"Issued from Purview Gurukul. Valid with the signatures above."));
 }
 function qaPrintLog(d,p){
-  const c=certLoad(), s=qaStats(c,d.client.id), name=$("#certName").value.trim()||c.name||"", reviewer=p.querySelector(".qarev").value.trim()||s.q.reviewer||"";
+  const c=certLoad(), s=qaStats(c,d.client.id), name=$("#certName").value.trim()||(c.train["proc:"+d.client.id]||{}).name||"", reviewer=p.querySelector(".qarev").value.trim()||s.q.reviewer||"";
   printHTML('<div class="qasheet"><div class="phead"><span><b>Purview Gurukul</b> · QA record for quality certification</span><span>'+esc(certDate())+'</span></div><h1>QA record'+(name?': '+esc(name):'')+'</h1><p class="pmeta">'+esc(d.client.name)+' process · '+s.n+' claims audited · overall '+(s.n?s.avg.toFixed(1)+'%':'–')+' · standard: at least '+QA_MIN_CLAIMS+' claims at '+QA_MIN_SCORE+'% or more'+(reviewer?' · QA reviewer: '+esc(reviewer):'')+'</p>'+
     '<table><thead><tr><th>#</th><th>Claim reference</th><th>Date audited</th><th>QA score</th></tr></thead><tbody>'+s.rows.map((r,i)=>'<tr><td>'+(i+1)+'</td><td>'+esc(r.ref)+'</td><td>'+esc(r.date)+'</td><td>'+esc(r.score)+'%</td></tr>').join("")+'</tbody></table>'+
     '<div class="certsign"><div>QA reviewer signature</div><div>Trainee signature</div></div></div>');
@@ -2155,8 +2155,9 @@ function certBuild(){
       const c=certLoad(), q=c.qa[d.client.id]; if(q&&q.rows){ q.rows.splice(+x.dataset.i,1); certSave(c); certRefresh(); } });
   });
   $("#certName").addEventListener("change",()=>{ const c=certLoad(); c.name=$("#certName").value.trim(); certSave(c); try{ if(c.name) localStorage.setItem("gk_name",c.name); }catch(e){} certRefresh(); });
-  let nm=certLoad().name||""; if(!nm){ try{ nm=localStorage.getItem("gk_name")||""; }catch(e){} }
-  $("#certName").value=nm;
+  // The name box starts empty for every visit and every person: no name is carried over
+  // from earlier visits or from other parts of the app. Certificates print the name typed
+  // when that assessment was cleared.
   certShow(CERT_TILE);
 }
 certBuild();
@@ -2216,13 +2217,13 @@ async function clVerifyOtp(){
   b.disabled=false; b.textContent="Verify and open";
   if(j.ok){
     try{ localStorage.setItem(CERT_ACCESS_KEY,JSON.stringify({email:j.email||CL_EMAIL,until:Date.now()+(j.hours||12)*3600000})); }catch(e){}
-    clearInterval(CL_TIMER); $("#clCode").value=""; clStep(1); certLockRefresh(); certRefresh(); toast("Certification is open");
+    clearInterval(CL_TIMER); $("#clCode").value=""; $("#certName").value=""; clStep(1); certLockRefresh(); certRefresh(); toast("Certification is open");
     return;
   }
   clErr(j.error==="wrong"?"That OTP is not right. "+(j.left===1?"1 try":(j.left||0)+" tries")+" left.":(CL_MSG[j.error]||CL_MSG.http));
   if(j.error==="expired"||j.error==="too-many") $("#clCode").value="";
 }
-function certLockNow(){ try{ localStorage.removeItem(CERT_ACCESS_KEY); }catch(e){} CL_EMAIL=""; clearInterval(CL_TIMER); clStep(1); certLockRefresh(); toast("Certification is locked on this device"); }
+function certLockNow(){ try{ localStorage.removeItem(CERT_ACCESS_KEY); }catch(e){} CL_EMAIL=""; $("#certName").value=""; clearInterval(CL_TIMER); clStep(1); certLockRefresh(); toast("Certification is locked on this device"); }
 $("#clSend").addEventListener("click",()=>clSendOtp(false));
 $("#clEmail").addEventListener("keydown",e=>{ if(e.key==="Enter") clSendOtp(false); });
 $("#clVerify").addEventListener("click",clVerifyOtp);
