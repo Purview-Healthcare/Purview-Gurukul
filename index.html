@@ -651,15 +651,15 @@ textarea.fbin{resize:vertical;min-height:110px;line-height:1.5}
   #printSheet .popts li.picked em{color:#c0392b}
   #printSheet .pex{margin:5px 0 0;font-size:10pt;color:#333}
   #printSheet .pfoot{margin-top:18px;font-size:9.5pt;color:#555;border-top:1px solid #999;padding-top:8px}
-  #printSheet .certsheet{border:6px double #1f3b57;padding:46px 40px;text-align:center;font-family:Georgia,"Times New Roman",serif;page-break-inside:avoid}
+  #printSheet .certsheet{border:6px double #1f3b57;padding:40px 48px;text-align:center;font-family:Georgia,"Times New Roman",serif;page-break-inside:avoid;box-sizing:border-box;min-height:184mm;display:flex;flex-direction:column;align-items:center;justify-content:center}
   #printSheet .certbrand{font-size:10.5pt;letter-spacing:.22em;text-transform:uppercase;color:#1f3b57}
-  #printSheet .certsheet h1{font-size:27pt;margin:14px 0 2px;color:#0b8f84}
+  #printSheet .certsheet h1{font-size:30pt;margin:14px 0 2px;color:#0b8f84}
   #printSheet .certarea{font-size:13pt;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#1f3b57;margin:2px 0 0}
   #printSheet .certof{font-size:12pt;color:#444;margin:16px 0 4px}
-  #printSheet .certname{font-size:23pt;font-weight:700;margin:0 0 12px;border-bottom:1px solid #999;display:inline-block;padding:0 26px 4px}
-  #printSheet .certsheet p{font-size:12pt;line-height:1.6;max-width:620px;margin:6px auto}
+  #printSheet .certname{font-size:26pt;font-weight:700;margin:0 0 12px;border-bottom:1px solid #999;padding:0 30px 4px}
+  #printSheet .certsheet p:not([class]){font-size:12.5pt;line-height:1.6;max-width:640px;margin:6px auto}
   #printSheet .certid{font-size:10pt;color:#666;margin-top:16px}
-  #printSheet .certsign{display:flex;justify-content:space-around;gap:30px;margin-top:46px}
+  #printSheet .certsign{display:flex;justify-content:space-around;gap:30px;margin-top:46px;align-self:stretch}
   #printSheet .certsign div{border-top:1px solid #333;padding-top:6px;min-width:190px;font-size:10.5pt;color:#333}
   #printSheet .certfoot{font-size:9.5pt;color:#666;margin-top:22px}
   #printSheet .qasheet table{width:100%;border-collapse:collapse;font-size:11pt;margin:12px 0}
@@ -2100,27 +2100,29 @@ function certStart(d,p){
     certSave(c); certRefresh();
   });
 }
-function printHTML(html){
+function printHTML(html,page){
   $("#printSheet").innerHTML=html; document.body.classList.add("printing");
-  const done=()=>{ document.body.classList.remove("printing"); removeEventListener("afterprint",done); document.removeEventListener("click",done); };
+  const pg=page?document.head.appendChild(Object.assign(document.createElement("style"),{textContent:"@page{"+page+"}"})):null;
+  const done=()=>{ document.body.classList.remove("printing"); if(pg) pg.remove(); removeEventListener("afterprint",done); document.removeEventListener("click",done); };
   addEventListener("afterprint",done); setTimeout(()=>{ window.print(); setTimeout(()=>document.addEventListener("click",done),400); },30);
 }
 function certSheet(kind,area,name,body,idline,signs,foot){
   return '<div class="certsheet"><div class="certbrand">Purview Gurukul · Purview Healthcare</div><h1>'+kind+'</h1><p class="certarea">'+esc(area)+'</p><p class="certof">This certifies that</p><p class="certname">'+esc(name)+'</p>'+body+
     '<p class="certid">'+idline+'</p><div class="certsign">'+signs.map(s=>'<div>'+esc(s)+'</div>').join("")+'</div><p class="certfoot">'+esc(foot)+'</p></div>';
 }
+const CERT_PAGE="size:A4 landscape;margin:12mm";   // certificates print landscape, one per page
 function certPrint(d,p){
   const c=certLoad(), st=certStatus(c,d); if(!st.ok) return;
   if(d.kind!=="qa"){ const t=st.t;
     printHTML(certSheet("Certificate of Training",d.client?d.client.name+" process":d.title,t.name,
       '<p>has cleared the <b>'+esc(d.label)+'</b> assessment with a score of <b>'+t.pct+'%</b> ('+t.score+' of '+t.n+' questions) on '+esc(t.date)+', covering '+esc(d.covers())+'. Pass mark '+CERT_PASS+'%.</p>',
-      'Certificate no. '+esc(t.id),["Trainer signature","Date"],"Issued from Purview Gurukul. Valid with the trainer’s signature."));
+      'Certificate no. '+esc(t.id),["Trainer signature","Date"],"Issued from Purview Gurukul. Valid with the trainer’s signature."),CERT_PAGE);
     return; }
   const pid=d.client.id, t=c.train["proc:"+pid], q=c.qa[pid], s=st.s, reviewer=p.querySelector(".qarev").value.trim()||q.reviewer||"";
   if(!q.id){ q.id=certId(d.idp); q.reviewer=reviewer; q.issued=certDate(); certSave(c); }
   printHTML(certSheet("Certificate of Quality",d.client.name+" process",t.name,
     '<p>has completed <b>'+s.n+' audited production claims</b> for the <b>'+esc(d.client.name)+'</b> process with an overall QA score of <b>'+s.avg.toFixed(1)+'%</b>, meeting the standard of at least '+QA_MIN_CLAIMS+' claims at '+QA_MIN_SCORE+'% or more, after clearing the '+esc(d.client.name)+' process training on '+esc(t.date)+'.</p>'+(reviewer?'<p>QA reviewer: <b>'+esc(reviewer)+'</b></p>':''),
-    'Certificate no. '+esc(q.id)+' · issued '+esc(q.issued),["QA reviewer signature","Team lead signature"],"Issued from Purview Gurukul. Valid with the signatures above."));
+    'Certificate no. '+esc(q.id)+' · issued '+esc(q.issued),["QA reviewer signature","Team lead signature"],"Issued from Purview Gurukul. Valid with the signatures above."),CERT_PAGE);
 }
 function qaPrintLog(d,p){
   const c=certLoad(), s=qaStats(c,d.client.id), name=$("#certName").value.trim()||(c.train["proc:"+d.client.id]||{}).name||"", reviewer=p.querySelector(".qarev").value.trim()||s.q.reviewer||"";
