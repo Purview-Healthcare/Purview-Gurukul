@@ -8,7 +8,7 @@
 "use strict";
 const SOP_CLIENTS=[
 {id:"abw",name:"ABW Medical",short:"ABW",updated:"COM updates to 29 September 2026, ABW athena SOPs 2026",
- truth:"The approved Client Operations Manuals (COMs), the ABW SOPs and the SAAG guidelines are the source of truth; rules change on the weekly client call.",
+ truth:"The approved Client Operations Manuals (COMs), the ABW SOPs and the SAAG guidelines (the kick-code file) are the source of truth; rules change on the weekly client call.",
  blurb:"Purview staff work as ABW’s AR and billing team for six US practices, mostly on athenahealth through Privia. This playbook covers how ABW works, the standard note, the client-by-client rules, the workflows that trip people up, and the athenaOne SOPs: Missing Slips, Hold and MGR Hold, kick codes, Zero Pay, Unpostables and patient payments.",
  modules:[
 {id:"abw-a",short:"ABW basics",title:"How ABW works",blurb:"Who the client is, the work types, the systems, and where decisions get parked.",lessons:[
@@ -406,7 +406,7 @@ const SOP_CLIENTS=[
   remember:"Auth or referral: add or fix → DROP + DRPBILLING; records needed → PLSAPPEAL. Not participating: call for the dates. Invalid DX or CPT: paid before → reprocess; never paid → coding team.",
   source:"ABW Workflow SOP, Hold and MGR Hold scenarios; ABW Consolidated SOP, Hold and MGRHOLD workflow (internal)."},
  {id:"abw-kick-codes",title:"Kick codes: which one, and when",
-  keywords:["kick code","kick codes","which kick code","kick code list","drpbilling","drppatient","inform kick code","webaccessgranted","ptresp","plsappeal","adnreview","tertiary kick code","rvclose","cip kick code","cbohold","fwrpayornonresponsive","fwrconfirmdeposit","fwrsharedtinremit","abandoned kick code"],
+  keywords:["kick code","kick codes","which kick code","kick code list","saag","saag guidelines","kick file","kick files","drpbilling","drppatient","inform kick code","webaccessgranted","ptresp","plsappeal","adnreview","tertiary kick code","rvclose","cip kick code","cbohold","fwrpayornonresponsive","fwrconfirmdeposit","fwrsharedtinremit","abandoned kick code"],
   line:"A kick code records why you acted and decides where the claim goes next: back to the payer (DRPBILLING), to the patient (DRPPATIENT, PTRESP), to athena’s team (PLSAPPEAL, ADNREVIEW, TERTIARY), to the practice (MGRHOLD), closed (RVCLOSE), or nowhere at all (INFORM, a note only).",
   compare:[
    {title:"Kick codes you use",head:["When","Kick code","What happens"],rows:[
@@ -427,11 +427,12 @@ const SOP_CLIENTS=[
     ["ABANDONED","A credit balance closed without a refund, or a small balance written off after final efforts"]]}
   ],
   body:[
+   "**SAAG.** ABW also calls its kick-code guidelines SAAG, or the kick file: the same codes and the situations they are for.",
    "**Avoid CIP for notes.** CIP (claim in progress) puts the claim in athena’s queue, where it can go unaddressed, and ages it. To leave a note, use INFORM.",
    "**The FWR codes** appear when athena has finished its standard follow-up and the responsibility shifts back to the practice side. Read them: they tell you what athena already tried.",
    "**Client rules first.** A kick code carries out a decision; it does not make it. Bill or move a balance to the patient, adjust or close only where the EOB and the client’s rules in the COM allow it."
   ],
-  terms:[["Kick code (kick reason)","The code chosen with a claim action that records why and sends the claim to its next queue."],["CBOHOLD","athena’s own work queue: PLSAPPEAL, ADNREVIEW and TERTIARY send claims there."],["CIP","Claim in progress; avoid it for notes, because it ages the claim."]],
+  terms:[["Kick code (kick reason)","The code chosen with a claim action that records why and sends the claim to its next queue."],["SAAG (kick file)","ABW’s name for its kick-code guidelines: which kick code to use in which situation."],["CBOHOLD","athena’s own work queue: PLSAPPEAL, ADNREVIEW and TERTIARY send claims there."],["CIP","Claim in progress; avoid it for notes, because it ages the claim."]],
   tips:["Changed anything on the claim? DRPBILLING. Only writing a note? INFORM.","MGRHOLD without a note is an unfinished action: the manager must know what to decide."],
   remember:"Fixed → DRPBILLING. Patient owes → DRPPATIENT or PTRESP. Note only → INFORM, never CIP. athena appeals → PLSAPPEAL; athena asks the payer → ADNREVIEW. Manager → MGRHOLD with a note. $0 → RVCLOSE.",
   source:"ABW Workflow SOP, scenario-based kick code usage (internal)."},
