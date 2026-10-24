@@ -2413,12 +2413,35 @@ function lineSim(a,b){ const A=stems4(a), B=new Set(stems4(b)), f=w=>LINE_IDF[w]
   const wa=A.reduce((t,w)=>t+f(w),0), wb=[...B].reduce((t,w)=>t+f(w),0), sh=A.filter(w=>B.has(w)).reduce((t,w)=>t+f(w),0);
   return wa&&wb?sh/Math.min(wa,wb):0; }
 const readsLikeOwn=(d,t)=>[].concat(d.questions||[],d.actions||[]).some(o=>lineSim(t,o)>=0.5);
-/* The lines a denial may borrow as wrong options, worked out once per denial: by field, and by owner for true/false. */
+/* A wrong option must also be plainly about something else. It has to carry a word from its own
+   denial's name or keywords that is specific to that denial and appears nowhere in the denial being
+   asked about ("hospice", "modifier", "WC"). A general step that fits many denials ("calculate the
+   appeal deadline", "send it to the coding team") is never used as a wrong option: it may be right. */
+const ANCHOR_SKIP=new Set("claim claims denial denied deny payer payers patient patients insurance insurer service services code codes coding billing billed bill provider providers coverage covered policy policies medical plan plans primary secondary information info request requested missing invalid inconsistent not paid payment payments same other lower level fee schedule time limit date dates obtain check verify verified update submit send ask confirm call follow document documents number details correct corrected reprocess processing processed rep representative status amount balance account accounts review records record issue error used met part rate dollar measure letter 45 filing timely tfl eob eobs appeal appeals appealing deadline resubmit resubmission rebill fax mail portal website phone documentation note notes turnaround tat reference ref escalate client instruction instructions team coder".split(" "));
+const anchorToks=s=>norm(s).split(" ").filter(w=>w.length>=2&&!STEM_SKIP.has(w)&&!ANCHOR_SKIP.has(w));
+const SIG_DF={}, LINE_DF={};
+DATA.forEach(x=>{ new Set([x.name].concat(x.keywords||[]).flatMap(anchorToks).map(w=>w.slice(0,4))).forEach(w=>SIG_DF[w]=(SIG_DF[w]||0)+1);
+  new Set([].concat(x.questions||[],x.actions||[]).flatMap(anchorToks).map(w=>w.slice(0,4))).forEach(w=>LINE_DF[w]=(LINE_DF[w]||0)+1); });
+const SIG={}, VOCAB={};
+const sigOf=x=>SIG[x.name]||(SIG[x.name]=new Set([x.name].concat(x.keywords||[]).flatMap(anchorToks).map(w=>w.slice(0,4)).filter(w=>SIG_DF[w]<=4&&(LINE_DF[w]||0)<=8)));
+const vocabOf=d=>VOCAB[d.name]||(VOCAB[d.name]=new Set([d.name,d.summary||"",d.denial_wording||""].concat(d.keywords||[],d.questions||[],d.actions||[]).flatMap(t=>norm(t).split(" ")).map(w=>w.slice(0,4))));
+/* the word that makes line t (from denial x) plainly foreign to denial d, or null */
+function anchorWord(d,t,x){ const S=sigOf(x), V=vocabOf(d); let best=null;
+  anchorToks(t).forEach(w=>{ const k=w.slice(0,4); if(!S.has(k)||V.has(k)) return; const b=best&&best.slice(0,4);
+    if(!best||SIG_DF[k]<SIG_DF[b]||(SIG_DF[k]===SIG_DF[b]&&w.length>best.length)) best=w; });
+  return best&&asWritten(t,best); }
+const showWord=w=>w.length<=3?w.toUpperCase():w;
+const asWritten=(t,w)=>{ const m=String(t).match(new RegExp("(^|[^A-Za-z0-9])("+w.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+")(?![A-Za-z0-9])","i")); return m?m[2]:showWord(w); };
+const art=n=>/^[aeiou]/i.test(n)?"an":"a";
+function aboutList(ws){ const by={}; ws.forEach(w=>{ const k=w.slice(0,4).toLowerCase(); if(!by[k]||w.length>by[k].length) by[k]=w; });
+  const u=Object.values(by).map(w=>"“"+w+"”"); return u.length>1?u.slice(0,-1).join(", ")+" and "+u[u.length-1]:u[0]; }
+/* The lines a denial may borrow as wrong options, worked out once per denial: {t: line, w: its anchor word, x: its denial}. */
 const WRONG={};
 function wrongBy(d){ if(WRONG[d.name]) return WRONG[d.name];
-  const fit=t=>uniqLine(t)&&!readsLikeOwn(d,t);
-  return WRONG[d.name]=farFrom(d).map(x=>({x:x,questions:(x.questions||[]).filter(fit),actions:(x.actions||[]).filter(fit)})); }
+  const fit=x=>t=>{ if(!uniqLine(t)||readsLikeOwn(d,t)) return null; const w=anchorWord(d,t,x); return w?{t:t,w:w,x:x}:null; };
+  return WRONG[d.name]=farFrom(d).map(x=>({x:x,questions:(x.questions||[]).map(fit(x)).filter(Boolean),actions:(x.actions||[]).map(fit(x)).filter(Boolean)})); }
 const wrongLines=(d,field)=>[].concat(...wrongBy(d).map(e=>e[field]));
+const othersAbout=picks=>"The other three are about "+aboutList(picks.map(o=>o.w))+", which belong to other denials.";
 const uniqCode=c=>{const s=CODE_OWNERS[normCode(c)];return s&&s.size===1;};
 
 function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
@@ -2468,7 +2491,7 @@ const GEN={
     const mine=sentences(d.summary); if(!mine.length) return null;
     const right=mine[0];
     const taken=new Set([norm(right)]);
-    const wrongPool=[]; farFrom(d).forEach(x=>{ const s=sentences(x.summary)[0]; if(s&&!mine.some(m=>lineSim(s,m)>=0.5)) wrongPool.push(s); });
+    const wrongPool=[]; farFrom(d).forEach(x=>{ const s=sentences(x.summary)[0]; if(s&&!mine.some(m=>lineSim(s,m)>=0.5)&&anchorWord(d,s,x)) wrongPool.push(s); });
     const wrongs=distinct(wrongPool,3,norm,taken);
     if(wrongs.length<3) return null;
     return assemble(right,wrongs,{q:"Which statement correctly explains a <b>"+esc(d.name)+"</b> denial?",
@@ -2478,30 +2501,33 @@ const GEN={
     const mine=(d.questions||[]).filter(uniqLine); if(!mine.length) return null;
     const right=pick(mine);
     const taken=new Set((d.questions||[]).map(gist));   // none of this denial's own questions may come back as a wrong option
-    const wrongs=distinct(wrongLines(d,"questions"),3,gist,taken);
-    if(wrongs.length<3) return null;
-    return assemble(right,wrongs,{q:"You are calling the payer on a <b>"+esc(d.name)+"</b> denial. Which of these belongs on that call?",
-      d:d,explain:"One of "+d.questions.length+" questions the library lists for this denial."});
+    const picks=distinct(wrongLines(d,"questions"),3,o=>gist(o.t),taken);
+    if(picks.length<3) return null;
+    const others=othersAbout(picks);
+    return assemble(right,picks.map(o=>o.t),{q:"You are calling the payer on a <b>"+esc(d.name)+"</b> denial. Which of these belongs on that call?",
+      d:d,others:others,explain:"One of "+d.questions.length+" questions the library lists for this denial. "+others});
   },
   whichDo(d){
     const mine=(d.actions||[]).filter(uniqLine); if(!mine.length) return null;
     const right=pick(mine);
     const taken=new Set((d.actions||[]).map(gist));   // none of this denial's own steps may come back as a wrong option
-    const wrongs=distinct(wrongLines(d,"actions"),3,gist,taken);
-    if(wrongs.length<3) return null;
-    return assemble(right,wrongs,{q:"Which of these is a correct step toward <b>resolving</b> a "+esc(d.name)+" denial?",
-      d:d,explain:"One of "+d.actions.length+" resolution steps the library lists for this denial."});
+    const picks=distinct(wrongLines(d,"actions"),3,o=>gist(o.t),taken);
+    if(picks.length<3) return null;
+    const others=othersAbout(picks);
+    return assemble(right,picks.map(o=>o.t),{q:"Which of these is a correct step toward <b>resolving</b> "+art(d.name)+" "+esc(d.name)+" denial?",
+      d:d,others:others,explain:"One of "+d.actions.length+" resolution steps the library lists for this denial. "+others});
   }
 };
 GEN.trueFalse=function(d){
   const mine=(d.questions||[]).concat(d.actions||[]).filter(uniqLine); if(!mine.length) return null;
-  const isTrue=Math.random()<0.5; let line, other=null;
+  const isTrue=Math.random()<0.5; let line, other=null, word=null;
   if(isTrue) line=pick(mine);
   else{ const others=wrongBy(d).filter(e=>e.questions.length||e.actions.length); if(!others.length) return null;
-    const e=pick(others); other=e.x; line=pick(e.questions.concat(e.actions)); }
+    const e=pick(others), o=pick(e.questions.concat(e.actions)); other=e.x; line=o.t; word=o.w; }
+  const ownStep=pick((d.actions||[]).length?d.actions:mine);
   return {options:["True","False"],correct:isTrue?0:1,
-    q:"True or false — on a <b>"+esc(d.name)+"</b> denial, this belongs on your call or action list:<br><i>“"+esc(line)+"”</i>",d:d,
-    explain:isTrue?"It is one of the library's lines for this denial.":"That line belongs to the "+other.name+" scenario, not this one."};
+    q:"True or false — on "+art(d.name)+" <b>"+esc(d.name)+"</b> denial, this belongs on your call or action list:<br><i>“"+esc(line)+"”</i>",d:d,
+    explain:isTrue?"It is one of the library's lines for this denial.":"False: that line is a step for "+art(other.name)+" "+other.name+" denial (it is about “"+word+"”). A step that does belong on "+art(d.name)+" "+d.name+" denial: “"+ownStep.replace(/[.!?]+$/,"")+"”."};
 };
 /* every question type the library can build about one denial, for the "quiz me on this denial" button */
 function buildDenialQuiz(d){
