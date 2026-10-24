@@ -245,8 +245,8 @@ function denialCall(d){
   // Some denials share most of their questions with related denials; then any of its questions is
   // right, and the wrong options are lines from unrelated denials that read nothing like its own.
   const askAny=()=>{ const mine=(d.questions||[]); if(!mine.length) return null; const right=P(mine);
-    const wrongs=distinct(wrongLines(d,"questions"),3,gist,new Set(mine.map(gist)));
-    if(wrongs.length<3) return null; const o=sOpts(right,wrongs); return {options:o.options,correct:o.correct,explain:"This denial’s list shares some questions with related denials; the other three lines belong to denials of a different kind."}; };
+    const picks=distinct(wrongLines(d,"questions"),3,o=>gist(o.t),new Set(mine.map(gist)));
+    if(picks.length<3) return null; const o=sOpts(right,picks.map(x=>x.t)); const others=othersAbout(picks); return {options:o.options,correct:o.correct,others:others,explain:others}; };
   const a1=GEN.whichAsk(d)||askAny();
   let a2=null; if(a1) for(let k=0;k<6;k++){ const t=GEN.whichAsk(d)||askAny(); if(t&&t.options[t.correct]!==a1.options[a1.correct]){ a2=t; break; } }
   const act=GEN.whichDo(d);
@@ -256,10 +256,10 @@ function denialCall(d){
   if(!a1&&!act) return [];
   const opening=payer+" provider services, this is "+rep+". I have claim "+claim+" for "+pt+", date of service "+dos+". It denied with "+(code||"the code on your remittance")+": ‘"+d.denial_wording+"’. What do you need?";
   if(a1) turns.push({rep:opening,q:"What do you ask first?",options:a1.options,correct:a1.correct,say:a1.options[a1.correct],
-    ex:"Only one of these belongs on a call about "+d.name+"; the other three are questions for different denials. "+(a1.explain||"").replace(/^One of \d+ questions the library lists for this denial\.?\s*/,"")});
+    ex:"Only one of these belongs on a call about "+d.name+". "+(a1.others||"The other three are questions for different denials.")});
   if(a2) turns.push({rep:"Let me check that for you… yes, I can confirm it. Anything else?",
     q:"What else do you ask before you close?",options:a2.options,correct:a2.correct,say:a2.options[a2.correct],
-    ex:"A second question from this denial’s list; the other three are questions for different denials. Ask everything you need in one call; a second call costs another queue."});
+    ex:"A second question from this denial’s list. "+(a2.others||"The other three are questions for different denials.")+" Ask everything you need in one call; a second call costs another queue."});
   const close="No, that is everything. May I have the call reference number and your name? Read-back: claim "+claim+", "+pt+", DOS "+dos+", denied "+(code?code+" ":"")+d.name+", and the answers you gave me are in my note.";
   const closeOpts=sOpts(close,shuffle(CALL_CLOSES.slice()).slice(0,3));
   turns.push({rep:(turns.length?"Is there anything else I can help with today?":opening+" … Anything else before we close?"),q:"How do you close the call?",options:closeOpts.options,correct:closeOpts.correct,say:close,
