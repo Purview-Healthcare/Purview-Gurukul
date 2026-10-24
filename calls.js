@@ -242,14 +242,14 @@ function denialCall(d){
   const mm=1+Math.floor(Math.random()*3), dd=1+Math.floor(Math.random()*28), dos=(mm<10?"0":"")+mm+"/"+(dd<10?"0":"")+dd+"/2026";
   const claim=String(Math.floor(1e9+Math.random()*9e9)), ref=String(Math.floor(1e5+Math.random()*9e5))+"-"+rep.slice(0,2).toUpperCase();
   const code=(d.codes&&d.codes.length)?"code "+d.codes[0]:"";
-  // Some denials share every question with others; then any of its questions is right and
-  // the distractors come from denials that do not list that line.
-  const askAny=()=>{ const mine=(d.questions||[]); if(!mine.length) return null; const right=P(mine); const own=LINE_OWNERS[norm(right)]||new Set();
-    const seen=new Set(mine.map(norm)), pool=[]; DATA.forEach(x=>{ if(x===d||own.has(x.name)) return; (x.questions||[]).forEach(t=>{ const k=norm(t); if(!seen.has(k)){ seen.add(k); pool.push(t); } }); });
-    if(pool.length<3) return null; const o=sOpts(right,shuffle(pool).slice(0,3)); return {options:o.options,correct:o.correct,explain:"This denial’s list shares some questions with related denials; the other three lines belong to denials of a different kind."}; };
-  const a1=GEN.whichAsk(d,DATA)||askAny();
-  let a2=null; if(a1) for(let k=0;k<6;k++){ const t=GEN.whichAsk(d,DATA)||askAny(); if(t&&t.options[t.correct]!==a1.options[a1.correct]){ a2=t; break; } }
-  const act=GEN.whichDo(d,DATA);
+  // Some denials share most of their questions with related denials; then any of its questions is
+  // right, and the wrong options are lines from unrelated denials that read nothing like its own.
+  const askAny=()=>{ const mine=(d.questions||[]); if(!mine.length) return null; const right=P(mine);
+    const wrongs=distinct(wrongLines(d,"questions"),3,gist,new Set(mine.map(gist)));
+    if(wrongs.length<3) return null; const o=sOpts(right,wrongs); return {options:o.options,correct:o.correct,explain:"This denial’s list shares some questions with related denials; the other three lines belong to denials of a different kind."}; };
+  const a1=GEN.whichAsk(d)||askAny();
+  let a2=null; if(a1) for(let k=0;k<6;k++){ const t=GEN.whichAsk(d)||askAny(); if(t&&t.options[t.correct]!==a1.options[a1.correct]){ a2=t; break; } }
+  const act=GEN.whichDo(d);
   const setup="You are calling "+payer+" about claim "+claim+" for "+pt+", DOS "+dos+", denied "+(code?code+", ":"")+d.name+". The remittance says: “"+d.denial_wording+"”";
   const title="Call: "+d.name;
   const turns=[];
@@ -259,7 +259,7 @@ function denialCall(d){
     ex:"Only one of these belongs on a call about "+d.name+"; the other three are questions for different denials. "+(a1.explain||"").replace(/^One of \d+ questions the library lists for this denial\.?\s*/,"")});
   if(a2) turns.push({rep:"Let me check that for you… yes, I can confirm it. Anything else?",
     q:"What else do you ask before you close?",options:a2.options,correct:a2.correct,say:a2.options[a2.correct],
-    ex:"A second question from this denial’s list. Ask everything you need in one call; a second call costs another queue."});
+    ex:"A second question from this denial’s list; the other three are questions for different denials. Ask everything you need in one call; a second call costs another queue."});
   const close="No, that is everything. May I have the call reference number and your name? Read-back: claim "+claim+", "+pt+", DOS "+dos+", denied "+(code?code+" ":"")+d.name+", and the answers you gave me are in my note.";
   const closeOpts=sOpts(close,shuffle(CALL_CLOSES.slice()).slice(0,3));
   turns.push({rep:(turns.length?"Is there anything else I can help with today?":opening+" … Anything else before we close?"),q:"How do you close the call?",options:closeOpts.options,correct:closeOpts.correct,say:close,
