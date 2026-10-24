@@ -1,7 +1,7 @@
 /* Purview Gurukul offline service worker.
    Bump VER on any release to invalidate old caches. */
 const PRE = "purview-gurukul-";
-const VER = PRE + "v46";
+const VER = PRE + "v47";
 const RT  = VER + "-rt";
 const APP = ["./", "./index.html", "./basics.js", "./scenarios.js", "./calls.js", "./sources.js", "./sops.js", "./sops-abw.js", "./sops-hagion.js", "./sops-titan.js", "./sops-vec.js", "./manifest.webmanifest",
              "./icon-192.png?v=2", "./icon-512.png?v=2", "./icon-maskable-512.png?v=2",
@@ -33,6 +33,19 @@ self.addEventListener("fetch", e => {
         caches.open(VER).then(c => c.put(req.mode === "navigate" ? "./index.html" : req, cp));
         return r;
       }).catch(() => caches.match(req).then(hit => hit || caches.match("./index.html")))
+    );
+    return;
+  }
+
+  // The app's own scripts: network-first as well, so a page never mixes new and old
+  // files after a release; cached copy when offline.
+  if (url.origin === location.origin && /\.js$/.test(url.pathname) && !/\/sw\.js$/.test(url.pathname)) {
+    e.respondWith(
+      fetch(req.url, { cache: "no-cache", credentials: "same-origin" }).then(r => {
+        const cp = r.clone();
+        caches.open(VER).then(c => c.put(req, cp));
+        return r;
+      }).catch(() => caches.match(req))
     );
     return;
   }
