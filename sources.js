@@ -117,6 +117,9 @@ const BASICS_SOURCES={
   /* Specialties: Dental care track (spec-dental.js) */
   "den-teeth":[S.adaForm,S.toothNumbering],
   "den-surfaces":[S.adaForm],
+  "den-specialties":[S.adaForm],
+  "den-endo-perio-surgery":[S.adaCdt,S.medDental],
+  "den-ortho-prostho":[S.adaCdt],
   "den-xrays":[S.adaCdt],
   "den-cdt":[S.adaCdt,S.cmsIcd10],
   "den-claim-form":[S.adaForm],
