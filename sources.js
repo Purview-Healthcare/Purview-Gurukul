@@ -4,6 +4,15 @@
 "use strict";
 const SOURCES_REVIEWED="7 October 2026";
 const S={
+  medEyeExams:["Medicare.gov — Eye exams (routine)","https://www.medicare.gov/coverage/eye-exams-routine"],
+  medGlasses:["Medicare.gov — Eyeglasses & contact lenses","https://www.medicare.gov/coverage/eyeglasses-contact-lenses"],
+  medGlaucoma:["Medicare.gov — Glaucoma tests","https://www.medicare.gov/coverage/glaucoma-tests"],
+  medDiabEye:["Medicare.gov — Eye exams for diabetes","https://www.medicare.gov/coverage/eye-exams-for-diabetes"],
+  neiRefractive:["National Eye Institute — Refractive errors","https://www.nei.nih.gov/learn-about-eye-health/eye-conditions-and-diseases/refractive-errors"],
+  aaoEyeCodes:["AAO EyeNet — Fact sheet for the comprehensive eye visit codes","https://www.aao.org/eyenet/article/fact-sheet-for-the-comprehensive-eye-visit-codes"],
+  bcbsriEyeExam:["BCBSRI policy — Ophthalmology examinations and routine eye examinations (S0620/S0621, refraction)","https://www.bcbsri.com/providers/sites/providers/files/policies/2024/05/Ophthalmology%20Examinations%20and%20Routine%20Eye%20Examinations.pdf"],
+  hcpcsV:["HCPCS V codes — vision materials (V2020–V2799)","https://hcpcs.codes/v-codes/"],
+  cmsIcd10:["CMS — ICD-10-CM codes","https://www.cms.gov/medicare/coding-billing/icd-10-codes"],
   cmsCosts:["Medicare.gov — Medicare costs (2026)","https://www.medicare.gov/basics/costs/medicare-costs"],
   cmsCostsMM:["CMS MM14279 — Deductible, coinsurance and premium rates CY 2026","https://www.cms.gov/files/document/mm14279-medicare-deductible-coinsurance-premium-rates-cy-2026-update.pdf"],
   partsOfMedicare:["Medicare.gov — Parts of Medicare","https://www.medicare.gov/basics/get-started-with-medicare/medicare-basics/parts-of-medicare"],
@@ -90,6 +99,16 @@ const S={
   medicaidHome:["Medicaid.gov — Medicaid","https://www.medicaid.gov/medicaid/index.html"]
 };
 const BASICS_SOURCES={
+  /* Specialties: Vision care track (spec-vision.js) */
+  "vis-refractive":[S.neiRefractive],
+  "vis-cpt-exam":[S.aaoEyeCodes,S.bcbsriEyeExam,S.medEyeExams],
+  "vis-cl-codes":[S.aaoEyeCodes],
+  "vis-materials":[S.hcpcsV,S.medGlasses],
+  "vis-icd":[S.cmsIcd10],
+  "vis-plans":[S.medEyeExams,S.medGlasses,S.medGlaucoma,S.medDiabEye],
+  "vis-cob":[S.whoPaysFirst,S.msp],
+  "vis-denials":[S.medEyeExams],
+  "vis-justify":[S.hipaaMin],
   "us-culture":[S.holidays,S.timeGov],
   "us-fun-facts":[],
   "phonetic-alphabet":[S.nato,S.faaAlphabet],
