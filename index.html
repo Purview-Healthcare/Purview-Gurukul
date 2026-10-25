@@ -493,6 +493,18 @@ details.day.spec>summary{background:linear-gradient(110deg,#0f5e57,#0b8f84)}
 .certwho .fbin{flex:1 1 240px;min-width:0;margin:0}
 .certtiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:14px}
 .certtiles.five{grid-template-columns:repeat(5,minmax(0,1fr))}
+.certtiles.six{grid-template-columns:repeat(3,minmax(0,1fr))}
+.areas{margin:18px 0 0;text-align:left}
+.areas h4{font-size:11.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);margin:0 0 6px}
+.arearow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:3px 12px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px;color:var(--ink-2)}
+.arearow:last-child{border-bottom:0}
+.arearow b{font-variant-numeric:tabular-nums;color:var(--ink)}
+.arearow .abar{grid-column:1/-1;height:6px;border-radius:999px;background:var(--line);overflow:hidden}
+.arearow .abar i{display:block;height:100%;background:var(--green)}
+.arearow.weak .abar i{background:#e4572e}
+.verdict{margin:14px 0 0;padding:12px 14px;border-radius:var(--r);background:#e8f2f1;font-size:14.5px;line-height:1.5;color:var(--ink);text-align:left}
+.verdict.ok{background:#e3f6ec;color:#135c38}
+.verdict.no{background:#fde8e8;color:#8a1d12}
 .certtile{display:flex;flex-direction:column;align-items:flex-start;gap:3px;min-width:0;text-align:left;background:#fff;border:1.5px solid var(--line-2);border-radius:var(--r);padding:12px 14px;font:inherit;color:var(--ink);cursor:pointer;transition:.14s}
 .certtile:hover{border-color:var(--blue)}
 .certtile .ctk{font-size:10.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
@@ -558,7 +570,7 @@ details.day.spec>summary{background:linear-gradient(110deg,#0f5e57,#0b8f84)}
 .certaccess{display:flex;align-items:center;gap:8px 12px;flex-wrap:wrap;margin:0 0 14px;padding:9px 14px;border-radius:8px;background:#e9f6f0;border:1px solid #bfe3d2;color:#0c5c3e;font-size:13.5px}
 .certaccess svg{flex:0 0 auto}
 .certaccess .linkbtn{margin-left:auto}
-@media(max-width:700px){.certtiles,.certtiles.five{grid-template-columns:1fr 1fr;gap:10px}.certtile{padding:11px 12px}.certcard{padding:16px 15px}}
+@media(max-width:700px){.certtiles,.certtiles.five,.certtiles.six{grid-template-columns:1fr 1fr;gap:10px}.certtile{padding:11px 12px}.certcard{padding:16px 15px}}
 .sopnote{display:flex;gap:12px;align-items:flex-start;background:var(--orange-soft);border:1px solid var(--orange-line);border-radius:var(--r);padding:14px 18px;margin-bottom:18px;color:var(--orange-deep);font-size:14px;line-height:1.55}
 .sopnote svg{flex:0 0 auto;margin-top:2px}
 .sopnote b{font-family:var(--font-display)}
@@ -1006,7 +1018,7 @@ textarea.fbin{resize:vertical;min-height:110px;line-height:1.5}
   </div>
 
   <div id="certPanel" class="panel">
-    <div class="band"><h2>Certification</h2><p>Four steps, in this order: RCM Basics, Denial management, Process training, then QA certification. Each training step has its own assessment; clear it at 80% or more. Process training has a separate assessment for each process: choose the process from the drop-down. QA certification comes after that process’s training: at least 5 claims audited with an overall QA score of 95% or more. Specialty training is an add-on for the teams that work a specialty (vision care first): its own assessment, chosen from the drop-down, best taken before the process training of a client in that specialty. Print each certificate and get it signed.</p></div>
+    <div class="band"><h2>Certification</h2><p>Five steps, in this order: RCM Basics, Denial management, Process training, QA certification, then the final readiness test. Each training step has its own assessment; clear it at 80% or more. Process training has a separate assessment for each process: choose the process from the drop-down. QA certification comes after that process’s training: at least 5 claims audited with an overall QA score of 95% or more. Specialty training is an add-on for the teams that work a specialty (vision care first): its own assessment, chosen from the drop-down, best taken before the process training of a client in that specialty. The final readiness test comes last: one assessment across everything, RCM Basics, the denial library, the trainee’s process and specialty, in sections, with a verdict by area. Print each certificate and get it signed.</p></div>
     <div class="certlock" id="certLock" hidden>
       <div class="clhead"><span class="clic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span><h3>Certification is locked</h3></div>
       <div class="clstep" id="clStep1">
@@ -1800,7 +1812,7 @@ $("#basicsSub").textContent=B_LESSONS.length+" topics in "+BASICS_MODULES.length
 /* ── day quizzes: random draw from that day's modules, new set every time ── */
 function dayPool(day){ const shorts=BASICS_MODULES.filter(m=>m.day===day).map(m=>m.short); return RCM_BANK.filter(x=>shorts.indexOf(x.t)>=0); }
 function dayQuizSize(day){ const n=BASICS_MODULES.filter(m=>m.day===day).reduce((a,m)=>a+m.lessons.length,0); return Math.min(20,Math.max(10,Math.round(n*1.1))); }
-function mountQuiz(area,makeQs,onClose,label,onDone){
+function mountQuiz(area,makeQs,onClose,label,onDone,extra){
   const qs=makeQs();
   if(!qs.length){ area.innerHTML='<div class="none">Not enough material here to build a quiz.</div>'; return; }
   let i=0, score=0, answered=false; const missed=[], picks=[];
@@ -1826,11 +1838,11 @@ function mountQuiz(area,makeQs,onClose,label,onDone){
     const n=qs.length, pct=Math.round(score/n*100);
     if(onDone){ try{ onDone(score,n,picks); }catch(e){} }
     const v=pct>=90?["Excellent","You own "+label+"."]:pct>=70?["Solid","Reopen the topics behind the ones you missed."]:pct>=50?["Getting there","Read "+label+" again before moving on."]:["Needs work","Go back through "+label+" before the next one."];
-    area.innerHTML='<div class="dq"><div class="result"><div class="big">'+score+' / '+n+'</div><div class="pct">'+pct+'% correct</div><h3>'+v[0]+'</h3><p>'+esc(v[1])+'</p></div>'+
+    area.innerHTML='<div class="dq"><div class="result"><div class="big">'+score+' / '+n+'</div><div class="pct">'+pct+'% correct</div><h3>'+v[0]+'</h3><p>'+esc(v[1])+'</p></div>'+(extra?extra(picks,score,n):"")+
       (missed.length?'<div class="misslist"><h4>Review these ('+missed.length+')</h4>'+missed.map(q=>'<div class="missrow">'+q.q+'<b class="ans">'+esc(q.options[q.correct])+'</b></div>').join("")+'</div>':'')+
       printRow()+'<div class="qnav"><button class="btn dqagain">New set of questions</button><button class="btn ghost dqclose">Close quiz</button></div></div>';
     wirePrintRow(area,"Quiz: "+label,picks,score);
-    area.querySelector(".dqagain").addEventListener("click",()=>mountQuiz(area,makeQs,onClose,label,onDone));
+    area.querySelector(".dqagain").addEventListener("click",()=>mountQuiz(area,makeQs,onClose,label,onDone,extra));
     area.querySelector(".dqclose").addEventListener("click",()=>{ area.innerHTML=""; if(onClose) onClose(); });
   }
   render(); area.scrollIntoView({behavior:"smooth",block:"start"});
@@ -1848,6 +1860,13 @@ function wirePrintRow(area,label,picks,score){
   area.querySelector(".dqprint").addEventListener("click",()=>printResults(label,picks,score,nameOf()));
   area.querySelector(".dqcopy").addEventListener("click",()=>copy(resultsText(label,picks,score,nameOf())));
 }
+/* questions tagged with an area (the final readiness test) are summed up by area */
+function areaStats(picks){
+  const m={}, order=[];
+  picks.forEach(p=>{ const a=p.q.area; if(!a) return; if(!m[a]){ m[a]={area:a,n:0,ok:0}; order.push(a); } m[a].n++; if(p.pick===p.q.correct) m[a].ok++; });
+  return order.map(a=>m[a]);
+}
+function areaLine(picks){ return areaStats(picks).map(a=>a.area+" "+a.ok+"/"+a.n+" ("+Math.round(a.ok/a.n*100)+"%)").join(" · "); }
 function resultRows(picks){
   return picks.map((p,i)=>{
     const q=p.q; let ctx="";
@@ -1864,6 +1883,7 @@ function printResults(label,picks,score,name){
   const rows=resultRows(picks), n=rows.length, pct=n?Math.round(score/n*100):0, wrong=rows.filter(r=>!r.ok).length;
   $("#printSheet").innerHTML='<div class="phead"><span><b>Purview Gurukul</b> · quiz results</span><span>'+esc(whenNow())+'</span></div>'+
     '<h1>'+esc(label)+'</h1><p class="pmeta">'+(name?'Name: <b>'+esc(name)+'</b> · ':'')+'Score: <b>'+score+' / '+n+'</b> ('+pct+'%) · '+(wrong?wrong+' to review':'all correct')+'</p>'+
+    (areaStats(picks).length?'<p class="pmeta">By area: '+esc(areaLine(picks))+'</p>':'')+
     rows.map(r=>'<div class="pq '+(r.ok?'ok':'no')+'"><div class="pqh"><span class="pn">'+r.n+'</span><span class="pcat">'+esc(r.cat)+'</span><span class="pmark">'+(r.ok?'Correct':'Wrong')+'</span></div>'+
       (r.ctx?'<p class="pctx">'+esc(r.ctx)+'</p>':'')+'<p class="pqt">'+r.q+'</p><ol class="popts">'+
       r.options.map((o,k)=>'<li class="'+(k===r.correct?'right':'')+(k===r.pick&&k!==r.correct?' picked':'')+'"><span>'+"ABCD"[k]+'</span>'+esc(o)+(k===r.correct?' <em>✓ correct answer</em>':'')+(k===r.pick&&k!==r.correct?' <em>✗ your answer</em>':'')+'</li>').join("")+
@@ -1878,7 +1898,7 @@ function printResults(label,picks,score,name){
 }
 function resultsText(label,picks,score,name){
   const rows=resultRows(picks), n=rows.length, pct=n?Math.round(score/n*100):0;
-  let t="Purview Gurukul — "+label+"\n"+whenNow()+(name?"\nName: "+name:"")+"\nScore: "+score+" / "+n+" ("+pct+"%)\n\n";
+  let t="Purview Gurukul — "+label+"\n"+whenNow()+(name?"\nName: "+name:"")+"\nScore: "+score+" / "+n+" ("+pct+"%)\n"+(areaStats(picks).length?"By area: "+areaLine(picks)+"\n":"")+"\n";
   rows.forEach(r=>{ t+=r.n+". "+(r.ok?"[Correct] ":"[Wrong] ")+(r.ctx?r.ctx+"\n   ":"")+stripHtml(r.q)+"\n";
     r.options.forEach((o,k)=>{ t+="   "+"ABCD"[k]+". "+o+(k===r.correct?"  ✓ correct":"")+(k===r.pick&&k!==r.correct?"  ✗ your answer":"")+"\n"; });
     if(r.whyNot) t+="   Why not "+"ABCD"[r.pick]+": "+r.whyNot+"\n";
@@ -2080,10 +2100,11 @@ function certCall(){
   }
   return {qs:[],dn:""};
 }
-function buildDenialCert(){
+function buildDenialCert(n){
+  n=n||CERT_Q;
   const call=certCall();
-  const vign=spreadPick(shuffle(fams).map(f=>AR_SCEN.filter(s=>s.fam===f&&s.dn!==call.dn)),4).map(authored);
-  const need=Math.max(0,CERT_Q-call.qs.length-vign.length), theory=[];
+  const vign=spreadPick(shuffle(fams).map(f=>AR_SCEN.filter(s=>s.fam===f&&s.dn!==call.dn)),Math.min(4,Math.max(2,Math.round(n/5)))).map(authored);
+  const need=Math.max(0,n-call.qs.length-vign.length), theory=[];
   const order=spreadPick(shuffle(fams).sort((a,b)=>famDenials(b).length-famDenials(a).length).map(f=>famDenials(f).filter(d=>d.name!==call.dn)),DATA.length);
   for(const d of order){
     if(theory.length>=need) break;
@@ -2092,24 +2113,57 @@ function buildDenialCert(){
   return flattenBlocks(theory.concat(vign).map(x=>[x]).concat(call.qs.length?[call.qs]:[]));
 }
 /* RCM Basics: every module of the course (the biggest modules take the extra questions) plus payment scenarios */
-function buildRcmCert(){
-  const scen=shuffle(SCEN_FAMS).sort((a,b)=>(b==="Payment math")-(a==="Payment math")).slice(0,CERT_SCEN).map(f=>buildScenarioRound(f,1)[0]).filter(Boolean);   // payment math always, three other families at random
+function buildRcmCert(n,ns){
+  n=n||CERT_Q; ns=ns==null?CERT_SCEN:ns;
+  const scen=shuffle(SCEN_FAMS).sort((a,b)=>(b==="Payment math")-(a==="Payment math")).slice(0,ns).map(f=>buildScenarioRound(f,1)[0]).filter(Boolean);   // payment math always, the other families at random
   const mods=shuffle(BASICS_MODULES).sort((a,b)=>b.lessons.length-a.lessons.length);
-  const theory=spreadPick(mods.map(m=>RCM_BANK.filter(x=>x.t===m.short)),CERT_Q-scen.length).map(authored);
+  const theory=spreadPick(mods.map(m=>RCM_BANK.filter(x=>x.t===m.short)),n-scen.length).map(authored);
   return shuffle(theory.concat(scen));
 }
 /* Process training: the client's own question bank, spread over its modules */
 function procBank(c){ return sopBank().filter(x=>x.c?x.c===c.id:c.modules.some(m=>m.short===x.t)); }
 function procQCount(c){ return Math.min(CERT_Q,procBank(c).length); }
-function buildProcCert(c){
+function buildProcCert(c,n){
   const bank=procBank(c), mods=shuffle(c.modules).sort((a,b)=>b.lessons.length-a.lessons.length);
-  return shuffle(spreadPick(mods.map(m=>bank.filter(x=>x.t===m.short)),procQCount(c))).map(authored);
+  return shuffle(spreadPick(mods.map(m=>bank.filter(x=>x.t===m.short)),n?Math.min(n,bank.length):procQCount(c))).map(authored);
 }
 /* Specialty training: the track's own question bank, spread over its modules */
 function specQCount(c){ return Math.min(CERT_Q,specTrackBank(c).length); }
-function buildSpecCert(c){
+function buildSpecCert(c,n){
   const bank=specTrackBank(c), mods=shuffle(c.modules).sort((a,b)=>b.lessons.length-a.lessons.length);
-  return shuffle(spreadPick(mods.map(m=>bank.filter(x=>x.t===m.short)),specQCount(c))).map(authored);
+  return shuffle(spreadPick(mods.map(m=>bank.filter(x=>x.t===m.short)),n?Math.min(n,bank.length):specQCount(c))).map(authored);
+}
+/* Final readiness test: one assessment across everything, in sections. RCM Basics and the denial
+   library share what the trainee's process (8) and specialty (4) do not take; a trainee with no
+   specialty gets 16 and 16, with neither 20 and 20. */
+const FINAL_Q=40;
+let CERT_FIN_PROC=(sopClients()[0]||{}).id||"", CERT_FIN_SPEC="";
+function finalPlan(){
+  const c=sopClients().find(x=>x.id===CERT_FIN_PROC)||null, t=specTracks().find(x=>x.id===CERT_FIN_SPEC)||null;
+  const proc=c?Math.min(8,procBank(c).length):0, spec=t?Math.min(4,specTrackBank(t).length):0;
+  const rest=FINAL_Q-proc-spec, rcm=Math.ceil(rest/2), den=rest-rcm;
+  return {client:c,track:t,rcm:rcm,den:den,proc:proc,spec:spec,n:rcm+den+proc+spec};
+}
+function finalAbout(){
+  const p=finalPlan(), parts=[p.rcm+" from the RCM Basics course (every module, with payment scenarios)",p.den+" from the denial library (theory across the categories, AR scenarios and a short payer call)"];
+  if(p.proc) parts.push(p.proc+" from the "+p.client.name+" playbook"); if(p.spec) parts.push(p.spec+" from the "+p.track.name+" track");
+  return p.n+" questions across everything in Purview Gurukul, in sections: "+listJoin(parts)+". The result shows the score by area and whether the trainee is ready.";
+}
+function finalCovers(p){ p=p||finalPlan(); const parts=["the RCM Basics course","the denial library"]; if(p.proc) parts.push("the "+p.client.name+" playbook"); if(p.spec) parts.push("the "+p.track.name+" specialty track"); return listJoin(parts); }
+function tagArea(qs,area){ return qs.map(q=>Object.assign({},q,{area:area,cat:area+(q.cat?" · "+q.cat:"")})); }
+function buildFinalCert(){
+  const p=finalPlan(), secs=[tagArea(buildRcmCert(p.rcm,2),"RCM Basics"),tagArea(buildDenialCert(p.den),"Denial management")];
+  if(p.proc) secs.push(tagArea(buildProcCert(p.client,p.proc),p.client.short+" process"));
+  if(p.spec) secs.push(tagArea(buildSpecCert(p.track,p.spec),p.track.name));
+  return secs.reduce((a,b)=>a.concat(b),[]);
+}
+function finalAreasHTML(picks,score,n){
+  const ar=areaStats(picks); if(!ar.length) return "";
+  const pct=Math.round(score/n*100), weak=ar.filter(a=>a.ok/a.n<0.7);
+  const rows=ar.map(a=>{ const ap=Math.round(a.ok/a.n*100); return '<div class="arearow'+(a.ok/a.n<0.7?' weak':'')+'"><span>'+esc(a.area)+'</span><b>'+a.ok+' / '+a.n+' · '+ap+'%</b><span class="abar"><i style="width:'+ap+'%"></i></span></div>'; }).join("");
+  const v=pct>=CERT_PASS?'<div class="verdict ok"><b>Ready.</b> Cleared at '+pct+'%, at or above the '+CERT_PASS+'% pass mark.'+(weak.length?' Still worth a revision before going live: '+esc(listJoin(weak.map(a=>a.area)))+' (below 70%).':' Every area at 70% or more.')+'</div>'
+    :'<div class="verdict no"><b>Not yet.</b> '+pct+'% is below the '+CERT_PASS+'% pass mark.'+(weak.length?' Revise '+esc(listJoin(weak.map(a=>a.area)))+' (below 70%), then take the test again.':' Review the questions below, then take the test again.')+'</div>';
+  return '<div class="areas"><h4>By area</h4>'+rows+'</div>'+v;
 }
 const CERT_DEFS=[
   {k:"rcm",kind:"train",title:"RCM Basics",label:"RCM Basics",idp:"R",build:buildRcmCert,
@@ -2132,8 +2186,9 @@ specTracks().forEach(c=>{
     about:()=>specQCount(c)?specQCount(c)+" questions from the "+c.name+" track, spread across its "+c.modules.length+" modules: "+mods+".":"This track has no assessment questions yet.",
     covers:()=>"the "+c.name+" specialty track: "+mods});
 });
+CERT_DEFS.push({k:"final",kind:"train",title:"Final readiness test",label:"final readiness test",quizLabel:"the final readiness test",idp:"F",build:buildFinalCert,about:finalAbout,covers:()=>finalCovers(),extra:finalAreasHTML});
 const CERT_BY={}; CERT_DEFS.forEach(d=>{ CERT_BY[d.k]=d; });
-const CERT_TILES=[["rcm","Step 1 · Training","RCM Basics"],["denials","Step 2 · Training","Denial management"],["proc","Step 3 · Each process","Process training"],["qa","Step 4 · Each process","QA certification"],["spec","Add-on · Each specialty","Specialty training"]];
+const CERT_TILES=[["rcm","Step 1 · Training","RCM Basics"],["denials","Step 2 · Training","Denial management"],["proc","Step 3 · Each process","Process training"],["qa","Step 4 · Each process","QA certification"],["spec","Add-on · Each specialty","Specialty training"],["final","Step 5 · Everything","Final readiness test"]];
 let CERT_TILE="rcm", CERT_PROC=(sopClients()[0]||{}).id||"", CERT_SPEC=(specTracks()[0]||{}).id||"";
 function certKey(tile){ return tile==="proc"||tile==="qa"?tile+":"+CERT_PROC:tile==="spec"?"spec:"+CERT_SPEC:tile; }
 function certCurrent(){ return CERT_BY[certKey(CERT_TILE)]||null; }
@@ -2164,8 +2219,10 @@ function certPaneHTML(d){
     '<div class="certrow"><input class="fbin qaref" placeholder="Claim reference (no patient details)" aria-label="Claim reference"><input class="fbin qadate" type="date" aria-label="Date audited"><input class="fbin qascore" type="number" min="0" max="100" step="0.5" placeholder="Score %" aria-label="QA score"><button class="btn ghost qaadd">Add claim</button></div>'+
     '<div class="certrow"><input class="fbin qarev" placeholder="QA reviewer name" aria-label="QA reviewer name"><button class="btn ghost qalogprint">'+IC.print+'Print QA record</button><button class="btn ghost cprint" hidden>'+IC.print+'Print certificate</button></div></div></div>';
   const has=d.client?procQCount(d.client)>0:d.track?specQCount(d.track)>0:true;
+  const fin=d.k==="final"?'<div class="certproc finrow"><label>Process</label><select class="finProc" aria-label="Process for the final test">'+sopClients().map(c=>'<option value="'+esc(c.id)+'">'+esc(c.name)+'</option>').join("")+'<option value="">No process yet</option></select>'+
+    '<label>Specialty</label><select class="finSpec" aria-label="Specialty for the final test"><option value="">None</option>'+specTracks().map(c=>'<option value="'+esc(c.id)+'">'+esc(c.name)+'</option>').join("")+'</select><span>What this trainee will work on; the process and specialty sections come from these.</span></div>':'';
   return '<div class="certcard certpane" data-k="'+esc(d.k)+'" hidden>'+head+
-    '<p>'+esc(d.about())+(has?' Pass mark <b>'+CERT_PASS+'%</b>. One question at a time, a new set every attempt, and you can retry.':'')+'</p>'+
+    '<p class="fintext">'+esc(d.about())+(has?' Pass mark <b>'+CERT_PASS+'%</b>. One question at a time, a new set every attempt, and you can retry.':'')+'</p>'+fin+
     '<ul class="certreq"></ul><div class="certrow"><button class="btn cstart"'+(has?'':' disabled')+'>Start the assessment</button><button class="btn ghost cprint" hidden>'+IC.print+'Print certificate</button></div><div class="carea"></div></div>';
 }
 function certRefresh(){
@@ -2204,15 +2261,15 @@ function certStart(d,p){
   const name=$("#certName").value.trim(); if(!name){ $("#certName").focus(); toast("Enter your name first; it goes on the certificate"); return; }
   const c0=certLoad(); c0.name=name; certSave(c0);
   const btn=p.querySelector(".cstart"); btn.hidden=true;
-  mountQuiz(p.querySelector(".carea"),d.build,()=>{ btn.hidden=false; },"the "+d.label+" assessment",(score,n)=>{
-    const pct=Math.round(score/n*100), c=certLoad(), nm=$("#certName").value.trim()||name, prev=c.train[d.k];
+  mountQuiz(p.querySelector(".carea"),d.build,()=>{ btn.hidden=false; },d.quizLabel||("the "+d.label+" assessment"),(score,n,picks)=>{
+    const pct=Math.round(score/n*100), c=certLoad(), nm=$("#certName").value.trim()||name, prev=c.train[d.k], areas=areaLine(picks||[]);
     c.name=nm; c.last[d.k]={date:certDate(),score:score,n:n,pct:pct};
     if(pct>=CERT_PASS){
-      if(!prev||pct>prev.pct) c.train[d.k]={name:nm,date:certDate(),score:score,n:n,pct:pct,id:certId(d.idp)};
+      if(!prev||pct>prev.pct) c.train[d.k]=Object.assign({name:nm,date:certDate(),score:score,n:n,pct:pct,id:certId(d.idp)},d.k==="final"?{covers:finalCovers(),areas:areas}:{});
       toast(!prev?capFirst(d.label)+" cleared: certificate issued":pct>prev.pct?"Cleared again with a higher score; the certificate now shows "+pct+"%":"Cleared again; the certificate keeps your best score");
     } else toast(prev?"Below "+CERT_PASS+"% this time; your certificate from "+prev.date+" stands":"Not cleared this time. Review and try again");
     certSave(c); certRefresh();
-  });
+  },d.extra);
 }
 function printHTML(html,page){
   $("#printSheet").innerHTML=html; document.body.classList.add("printing");
@@ -2240,9 +2297,9 @@ function certSheet(kind,area,name,body,idline,signs,foot){
 const CERT_PAGE="size:A4 landscape;margin:12mm";   // certificates print landscape, one per page
 function certPrint(d,p){
   const c=certLoad(), st=certStatus(c,d); if(!st.ok) return;
-  if(d.kind!=="qa"){ const t=st.t;
-    printHTML(certSheet("Certificate of Training",d.client?d.client.name+" process":d.track?d.track.name+" specialty":d.title,t.name,
-      '<p>has cleared the <b>'+esc(d.label)+'</b> assessment with a score of <b>'+t.pct+'%</b> ('+t.score+' of '+t.n+' questions) on '+esc(t.date)+', covering '+esc(d.covers())+'. Pass mark '+CERT_PASS+'%.</p>',
+  if(d.kind!=="qa"){ const t=st.t, fin=d.k==="final";
+    printHTML(certSheet(fin?"Certificate of Readiness":"Certificate of Training",d.client?d.client.name+" process":d.track?d.track.name+" specialty":d.title,t.name,
+      '<p>has cleared the <b>'+esc(fin?"final readiness test":d.label)+'</b>'+(fin?'':' assessment')+' with a score of <b>'+t.pct+'%</b> ('+t.score+' of '+t.n+' questions) on '+esc(t.date)+', covering '+esc(t.covers||d.covers())+'. Pass mark '+CERT_PASS+'%.</p>'+(t.areas?'<p>By area: '+esc(t.areas)+'.</p>':''),
       'Certificate no. '+esc(t.id),["Trainer signature","Date"],"Issued from Purview Gurukul. Valid with the trainer’s signature."),CERT_PAGE);
     return; }
   const pid=d.client.id, t=c.train["proc:"+pid], q=c.qa[pid], s=st.s, reviewer=p.querySelector(".qarev").value.trim()||q.reviewer||"";
@@ -2269,7 +2326,7 @@ function qaAdd(d,p){
 function certBuild(){
   const tiles=CERT_TILES.filter(t=>t[0]==="spec"?specTracks().length:(t[0]!=="proc"&&t[0]!=="qa")||sopClients().length);
   $("#certTiles").innerHTML=tiles.map(t=>'<button class="certtile" data-t="'+t[0]+'" aria-pressed="false"><span class="ctk">'+esc(t[1])+'</span><b>'+esc(t[2])+'</b><span class="cts"></span></button>').join("");
-  $("#certTiles").classList.toggle("five",tiles.length===5);
+  $("#certTiles").classList.toggle("five",tiles.length===5); $("#certTiles").classList.toggle("six",tiles.length===6);
   $("#certProc").innerHTML=sopClients().map(c=>'<option value="'+esc(c.id)+'">'+esc(c.name)+'</option>').join("");
   $("#certSpec").innerHTML=specTracks().map(c=>'<option value="'+esc(c.id)+'">'+esc(c.name)+'</option>').join("");
   $("#certPanes").innerHTML=CERT_DEFS.map(certPaneHTML).join("");
@@ -2279,6 +2336,9 @@ function certBuild(){
   $$("#certPanes .certpane").forEach(p=>{
     const d=CERT_BY[p.dataset.k];
     p.querySelector(".cprint").addEventListener("click",()=>certPrint(d,p));
+    if(d.k==="final"){ const fp=p.querySelector(".finProc"), fs=p.querySelector(".finSpec"), txt=p.querySelector(".fintext");
+      const upd=()=>{ CERT_FIN_PROC=fp.value; CERT_FIN_SPEC=fs.value; txt.innerHTML=esc(d.about())+' Pass mark <b>'+CERT_PASS+'%</b>. One question at a time, a new set every attempt, and you can retry.'; };
+      fp.value=CERT_FIN_PROC; fs.value=CERT_FIN_SPEC; fp.addEventListener("change",upd); fs.addEventListener("change",upd); }
     if(d.kind!=="qa"){ p.querySelector(".cstart").addEventListener("click",()=>certStart(d,p)); return; }
     p.querySelector(".qaadd").addEventListener("click",()=>qaAdd(d,p));
     p.querySelector(".qalogprint").addEventListener("click",()=>qaPrintLog(d,p));
