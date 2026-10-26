@@ -1,6 +1,6 @@
 # Purview Gurukul
 
-Static training app for Purview Healthcare's RCM teams, published with GitHub Pages. No backend: progress, quiz results and certificates live in the viewer's browser and print from the page. Certification ends with a final readiness test: one assessment across the RCM Basics course, the denial library, the trainee's client playbook and specialty track, scored by area with a ready / not yet verdict.
+Static training app for Purview Healthcare's RCM teams, published with GitHub Pages. No backend: progress, quiz results and certificates live in the viewer's browser and print from the page. Certification ends with a final readiness test: one assessment across the RCM Basics course and AR and denial management (no client process content), scored by area with a ready / not yet verdict.
 
 ## Files
 
