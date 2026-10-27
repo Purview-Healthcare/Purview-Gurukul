@@ -1,7 +1,7 @@
 /* Purview Gurukul offline service worker.
    Bump VER on any release to invalidate old caches. */
 const PRE = "purview-gurukul-";
-const VER = PRE + "v57";
+const VER = PRE + "v58";
 const RT  = VER + "-rt";
 const APP = ["./", "./index.html", "./basics.js", "./scenarios.js", "./calls.js", "./sources.js", "./sops.js", "./sops-abw.js", "./sops-hagion.js", "./sops-titan.js", "./sops-vec.js", "./specialties.js", "./spec-vision.js", "./spec-dental.js", "./manifest.webmanifest",
              "./icon-192.png?v=2", "./icon-512.png?v=2", "./icon-maskable-512.png?v=2",
