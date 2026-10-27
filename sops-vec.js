@@ -12,7 +12,7 @@ const SRC_AR="VEC AR Work Flow SOP, version 1.0, drafted April 2026 (internal)."
 const SRC_EV="PCC and EV Standard Operating Procedure, version 1.0, effective June 2026 (internal).";
 
 SOP_CLIENTS.push(
-{id:"vec",name:"VEC (Village Eye Care)",short:"VEC",updated:"AR SOP April 2026; PCC/EV SOP June 2026",
+{id:"vec",name:"VEC (Village Eye Care)",short:"VEC",scope:["Eligibility verification (EV)","Patient care coordination (PCC)","AR follow-up"],updated:"AR SOP April 2026; PCC/EV SOP June 2026",
  truth:"The VEC AR SOP and the PCC/EV SOP are the source of truth; changes are agreed on the weekly client call.",
  blurb:"Purview runs eligibility verification (EV), patient care coordination (PCC), claim submission, posting and AR for VEC, an eye care practice with several locations. Its claims are medical, vision and MNCL (medically necessary contact lens) claims. This playbook covers the front end (PCC and EV), the AR workflow and handoffs, how claims are closed, and the top denials and COB rules.",
  modules:[

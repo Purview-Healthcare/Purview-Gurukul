@@ -15,6 +15,17 @@
         when it is typed in. An OTP works once, for 10 minutes, with 5 tries. Only
         a fingerprint of each OTP is kept, in Google's short-term cache.
 
+     3. Dashboard. The Dashboard page (same approved email IDs, same OTP) shows,
+        for every project and specialty track, whether its training material is
+        up to date, with the reason when it is not, who manages it and leads it,
+        and its scope of work; and how many certificates have been issued, by
+        step and by project. That data lives in this script's Script Properties,
+        not in the public Gurukul code: project rows under DASH_PROJECTS, the
+        certificate counts under CERTS_<key> (a count and a fingerprint of each
+        certified email ID, never the name), and the last 60 certificates under
+        CERT_RECENT (name, step, score, date). A signed access token issued at
+        OTP time is required for every dashboard call.
+
    The approved list is NOT in this file, because the Gurukul code is public. It
    lives in this project's Script Properties, where only you can see it.
 
@@ -43,7 +54,9 @@
    A free Google account can send to about 100 recipients a day; a feedback message
    goes to two people and an OTP to one.
    If you edit this file later, use Deploy > Manage deployments > Edit > New version,
-   so the URL stays the same. */
+   so the URL stays the same. The Dashboard needs this version or later: after
+   updating, people open Certification and verify their email ID once more, so
+   that they receive the access token the Dashboard calls carry. */
 
 const FEEDBACK_TO = ["shreya.k@purview-healthcare.com", "sweety.t@purviewservices.com"];
 const MAX_MESSAGE = 4000;      // characters
@@ -61,9 +74,11 @@ const OTP_BURST = 30;          // OTPs for everyone together in any 10 minutes
 const ACCESS_HOURS = 12;       // how long the Certification page stays open on that device
 
 const EMAIL_RE = /^[^\s@<>,;]+@[^\s@<>,;]+\.[^\s@<>,;]+$/;
+const RECENT_MAX = 60;         // certificates kept in the "recent" list
+const DASH_IDS = /^[a-z0-9-]{1,40}$/;
 
 function doGet() {
-  return json_({ ok: true, service: "gurukul", feedback: true, otp: true, approved: approved_().length });
+  return json_({ ok: true, service: "gurukul", feedback: true, otp: true, dash: true, approved: approved_().length });
 }
 
 function doPost(e) {
@@ -74,6 +89,9 @@ function doPost(e) {
   try {
     if (d.action === "otp-send") return json_(otpSend_(d));
     if (d.action === "otp-verify") return json_(otpVerify_(d));
+    if (d.action === "dash-get") return json_(dashGet_(d));
+    if (d.action === "dash-save") return json_(dashSave_(d));
+    if (d.action === "cert-log") return json_(certLog_(d));
     return json_(feedback_(d));
   } catch (err) {
     return json_({ ok: false, error: "send failed" });
@@ -190,7 +208,8 @@ function otpVerify_(d) {
   if (left <= 0) { cache.remove(key); return { ok: false, error: "expired" }; }
   if (code.length === 6 && digest_(rec.s + code) === rec.h) {
     cache.remove(key);                                       // an OTP works once
-    return { ok: true, email: email, hours: ACCESS_HOURS };
+    const until = Date.now() + ACCESS_HOURS * 3600000;
+    return { ok: true, email: email, hours: ACCESS_HOURS, token: token_(email, until) };
   }
   rec.t = (rec.t || 0) + 1;
   if (rec.t >= OTP_TRIES) { cache.remove(key); return { ok: false, error: "too-many" }; }
@@ -205,6 +224,93 @@ function otpCode_() {
 }
 function digest_(s) {
   return Utilities.base64Encode(Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, s, Utilities.Charset.UTF_8));
+}
+
+/* ── access tokens: email|until signed with a secret that lives only in Script Properties ── */
+function secret_() {
+  const props = PropertiesService.getScriptProperties();
+  let s = props.getProperty("GK_SECRET");
+  if (!s) { s = Utilities.getUuid() + Utilities.getUuid(); props.setProperty("GK_SECRET", s); }
+  return s;
+}
+function sign_(body) {
+  return Utilities.base64EncodeWebSafe(Utilities.computeHmacSha256Signature(body, secret_(), Utilities.Charset.UTF_8));
+}
+function token_(email, until) {
+  const body = Utilities.base64EncodeWebSafe(email + "|" + until, Utilities.Charset.UTF_8);
+  return body + "." + sign_(body);
+}
+/* the email ID behind a valid token, or "" */
+function tokenEmail_(d) {
+  const t = String(d && d.token || ""), i = t.indexOf(".");
+  if (i < 1) return "";
+  const body = t.slice(0, i), sig = t.slice(i + 1);
+  if (sign_(body) !== sig) return "";
+  let dec;
+  try { dec = Utilities.newBlob(Utilities.base64DecodeWebSafe(body)).getDataAsString(); } catch (err) { return ""; }
+  const j = dec.lastIndexOf("|"), email = dec.slice(0, j).toLowerCase(), until = Number(dec.slice(j + 1));
+  if (!EMAIL_RE.test(email) || !(until > Date.now())) return "";
+  if (approved_().indexOf(email) < 0) return "";
+  return email;
+}
+
+/* ── dashboard ─────────────────────────────────────────────────────────────── */
+function projects_() {
+  try { return JSON.parse(PropertiesService.getScriptProperties().getProperty("DASH_PROJECTS") || "{}") || {}; } catch (err) { return {}; }
+}
+function certsFor_(k) {
+  try { return JSON.parse(PropertiesService.getScriptProperties().getProperty("CERTS_" + k) || "null") || { n: 0, people: {} }; } catch (err) { return { n: 0, people: {} }; }
+}
+function recent_() {
+  try { return JSON.parse(PropertiesService.getScriptProperties().getProperty("CERT_RECENT") || "[]") || []; } catch (err) { return []; }
+}
+function dashGet_(d) {
+  const email = tokenEmail_(d);
+  if (!email) return { ok: false, error: "no-access" };
+  const props = PropertiesService.getScriptProperties(), all = props.getProperties(), counts = {};
+  Object.keys(all).forEach(function (k) {
+    if (k.indexOf("CERTS_") !== 0) return;
+    try { const c = JSON.parse(all[k]); counts[k.slice(6)] = { n: Number(c.n) || 0, people: Object.keys(c.people || {}).length }; } catch (err) {}
+  });
+  return { ok: true, email: email, projects: projects_(), counts: counts, recent: recent_() };
+}
+function dashSave_(d) {
+  const email = tokenEmail_(d);
+  if (!email) return { ok: false, error: "no-access" };
+  const id = line_(d.id, 40).toLowerCase();
+  if (!DASH_IDS.test(id)) return { ok: false, error: "bad-id" };
+  const status = ["yes", "no", "other"].indexOf(d.status) >= 0 ? d.status : "";
+  const reason = text_(d.reason, 600);
+  if (status !== "yes" && !reason) return { ok: false, error: "reason-needed" };
+  const row = {
+    status: status, reason: status === "yes" ? "" : reason,
+    manager: line_(d.manager, 80), tl: line_(d.tl, 80),
+    scope: (Array.isArray(d.scope) ? d.scope : String(d.scope || "").split(",")).map(function (x) { return line_(x, 60); }).filter(Boolean).slice(0, 12),
+    by: email, at: new Date().toISOString()
+  };
+  const lock = LockService.getScriptLock(); lock.waitLock(5000);
+  try {
+    const all = projects_(); all[id] = row;
+    PropertiesService.getScriptProperties().setProperty("DASH_PROJECTS", JSON.stringify(all));
+  } finally { lock.releaseLock(); }
+  return { ok: true, id: id, row: row };
+}
+/* one certificate issued: count it under its key, remember who (a fingerprint, not the ID), and list it as recent */
+function certLog_(d) {
+  const email = tokenEmail_(d);
+  if (!email) return { ok: false, error: "no-access" };
+  const k = line_(d.k, 60);
+  if (!/^(rcm|denials|final|proc:[a-z0-9-]+|qa:[a-z0-9-]+|spec:[a-z0-9-]+)$/.test(k)) return { ok: false, error: "bad-key" };
+  const name = line_(d.name, 80), pct = Math.max(0, Math.min(100, Math.round(Number(d.pct) || 0)));
+  const lock = LockService.getScriptLock(); lock.waitLock(5000);
+  try {
+    const props = PropertiesService.getScriptProperties();
+    const c = certsFor_(k); c.n = (Number(c.n) || 0) + 1; c.people = c.people || {}; c.people[digest_(email).slice(0, 16)] = new Date().toISOString().slice(0, 10);
+    props.setProperty("CERTS_" + k, JSON.stringify(c));
+    const r = recent_(); r.unshift({ t: new Date().toISOString(), k: k, name: name, pct: pct });
+    props.setProperty("CERT_RECENT", JSON.stringify(r.slice(0, RECENT_MAX)));
+  } finally { lock.releaseLock(); }
+  return { ok: true };
 }
 
 /* ── helpers ───────────────────────────────────────────────────────────────── */

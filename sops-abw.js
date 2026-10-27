@@ -8,7 +8,7 @@
    deliberately left out; the COM itself remains the source of truth for those. */
 "use strict";
 const SOP_CLIENTS=[
-{id:"abw",name:"ABW Medical",short:"ABW",updated:"COM updates to 29 September 2026, ABW athena SOPs 2026, ABW answers October 2026",
+{id:"abw",name:"ABW Medical",short:"ABW",scope:["AR follow-up","Denial management","Payment posting (Zero Pay, Unpostables)"],updated:"COM updates to 29 September 2026, ABW athena SOPs 2026, ABW answers October 2026",
  truth:"The approved Client Operations Manuals (COMs), the ABW SOPs and the SAAG guidelines (the kick-code file) are the source of truth; rules change on the weekly client call.",
  blurb:"Purview staff work as ABW’s AR and billing team for six US practices, mostly on athenahealth through Privia. This playbook covers how ABW works, the standard note, the client-by-client rules, the workflows that trip people up, and the athenaOne SOPs: Hold and MGR Hold, kick codes, Zero Pay, Unpostables and patient payments.",
  modules:[

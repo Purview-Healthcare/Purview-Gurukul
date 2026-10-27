@@ -17,7 +17,7 @@ const SRC_MOM="Hagion client meeting minutes, 30 December 2025 to 10 March 2026 
 const SRC_CONF="Client answers on the Update Tracker, October 2026 (internal).";
 
 SOP_CLIENTS.push(
-{id:"hagion",name:"Hagion (Joppa Trading and Medical Supplies)",short:"Hagion",updated:"Update Tracker to 6 October 2026, meeting minutes to 10 March 2026",
+{id:"hagion",name:"Hagion (Joppa Trading and Medical Supplies)",short:"Hagion",scope:["DME billing","AR follow-up","Denial management"],updated:"Update Tracker to 6 October 2026, meeting minutes to 10 March 2026",
  truth:"Rules change by email and in client meetings, recorded in the meeting minutes and logged in the Update Tracker; the Hagion SOPs and the newest dated entry are the source of truth.",
  blurb:"Purview submits the orders and works the AR for Joppa Trading and Medical Supplies (JOPPA), a home medical supply company, inside its NikoHealth system. Most claims go to Texas Medicaid plans (Superior, Molina, TMHP) and Medicare. This playbook covers who does what, the NikoHealth screens, the billing and modifier rules, AR and denials, and every dated update.",
  modules:[
