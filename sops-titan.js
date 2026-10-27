@@ -18,7 +18,7 @@ const SRC_EPIC="Epic Navigation SOP for NWM ARR (internal).";
 const SRC_CONF="Titan’s answers to Purview’s questions on the training documents, October 2026 (email, internal).";
 
 SOP_CLIENTS.push(
-{id:"titan",name:"Titan (Northwestern Medicine ARR)",short:"Titan",updated:"Known Billing Issues to 12 August 2026; collector manual July 2026; Titan’s answers October 2026",
+{id:"titan",name:"Titan (Northwestern Medicine ARR)",short:"Titan",scope:["Hospital AR follow-up","Denial management","Adjustments"],updated:"Known Billing Issues to 12 August 2026; collector manual July 2026; Titan’s answers October 2026",
  truth:"Client directives change often: the Known Billing Issues list, newest entry first, is the source of truth, then Titan’s collector manual and training guide.",
  blurb:"Purview works as Titan Health Solutions’ offshore collectors on Northwestern Medicine (NM) hospital accounts: accounts receivable recovery (ARR) in Titan’s RevX platform and NM’s Epic. This playbook covers the five-step ARR process, RevX and Epic, the denial workflows, root causes and adjustments, the payer rules and Known Billing Issues, and the latest client updates.",
  modules:[

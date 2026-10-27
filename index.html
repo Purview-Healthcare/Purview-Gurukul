@@ -534,6 +534,34 @@ details.day.spec>summary{background:linear-gradient(110deg,#0f5e57,#0b8f84)}
 .certreq li{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--ink-3)}
 .certreq li.ok{color:var(--green);font-weight:600}
 .certreq li svg{flex:0 0 auto}
+.dstats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:0 0 6px}
+.dstat{background:#fff;border:1.5px solid var(--line-2);border-radius:var(--r);padding:14px 16px;min-width:0}
+.dstat b{display:block;font-family:var(--font-display);font-size:28px;line-height:1;color:var(--navy);font-variant-numeric:tabular-nums}
+.dstat span{display:block;font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);margin-top:7px}
+.dstat em{display:block;font-style:normal;font-size:12.5px;color:var(--ink-3);margin-top:3px}
+.dwrap{overflow:auto;background:#fff;border:1.5px solid var(--line-2);border-radius:var(--r);padding:4px 10px;margin-bottom:6px}
+.dwrap table.cmp{min-width:900px}.dwrap table.dcerts{min-width:520px}
+.dwrap td:nth-child(6){max-width:260px}
+.st{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;padding:3px 9px;border-radius:999px;background:#e8f2f1;color:var(--ink-3);white-space:nowrap}
+.st.yes{background:#e3f6ec;color:#135c38}.st.no{background:#fde8e8;color:#b42318}.st.other{background:#fff4d6;color:#8a5a00}
+.dmeta{font-size:12px;color:var(--ink-3);font-weight:500}
+.dedit{background:#f5faf9;border:1.5px solid var(--line-2);border-radius:var(--r);padding:14px 16px;margin:0 0 14px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 14px}
+.dedit h4{grid-column:1/-1;margin:0;font-size:15.5px}
+.dedit label{display:block;font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);margin-bottom:5px}
+.dedit .full{grid-column:1/-1}
+.dedit .opts{display:flex;gap:16px;flex-wrap:wrap}
+.dedit .opts label{display:inline-flex;align-items:center;gap:6px;text-transform:none;letter-spacing:0;font-size:14.5px;color:var(--ink);font-weight:600;margin:0}
+.dedit textarea.fbin{min-height:72px;resize:vertical}
+.dedit .drow{grid-column:1/-1;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.derr{color:#b42318;font-size:13.5px;font-weight:600}
+.dlock{background:#fff;border:1.5px solid var(--line-2);border-radius:var(--r);padding:18px 20px;display:flex;gap:14px;align-items:center;flex-wrap:wrap;color:var(--ink-2)}
+.dlock p{margin:0;flex:1;min-width:240px;font-size:14.5px;line-height:1.55}
+.dlock[hidden]{display:none}
+.drecent{list-style:none;margin:0 0 14px;padding:0 4px}
+.drecent li{display:flex;gap:12px;flex-wrap:wrap;align-items:baseline;font-size:14px;padding:8px 0;border-bottom:1px solid var(--line)}
+.drecent li:last-child{border-bottom:0}
+#dashBody.loading{opacity:.6;pointer-events:none}
+@media(max-width:700px){.dedit{grid-template-columns:1fr}.dstats{grid-template-columns:1fr 1fr}}
 .certrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:10px}
 .certrow .fbin{flex:1 1 200px;min-width:0;margin:0}
 .certrow .btn{display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
@@ -850,6 +878,7 @@ textarea.fbin{resize:vertical;min-height:110px;line-height:1.5}
         <button class="navtab" data-panel="specPanel">Specialties</button>
         <button class="navtab" data-panel="quizPanel">Quiz</button>
         <button class="navtab" data-panel="certPanel">Certification</button>
+        <button class="navtab" data-panel="dashPanel">Dashboard</button>
       </div></div>
       <span class="navspacer"></span>
       <button class="pillbtn fbbtn" id="fbOpen" hidden><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v12H7l-3 3z"/><path d="M8 9h8M8 12.5h5"/></svg>Feedback</button>
@@ -1045,6 +1074,24 @@ textarea.fbin{resize:vertical;min-height:110px;line-height:1.5}
     <p class="certnote">Records live on this device only; there is no backend. The signed printout is the record of certification, so keep it with the trainee’s file. Reset: clear the browser data for this site.</p>
     </div>
   </div>
+</div>
+
+<div id="dashPanel" class="panel dash">
+  <div class="band"><h2>Dashboard</h2><p>One view for managers and team leads: for every project and specialty track, whether its training material is up to date (with the reason when it is not), who manages and leads it, and its scope of work; and how many certificates Gurukul has issued, by step and by project. It opens for the same approved email IDs as Certification, and the data lives in the Gurukul email script, not in this public page.</p></div>
+  <div class="dlock" id="dashLock" hidden><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><p id="dashLockMsg"></p><button class="btn" id="dashGoCert">Open Certification</button><button class="btn ghost" id="dashRetry" hidden>Refresh</button></div>
+  <div id="dashBody" hidden>
+    <div class="bhead"><h3>Certificates issued</h3><span id="dashWho"></span></div>
+    <div class="dstats" id="dashStats"></div>
+    <div class="bhead"><h3>Projects and specialty tracks</h3><button class="btn ghost" id="dashReload">Refresh</button></div>
+    <div id="dashEdit"></div>
+    <div class="dwrap"><table class="cmp" id="dashProjects"></table></div>
+    <div class="bhead"><h3>Certificates by step and project</h3></div>
+    <div class="dwrap"><table class="cmp dcerts" id="dashCerts"></table></div>
+    <div class="bhead"><h3>Recent certificates</h3><span id="dashRecentN"></span></div>
+    <ul class="drecent" id="dashRecent"></ul>
+    <p class="certnote">Material status, owners and scope are saved in the email script’s settings by whoever edits them, with their email ID and the time. Certificate counts come from certificates issued on this site after the dashboard went live; certificates printed before that are not counted.</p>
+  </div>
+  <datalist id="dashNames"></datalist>
 </div>
 
 <div class="fbwrap" id="fbWrap" hidden>
@@ -1612,12 +1659,13 @@ $("#fbDoneClose").addEventListener("click",fbClose);
 
 function showPanel(id){
   $$(".panel").forEach(p=>p.classList.toggle("on",p.id===id));
-  document.body.classList.toggle("nohero",id==="basicsPanel"||id==="sopPanel"||id==="specPanel"||id==="certPanel");   // the hero is about denials; the course and SOPs have their own headers
+  document.body.classList.toggle("nohero",id==="basicsPanel"||id==="sopPanel"||id==="specPanel"||id==="certPanel"||id==="dashPanel");   // the hero is about denials; the course and SOPs have their own headers
   $$(".navtab").forEach(b=>{ const on=b.dataset.panel===id; b.classList.toggle("on",on); if(on&&b.scrollIntoView) b.scrollIntoView({block:"nearest",inline:"nearest"}); });
   // Deal a fresh set every time the quiz is opened — but never wipe a round in progress,
   // since answering a question can send you to the Ask tab and back.
   if(id==="quizPanel" && typeof showQuizType==="function") showQuizType(Q_TYPE);
   if(id==="certPanel" && typeof certLockRefresh==="function") certLockRefresh();
+  if(id==="dashPanel" && typeof dashLoad==="function") dashLoad(false);
 }
 $$(".navtab").forEach(b=>b.addEventListener("click",()=>showPanel(b.dataset.panel)));
 /* on narrow screens the tab strip scrolls; fade the right edge while more tabs are hidden */
@@ -2249,7 +2297,7 @@ function certStart(d,p){
     const pct=Math.round(score/n*100), c=certLoad(), nm=$("#certName").value.trim()||name, prev=c.train[d.k], areas=areaLine(picks||[]);
     c.name=nm; c.last[d.k]={date:certDate(),score:score,n:n,pct:pct};
     if(pct>=CERT_PASS){
-      if(!prev||pct>prev.pct) c.train[d.k]=Object.assign({name:nm,date:certDate(),score:score,n:n,pct:pct,id:certId(d.idp)},d.k==="final"?{covers:finalCovers(),areas:areas}:{});
+      if(!prev||pct>prev.pct){ c.train[d.k]=Object.assign({name:nm,date:certDate(),score:score,n:n,pct:pct,id:certId(d.idp)},d.k==="final"?{covers:finalCovers(),areas:areas}:{}); if(typeof certLog==="function") certLog(d.k,nm,pct); }
       toast(!prev?capFirst(d.label)+" cleared: certificate issued":pct>prev.pct?"Cleared again with a higher score; the certificate now shows "+pct+"%":"Cleared again; the certificate keeps your best score");
     } else toast(prev?"Below "+CERT_PASS+"% this time; your certificate from "+prev.date+" stands":"Not cleared this time. Review and try again");
     certSave(c); certRefresh();
@@ -2287,7 +2335,7 @@ function certPrint(d,p){
       'Certificate no. '+esc(t.id),["Trainer signature","Date"],"Issued from Purview Gurukul. Valid with the trainer’s signature."),CERT_PAGE);
     return; }
   const pid=d.client.id, t=c.train["proc:"+pid], q=c.qa[pid], s=st.s, reviewer=p.querySelector(".qarev").value.trim()||q.reviewer||"";
-  if(!q.id){ q.id=certId(d.idp); q.reviewer=reviewer; q.issued=certDate(); certSave(c); }
+  if(!q.id){ q.id=certId(d.idp); q.reviewer=reviewer; q.issued=certDate(); certSave(c); if(typeof certLog==="function") certLog(d.k,t.name,Math.round(s.avg)); }
   printHTML(certSheet("Certificate of Quality",d.client.name+" process",t.name,
     '<p>has completed <b>'+s.n+' audited production claims</b> for the <b>'+esc(d.client.name)+'</b> process with an overall QA score of <b>'+s.avg.toFixed(1)+'%</b>, meeting the standard of at least '+QA_MIN_CLAIMS+' claims at '+QA_MIN_SCORE+'% or more, after clearing the '+esc(d.client.name)+' process training on '+esc(t.date)+'.</p>'+(reviewer?'<p>QA reviewer: <b>'+esc(reviewer)+'</b></p>':''),
     'Certificate no. '+esc(q.id)+' · issued '+esc(q.issued),["QA reviewer signature","Team lead signature"],"Issued from Purview Gurukul. Valid with the signatures above."),CERT_PAGE);
@@ -2389,7 +2437,8 @@ async function clVerifyOtp(){
   const j=await callScript({action:"otp-verify",email:CL_EMAIL,code:code},20000);
   b.disabled=false; b.textContent="Verify and open";
   if(j.ok){
-    try{ localStorage.setItem(CERT_ACCESS_KEY,JSON.stringify({email:j.email||CL_EMAIL,until:Date.now()+(j.hours||12)*3600000})); }catch(e){}
+    try{ localStorage.setItem(CERT_ACCESS_KEY,JSON.stringify({email:j.email||CL_EMAIL,until:Date.now()+(j.hours||12)*3600000,token:j.token||""})); }catch(e){}
+    if(typeof DASH!=="undefined"){ DASH.loaded=false; DASH.error=""; }
     clearInterval(CL_TIMER); $("#clCode").value=""; $("#certName").value=""; clStep(1); certLockRefresh(); certRefresh(); toast("Certification is open");
     return;
   }
@@ -2400,6 +2449,119 @@ function certLockNow(){ try{ localStorage.removeItem(CERT_ACCESS_KEY); }catch(e)
 $("#clSend").addEventListener("click",()=>clSendOtp(false));
 $("#clEmail").addEventListener("keydown",e=>{ if(e.key==="Enter") clSendOtp(false); });
 $("#clVerify").addEventListener("click",clVerifyOtp);
+/* ── Dashboard: material status, owners and scope per project and track, and certificate counts.
+   Nothing here is stored in this public page: the rows and counts live in the Gurukul email
+   script (Script Properties), reached with the access token issued at OTP time. ── */
+const DASH={projects:{},counts:{},recent:[],loaded:false,error:""};
+const DASH_STEPS=[["rcm","RCM Basics"],["denials","Denial management"],["final","Final readiness test"]];
+function dashItems(){
+  const out=[];
+  sopClients().forEach(c=>out.push({id:c.id,name:c.name,short:c.short,type:"Process",scope:c.scope||[],keys:[["proc:"+c.id,"Process"],["qa:"+c.id,"QA"]]}));
+  specTracks().forEach(t=>out.push({id:"spec-"+t.id,name:t.name,short:t.short,type:"Specialty",scope:t.scope||["Specialty training"],keys:[["spec:"+t.id,"Specialty"]]}));
+  return out;
+}
+function dashToken(){ const a=certAccess(); return a&&a.token?a.token:""; }
+function dashKeyLabel(k){
+  const s=DASH_STEPS.find(x=>x[0]===k); if(s) return s[1];
+  const [kind,id]=k.split(":"), c=sopClients().find(x=>x.id===id), t=specTracks().find(x=>x.id===id);
+  if(kind==="proc") return "Process training: "+(c?c.short:id);
+  if(kind==="qa") return "QA certification: "+(c?c.short:id);
+  if(kind==="spec") return "Specialty training: "+(t?t.name:id);
+  return k;
+}
+function dashCount(k){ const c=DASH.counts[k]||{}; return {n:Number(c.n)||0,people:Number(c.people)||0}; }
+function dashSum(pref){ return Object.keys(DASH.counts).filter(k=>k.indexOf(pref)===0).reduce((a,k)=>{ const c=dashCount(k); a.n+=c.n; a.people+=c.people; return a; },{n:0,people:0}); }
+function dashWhen(iso){ try{ return new Date(iso).toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"}); }catch(e){ return ""; } }
+async function dashLoad(force){
+  const a=certAccess(), tok=dashToken();
+  if(!a){ DASH.error="locked"; dashRender(); return; }
+  if(!tok){ DASH.error="token"; dashRender(); return; }
+  if(!SCRIPT_URL){ DASH.error="not-set"; dashRender(); return; }
+  if(DASH.loaded&&!force){ dashRender(); return; }
+  $("#dashBody").classList.add("loading");
+  const j=await callScript({action:"dash-get",token:tok},20000);
+  $("#dashBody").classList.remove("loading");
+  if(j.ok){ DASH.projects=j.projects||{}; DASH.counts=j.counts||{}; DASH.recent=j.recent||[]; DASH.loaded=true; DASH.error=""; }
+  else DASH.error=j.error==="no-access"?"token":(j.error==="network"||j.error==="http"||j.error==="timeout")?"network":j.error==="not-set"?"not-set":"old-script";
+  dashRender();
+}
+const DASH_MSG={
+  locked:"The Dashboard opens for the same approved email IDs as Certification. Open Certification, verify your email ID with the OTP, and come back here.",
+  token:"Your Certification access is from before the Dashboard existed, or it has expired. In Certification, click “Lock now”, verify your email ID again, and come back here.",
+  "not-set":"The Gurukul email script is not set up on this site, so the Dashboard has nowhere to read from. Please contact the Gurukul admin.",
+  network:"Could not reach the Gurukul email script. Check your connection and click Refresh.",
+  "old-script":"The Gurukul email script needs its new version for the Dashboard: in Apps Script, paste the latest tools/gurukul-email.gs and deploy it as a new version. Then lock and unlock Certification once."
+};
+function dashRender(){
+  const lock=$("#dashLock"), body=$("#dashBody");
+  if(DASH.error){ lock.hidden=false; body.hidden=true; $("#dashLockMsg").textContent=DASH_MSG[DASH.error]||DASH_MSG.network; $("#dashGoCert").hidden=DASH.error!=="locked"&&DASH.error!=="token"; $("#dashRetry").hidden=DASH.error==="locked"||DASH.error==="token"; return; }
+  lock.hidden=true; body.hidden=false;
+  const a=certAccess(); $("#dashWho").textContent=a?"Signed in as "+a.email:"";
+  // tiles
+  const total=Object.keys(DASH.counts).reduce((n,k)=>n+dashCount(k).n,0);
+  const tiles=[["Certificates issued",total,"all steps, since the dashboard went live"],["RCM Basics",dashCount("rcm").n,dashCount("rcm").people+" people"],["Denial management",dashCount("denials").n,dashCount("denials").people+" people"],["Process training",dashSum("proc:").n,"all projects"],["QA certification",dashSum("qa:").n,"all projects"],["Specialty training",dashSum("spec:").n,"all tracks"],["Final readiness",dashCount("final").n,dashCount("final").people+" people"]];
+  $("#dashStats").innerHTML=tiles.map(t=>'<div class="dstat"><b>'+t[1]+'</b><span>'+esc(t[0])+'</span><em>'+esc(t[2])+'</em></div>').join("");
+  // projects
+  const items=dashItems(), names=new Set();
+  const rows=items.map(it=>{
+    const r=DASH.projects[it.id]||{}; if(r.manager) names.add(r.manager); if(r.tl) names.add(r.tl);
+    const scope=(r.scope&&r.scope.length?r.scope:it.scope)||[];
+    const st=r.status?'<span class="st '+esc(r.status)+'">'+(r.status==="yes"?"Yes":r.status==="no"?"No":"Other")+'</span>':'<span class="st">Not recorded</span>';
+    const certs=it.keys.map(k=>k[1]+" "+dashCount(k[0]).n).join(" · ");
+    return '<tr data-id="'+esc(it.id)+'"><td>'+esc(it.name)+'<div class="dmeta">'+esc(it.type)+'</div></td><td>'+(scope.length?esc(scope.join(", ")):'<span class="dmeta">Not set</span>')+'</td><td>'+(r.manager?esc(r.manager):'<span class="dmeta">Not set</span>')+'</td><td>'+(r.tl?esc(r.tl):'<span class="dmeta">Not set</span>')+'</td><td>'+st+'</td><td>'+(r.reason?esc(r.reason):'<span class="dmeta">'+(r.status==="yes"?"No reason needed":"")+'</span>')+'</td><td>'+esc(certs)+'</td><td>'+(r.at?'<div class="dmeta">'+esc(dashWhen(r.at))+'<br>'+esc(r.by||"")+'</div>':'<span class="dmeta">Never</span>')+'</td><td><button class="btn ghost dedit-btn" data-id="'+esc(it.id)+'">Edit</button></td></tr>';
+  }).join("");
+  $("#dashProjects").innerHTML='<thead><tr><th>Project / track</th><th>Scope of work</th><th>Manager</th><th>Team lead</th><th>Material updated?</th><th>Reason / note</th><th>Certificates</th><th>Last updated</th><th></th></tr></thead><tbody>'+rows+'</tbody>';
+  $("#dashNames").innerHTML=[...names].sort().map(n=>'<option value="'+esc(n)+'">').join("");
+  $$("#dashProjects .dedit-btn").forEach(b=>b.addEventListener("click",()=>dashEdit(b.dataset.id)));
+  // counts by step and project
+  const crow=(label,k)=>{ const c=dashCount(k); return '<tr><td>'+esc(label)+'</td><td>'+c.n+'</td><td>'+c.people+'</td></tr>'; };
+  let ch=DASH_STEPS.slice(0,2).map(s=>crow(s[1],s[0])).join("");
+  sopClients().forEach(c=>{ ch+=crow("Process training: "+c.name,"proc:"+c.id)+crow("QA certification: "+c.name,"qa:"+c.id); });
+  specTracks().forEach(t=>{ ch+=crow("Specialty training: "+t.name,"spec:"+t.id); });
+  ch+=crow("Final readiness test","final");
+  $("#dashCerts").innerHTML='<thead><tr><th>Step</th><th>Certificates issued</th><th>People certified</th></tr></thead><tbody>'+ch+'</tbody>';
+  // recent
+  const rec=DASH.recent||[]; $("#dashRecentN").textContent=rec.length?"last "+rec.length:"none yet";
+  $("#dashRecent").innerHTML=rec.length?rec.map(x=>'<li><b>'+esc(x.name||"")+'</b><span>'+esc(dashKeyLabel(x.k||""))+'</span><span>'+esc(x.pct!=null?x.pct+"%":"")+'</span><span class="dmeta">'+esc(dashWhen(x.t))+'</span></li>').join(""):'<li class="dmeta">No certificates have been issued on this site since the dashboard went live.</li>';
+}
+function dashEdit(id){
+  const it=dashItems().find(x=>x.id===id); if(!it) return;
+  const r=DASH.projects[id]||{}, scope=(r.scope&&r.scope.length?r.scope:it.scope)||[];
+  const st=r.status||"";
+  $("#dashEdit").innerHTML='<form class="dedit" data-id="'+esc(id)+'"><h4>'+esc(it.name)+' <span class="dmeta">('+esc(it.type)+')</span></h4>'+
+    '<div class="full"><label>Training material updated?</label><div class="opts">'+[["yes","Yes"],["no","No"],["other","Other"]].map(o=>'<label><input type="radio" name="dstatus" value="'+o[0]+'"'+(st===o[0]?' checked':'')+'> '+o[1]+'</label>').join("")+'</div></div>'+
+    '<div class="full"><label>Reason <span class="dmeta dreason-hint">(required for No and Other: for No, what is pending and by when; for Other, why there is no material to update)</span></label><textarea class="fbin" name="dreason" maxlength="600" placeholder="For example: SOP under revision, expected 15 November">'+esc(r.reason||"")+'</textarea></div>'+
+    '<div><label>Manager</label><input class="fbin" name="dmanager" list="dashNames" maxlength="80" value="'+esc(r.manager||"")+'" placeholder="Name"></div>'+
+    '<div><label>Team lead</label><input class="fbin" name="dtl" list="dashNames" maxlength="80" value="'+esc(r.tl||"")+'" placeholder="Name"></div>'+
+    '<div class="full"><label>Scope of work <span class="dmeta">(comma separated)</span></label><input class="fbin" name="dscope" maxlength="400" value="'+esc(scope.join(", "))+'" placeholder="For example: AR follow-up, Eligibility verification (EV), Patient care coordination (PCC)"></div>'+
+    '<div class="drow"><button type="submit" class="btn">Save</button><button type="button" class="btn ghost dcancel">Cancel</button><span class="derr" aria-live="polite"></span></div></form>';
+  const f=$("#dashEdit form");
+  f.querySelector(".dcancel").addEventListener("click",()=>{ $("#dashEdit").innerHTML=""; });
+  f.addEventListener("submit",e=>{ e.preventDefault(); dashSave(f); });
+  f.scrollIntoView({behavior:"smooth",block:"start"});
+}
+async function dashSave(f){
+  const err=f.querySelector(".derr"), id=f.dataset.id;
+  const status=(f.querySelector("input[name=dstatus]:checked")||{}).value||"", reason=f.dreason.value.trim(), manager=f.dmanager.value.trim(), tl=f.dtl.value.trim();
+  const scope=f.dscope.value.split(",").map(s=>s.trim()).filter(Boolean);
+  if(!status){ err.textContent="Choose Yes, No or Other."; return; }
+  if(status!=="yes"&&!reason){ err.textContent=status==="no"?"Say what is pending and by when.":"Say why there is no material to update."; f.dreason.focus(); return; }
+  err.textContent=""; const b=f.querySelector("button[type=submit]"); b.disabled=true; b.textContent="Saving…";
+  const j=await callScript({action:"dash-save",token:dashToken(),id:id,status:status,reason:status==="yes"?"":reason,manager:manager,tl:tl,scope:scope},20000);
+  b.disabled=false; b.textContent="Save";
+  if(!j.ok){ err.textContent=j.error==="no-access"?DASH_MSG.token:j.error==="reason-needed"?"A reason is needed for No and Other.":"Could not save. Check your connection and try again."; return; }
+  DASH.projects[id]=j.row||{status:status,reason:reason,manager:manager,tl:tl,scope:scope,by:(certAccess()||{}).email,at:new Date().toISOString()};
+  $("#dashEdit").innerHTML=""; dashRender(); toast("Saved");
+}
+/* a certificate was issued on this device: count it on the dashboard (best effort, never blocks) */
+function certLog(k,name,pct){
+  const tok=dashToken(); if(!tok||!SCRIPT_URL) return;
+  callScript({action:"cert-log",token:tok,k:k,name:name,pct:pct},15000).then(()=>{ DASH.loaded=false; }).catch(()=>{});
+}
+$("#dashGoCert").addEventListener("click",()=>{ showPanel("certPanel"); scrollTo({top:0,behavior:"smooth"}); });
+$("#dashRetry").addEventListener("click",()=>dashLoad(true));
+$("#dashReload").addEventListener("click",()=>dashLoad(true));
+
 $("#clCode").addEventListener("keydown",e=>{ if(e.key==="Enter") clVerifyOtp(); });
 $("#clCode").addEventListener("input",()=>{ const v=$("#clCode").value.replace(/\D/g,"").slice(0,6); if(v!==$("#clCode").value) $("#clCode").value=v; });
 $("#clResend").addEventListener("click",()=>clSendOtp(true));
