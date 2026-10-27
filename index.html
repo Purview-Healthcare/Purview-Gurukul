@@ -534,34 +534,96 @@ details.day.spec>summary{background:linear-gradient(110deg,#0f5e57,#0b8f84)}
 .certreq li{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--ink-3)}
 .certreq li.ok{color:var(--green);font-weight:600}
 .certreq li svg{flex:0 0 auto}
-.dstats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:0 0 6px}
-.dstat{background:#fff;border:1.5px solid var(--line-2);border-radius:var(--r);padding:14px 16px;min-width:0}
-.dstat b{display:block;font-family:var(--font-display);font-size:28px;line-height:1;color:var(--navy);font-variant-numeric:tabular-nums}
-.dstat span{display:block;font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);margin-top:7px}
+.dov{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:18px;background:linear-gradient(120deg,var(--navy),#143f52 60%,#0b6f7a);border-radius:var(--r);padding:20px 22px;color:#fff;margin:0 0 16px;box-shadow:0 10px 30px rgba(11,27,38,.18)}
+.dov-k{display:block;font-size:11.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:#9fd3d6}
+.dov-a>b{display:block;font-family:var(--font-display);font-size:22px;margin:4px 0 12px}
+.dbar{display:flex;height:12px;border-radius:999px;overflow:hidden;background:rgba(255,255,255,.14);gap:2px}
+.dbar i{display:block;min-width:6px}
+.dbar i.yes,.dlegend i.yes{background:#3ee08f}.dbar i.no,.dlegend i.no{background:#ff8a7a}.dbar i.other,.dlegend i.other{background:#ffc766}.dbar i.none,.dlegend i.none{background:rgba(255,255,255,.35);padding:0;font-size:0;line-height:0}
+.dlegend{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px;font-size:12.5px;color:#dff2f3}
+.dlegend span{display:inline-flex;align-items:center;gap:6px}.dlegend i{width:10px;height:10px;border-radius:3px}
+.dov-b{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;align-content:center}
+.dov-b div{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:12px 14px}
+.dov-b b{display:block;font-family:var(--font-display);font-size:30px;line-height:1;font-variant-numeric:tabular-nums}
+.dov-b span{display:block;font-size:12px;color:#c9e6e8;margin-top:6px}
+.dstats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:0 0 6px}
+.dstat{position:relative;background:#fff;border:1.5px solid var(--line-2);border-left-width:5px;border-radius:var(--r);padding:14px 16px 14px 16px;min-width:0;transition:.15s}
+.dstat:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(11,27,38,.08)}
+.dstat .dic{position:absolute;right:14px;top:12px;width:30px;height:30px;border-radius:9px;display:grid;place-items:center;color:#fff}
+.dstat .dic svg{width:17px;height:17px}
+.dstat b{display:block;font-family:var(--font-display);font-size:30px;line-height:1;color:var(--navy);font-variant-numeric:tabular-nums}
+.dstat .dl{display:block;font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);margin-top:8px}
 .dstat em{display:block;font-style:normal;font-size:12.5px;color:var(--ink-3);margin-top:3px}
-.dwrap{overflow:auto;background:#fff;border:1.5px solid var(--line-2);border-radius:var(--r);padding:4px 10px;margin-bottom:6px}
-.dwrap table.cmp{min-width:900px}.dwrap table.dcerts{min-width:520px}
-.dwrap td:nth-child(6){max-width:260px}
-.st{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;padding:3px 9px;border-radius:999px;background:#e8f2f1;color:var(--ink-3);white-space:nowrap}
-.st.yes{background:#e3f6ec;color:#135c38}.st.no{background:#fde8e8;color:#b42318}.st.other{background:#fff4d6;color:#8a5a00}
+.dstat.t1{border-left-color:#1189b1}.dstat.t1 .dic{background:#1189b1}.dstat.t2{border-left-color:#0b8f84}.dstat.t2 .dic{background:#0b8f84}.dstat.t3{border-left-color:#1fb488}.dstat.t3 .dic{background:#1fb488}.dstat.t4{border-left-color:#0f7a52}.dstat.t4 .dic{background:#0f7a52}.dstat.t5{border-left-color:#0b5e57}.dstat.t5 .dic{background:#0b5e57}.dstat.t6{border-left-color:#123040}.dstat.t6 .dic{background:#123040}
+.dgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:14px;margin:0 0 6px}
+.dcard{background:#fff;border:1.5px solid var(--line-2);border-radius:var(--r);padding:16px 18px;display:flex;flex-direction:column;gap:10px;position:relative;overflow:hidden;transition:.15s}
+.dcard:hover{box-shadow:0 10px 26px rgba(11,27,38,.09);transform:translateY(-2px)}
+.dcard::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--line-2)}
+.dcard.st-yes::before{background:#1fb488}.dcard.st-no::before{background:#e4572e}.dcard.st-other::before{background:#f0a52a}
+.dcard header{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.dcard h4{margin:0;font-size:16px;line-height:1.3}
+.dtype{display:inline-block;margin-top:4px;font-size:10.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--blue);background:var(--blue-soft);padding:2px 8px;border-radius:999px}
+.st{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;padding:4px 10px;border-radius:999px;background:#e8f2f1;color:var(--ink-3);white-space:nowrap}
+.st::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.st.yes{background:#e3f6ec;color:#135c38}.st.no{background:#fde8e8;color:#b42318}.st.other{background:#fff4d6;color:#8a5a00}.st.none{background:#eef3f4;color:var(--ink-3)}
+.dk{display:block;font-size:10.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+.dscope{display:flex;flex-wrap:wrap;gap:6px}
+.dscope span{font-size:12.5px;font-weight:600;color:var(--ink-2);background:var(--page);border:1px solid var(--line);border-radius:999px;padding:3px 10px}
+.dscope em{font-size:13px;color:var(--ink-3)}
+.downers{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.downer{display:flex;align-items:center;gap:10px;min-width:0}
+.downer b{display:block;font-size:14px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dav{flex:0 0 auto;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-family:var(--font-display);font-size:13px;font-weight:800;color:#fff;background:linear-gradient(135deg,var(--band-a),var(--band-b))}
+.dav.empty{background:#e8f2f1;color:var(--ink-3)}.dav.empty svg{width:18px;height:18px}
+.dav.sm{width:30px;height:30px;font-size:11.5px}
+.dreason{border-radius:9px;padding:9px 12px;font-size:13.5px;line-height:1.5;color:var(--ink-2);background:var(--page)}
+.dreason .dk{margin-bottom:3px}
+.dreason.no{background:#fff1ef;color:#7a2318}.dreason.no .dk{color:#b42318}
+.dreason.other{background:#fff7e3;color:#6b4500}.dreason.other .dk{color:#8a5a00}
+.dreason.yes{background:#eef9f3;color:#135c38}.dreason.yes .dk{color:#0f7a52}
+.dreason.none{border:1px dashed var(--line-2);background:#fff;color:var(--ink-3)}
+.dcerts{display:flex;gap:10px}
+.dcerts div{flex:1;display:flex;align-items:baseline;gap:6px;background:var(--page);border-radius:9px;padding:8px 12px}
+.dcerts b{font-family:var(--font-display);font-size:18px;color:var(--navy)}.dcerts span{font-size:12px;color:var(--ink-3);font-weight:600}
+.dcard footer{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:auto;padding-top:8px;border-top:1px solid var(--line)}
+.dcard footer .btn{display:inline-flex;align-items:center;gap:6px;padding:7px 12px}.dcard footer .btn svg{width:15px;height:15px}
 .dmeta{font-size:12px;color:var(--ink-3);font-weight:500}
-.dedit{background:#f5faf9;border:1.5px solid var(--line-2);border-radius:var(--r);padding:14px 16px;margin:0 0 14px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 14px}
-.dedit h4{grid-column:1/-1;margin:0;font-size:15.5px}
-.dedit label{display:block;font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);margin-bottom:5px}
+.dtwo{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:14px;margin:0 0 6px}
+.dpanel{background:#fff;border:1.5px solid var(--line-2);border-radius:var(--r);padding:14px 16px;min-width:0}
+.dpanel h5{margin:0 0 10px;font-size:11.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+.drow{display:grid;grid-template-columns:150px minmax(0,1fr) 38px 70px;align-items:center;gap:10px;padding:5px 0;font-size:13.5px}
+.drow .dn{color:var(--ink);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dtrack{height:10px;border-radius:999px;background:var(--page);overflow:hidden}
+.dtrack i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--band-a),var(--band-b));min-width:0}
+.drow b{text-align:right;font-variant-numeric:tabular-nums;color:var(--navy)}.drow em{font-style:normal;font-size:12px;color:var(--ink-3)}
+.dwrap{overflow:auto}.dwrap table.cmp{min-width:420px}
+.drecent{list-style:none;margin:0;padding:0}
+.drecent li{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;gap:12px;align-items:center;font-size:14px;padding:8px 0;border-bottom:1px solid var(--line)}
+.drecent li>div b{display:block}.drecent li:last-child{border-bottom:0}
+.dpct{font-family:var(--font-display);font-weight:800;color:var(--green)}
+.dmodal{position:fixed;inset:0;background:rgba(11,27,38,.55);display:grid;place-items:center;padding:16px;z-index:60;overflow:auto}
+.dedit{background:#fff;border-radius:14px;padding:18px 20px;width:min(640px,100%);display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 14px;box-shadow:0 24px 60px rgba(11,27,38,.3);max-height:calc(100vh - 32px);overflow:auto}
+.dmhead{grid-column:1/-1;display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.dmhead h4{margin:0;font-size:17px}
+.dedit label{display:block;font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);margin-bottom:6px}
 .dedit .full{grid-column:1/-1}
-.dedit .opts{display:flex;gap:16px;flex-wrap:wrap}
-.dedit .opts label{display:inline-flex;align-items:center;gap:6px;text-transform:none;letter-spacing:0;font-size:14.5px;color:var(--ink);font-weight:600;margin:0}
-.dedit textarea.fbin{min-height:72px;resize:vertical}
-.dedit .drow{grid-column:1/-1;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-.derr{color:#b42318;font-size:13.5px;font-weight:600}
+.dseg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.dseg label{margin:0;cursor:pointer}
+.dseg input{position:absolute;opacity:0;pointer-events:none}
+.dseg span{display:block;text-align:center;text-transform:none;letter-spacing:0;font-size:14px;font-weight:700;color:var(--ink-2);border:1.5px solid var(--line-2);border-radius:9px;padding:10px 8px;transition:.12s}
+.dseg input:focus-visible+span{outline:2px solid var(--blue);outline-offset:2px}
+.dseg label.yes input:checked+span{background:#e3f6ec;border-color:#1fb488;color:#135c38}
+.dseg label.no input:checked+span{background:#fde8e8;border-color:#e4572e;color:#b42318}
+.dseg label.other input:checked+span{background:#fff4d6;border-color:#f0a52a;color:#8a5a00}
+.dedit textarea.fbin{min-height:78px;resize:vertical}
+.drowb{grid-column:1/-1;display:flex;gap:10px;align-items:center;justify-content:flex-end;flex-wrap:wrap;padding-top:4px}
+.derr{color:#b42318;font-size:13.5px;font-weight:600;margin-right:auto}
 .dlock{background:#fff;border:1.5px solid var(--line-2);border-radius:var(--r);padding:18px 20px;display:flex;gap:14px;align-items:center;flex-wrap:wrap;color:var(--ink-2)}
 .dlock p{margin:0;flex:1;min-width:240px;font-size:14.5px;line-height:1.55}
 .dlock[hidden]{display:none}
-.drecent{list-style:none;margin:0 0 14px;padding:0 4px}
-.drecent li{display:flex;gap:12px;flex-wrap:wrap;align-items:baseline;font-size:14px;padding:8px 0;border-bottom:1px solid var(--line)}
-.drecent li:last-child{border-bottom:0}
 #dashBody.loading{opacity:.6;pointer-events:none}
-@media(max-width:700px){.dedit{grid-template-columns:1fr}.dstats{grid-template-columns:1fr 1fr}}
+@media(max-width:860px){.dov,.dtwo{grid-template-columns:1fr}.drow{grid-template-columns:120px minmax(0,1fr) 34px 60px}}
+@media(max-width:700px){.dstats{grid-template-columns:1fr 1fr}.dgrid{grid-template-columns:1fr}.dedit{grid-template-columns:1fr}.dseg{grid-template-columns:1fr}.dov-b{grid-template-columns:repeat(3,minmax(0,1fr))}.drecent li{grid-template-columns:auto minmax(0,1fr) auto}.drecent li>.dmeta:last-child{grid-column:2}}
 .certrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:10px}
 .certrow .fbin{flex:1 1 200px;min-width:0;margin:0}
 .certrow .btn{display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
@@ -1077,18 +1139,19 @@ textarea.fbin{resize:vertical;min-height:110px;line-height:1.5}
 </div>
 
 <div id="dashPanel" class="panel dash">
-  <div class="band"><h2>Dashboard</h2><p>One view for managers and team leads: for every project and specialty track, whether its training material is up to date (with the reason when it is not), who manages and leads it, and its scope of work; and how many certificates Gurukul has issued, by step and by project. It opens for the same approved email IDs as Certification, and the data lives in the Gurukul email script, not in this public page.</p></div>
+  <div class="band"><h2>Dashboard</h2><p>One view for managers and team leads: is each project’s training material up to date, who owns it, what it covers, and how many certificates Gurukul has issued. Same approved email IDs as Certification; the data lives in the Gurukul email script, not in this public page.</p></div>
   <div class="dlock" id="dashLock" hidden><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><p id="dashLockMsg"></p><button class="btn" id="dashGoCert">Open Certification</button><button class="btn ghost" id="dashRetry" hidden>Refresh</button></div>
   <div id="dashBody" hidden>
-    <div class="bhead"><h3>Certificates issued</h3><span id="dashWho"></span></div>
+    <div class="bhead"><h3>Overview</h3><span id="dashWho"></span></div>
+    <div class="dov" id="dashOverview"></div>
     <div class="dstats" id="dashStats"></div>
     <div class="bhead"><h3>Projects and specialty tracks</h3><button class="btn ghost" id="dashReload">Refresh</button></div>
     <div id="dashEdit"></div>
-    <div class="dwrap"><table class="cmp" id="dashProjects"></table></div>
-    <div class="bhead"><h3>Certificates by step and project</h3></div>
-    <div class="dwrap"><table class="cmp dcerts" id="dashCerts"></table></div>
+    <div class="dgrid" id="dashProjects"></div>
+    <div class="bhead"><h3>Certificates</h3></div>
+    <div class="dtwo"><div class="dpanel"><h5>By step</h5><div id="dashCerts"></div></div><div class="dpanel"><h5>By project and track</h5><div class="dwrap"><table class="cmp" id="dashByProject"></table></div></div></div>
     <div class="bhead"><h3>Recent certificates</h3><span id="dashRecentN"></span></div>
-    <ul class="drecent" id="dashRecent"></ul>
+    <div class="dpanel"><ul class="drecent" id="dashRecent"></ul></div>
     <p class="certnote">Material status, owners and scope are saved in the email script’s settings by whoever edits them, with their email ID and the time. Certificate counts come from certificates issued on this site after the dashboard went live; certificates printed before that are not counted.</p>
   </div>
   <datalist id="dashNames"></datalist>
@@ -2492,53 +2555,70 @@ const DASH_MSG={
   network:"Could not reach the Gurukul email script. Check your connection and click Refresh.",
   "old-script":"The Gurukul email script needs its new version for the Dashboard: in Apps Script, paste the latest tools/gurukul-email.gs and deploy it as a new version. Then lock and unlock Certification once."
 };
+const DI={cert:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="5"/><path d="M8.5 13.5 7 21l5-2.5L17 21l-1.5-7.5"/></svg>',book:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h6a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H4z"/><path d="M20 4h-6a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h7z"/></svg>',shield:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/></svg>',flag:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V4"/><path d="M5 4h12l-2 4 2 4H5"/></svg>',star:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1L3.9 9.5l6.1-.9z"/></svg>',eye:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>',check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg>',edit:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4z"/></svg>',user:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>'};
+const ST_LABEL={yes:"Up to date",no:"Not updated",other:"Other"};
+function dashInitials(n){ return String(n||"").trim().split(/\s+/).slice(0,2).map(w=>w[0]||"").join("").toUpperCase()||"?"; }
 function dashRender(){
   const lock=$("#dashLock"), body=$("#dashBody");
   if(DASH.error){ lock.hidden=false; body.hidden=true; $("#dashLockMsg").textContent=DASH_MSG[DASH.error]||DASH_MSG.network; $("#dashGoCert").hidden=DASH.error!=="locked"&&DASH.error!=="token"; $("#dashRetry").hidden=DASH.error==="locked"||DASH.error==="token"; return; }
   lock.hidden=true; body.hidden=false;
-  const a=certAccess(); $("#dashWho").textContent=a?"Signed in as "+a.email:"";
-  // tiles
-  const total=Object.keys(DASH.counts).reduce((n,k)=>n+dashCount(k).n,0);
-  const tiles=[["Certificates issued",total,"all steps, since the dashboard went live"],["RCM Basics",dashCount("rcm").n,dashCount("rcm").people+" people"],["Denial management",dashCount("denials").n,dashCount("denials").people+" people"],["Process training",dashSum("proc:").n,"all projects"],["QA certification",dashSum("qa:").n,"all projects"],["Specialty training",dashSum("spec:").n,"all tracks"],["Final readiness",dashCount("final").n,dashCount("final").people+" people"]];
-  $("#dashStats").innerHTML=tiles.map(t=>'<div class="dstat"><b>'+t[1]+'</b><span>'+esc(t[0])+'</span><em>'+esc(t[2])+'</em></div>').join("");
-  // projects
+  const a=certAccess(); $("#dashWho").textContent=a?a.email:"";
   const items=dashItems(), names=new Set();
-  const rows=items.map(it=>{
+  // overview: material status across projects and tracks
+  const sc={yes:0,no:0,other:0,none:0}; items.forEach(it=>{ const r=DASH.projects[it.id]||{}; sc[r.status||"none"]++; });
+  const total=Object.keys(DASH.counts).reduce((n,k)=>n+dashCount(k).n,0), people=Object.keys(DASH.counts).reduce((n,k)=>n+dashCount(k).people,0);
+  const seg=(k,cls)=>sc[k]?'<i class="'+cls+'" style="flex:'+sc[k]+'" title="'+esc(ST_LABEL[k]||"Not recorded")+': '+sc[k]+'"></i>':'';
+  $("#dashOverview").innerHTML='<div class="dov-a"><span class="dov-k">Training material</span><b>'+sc.yes+' of '+items.length+' up to date</b>'+
+    '<div class="dbar">'+seg("yes","yes")+seg("no","no")+seg("other","other")+seg("none","none")+'</div>'+
+    '<div class="dlegend"><span><i class="yes"></i>Up to date '+sc.yes+'</span><span><i class="no"></i>Not updated '+sc.no+'</span><span><i class="other"></i>Other '+sc.other+'</span><span><i class="none"></i>Not recorded '+sc.none+'</span></div></div>'+
+    '<div class="dov-b"><div><b>'+total+'</b><span>certificates issued</span></div><div><b>'+people+'</b><span>certificate holders</span></div><div><b>'+items.length+'</b><span>projects and tracks</span></div></div>';
+  // tiles by step
+  const tiles=[["RCM Basics","rcm",DI.book,"t1"],["Denial management","denials",DI.shield,"t2"],["Process training","proc:",DI.flag,"t3"],["QA certification","qa:",DI.check,"t4"],["Specialty training","spec:",DI.eye,"t5"],["Final readiness","final",DI.star,"t6"]];
+  $("#dashStats").innerHTML=tiles.map(t=>{ const c=t[1].endsWith(":")?dashSum(t[1]):dashCount(t[1]); return '<div class="dstat '+t[3]+'"><span class="dic">'+t[2]+'</span><b>'+c.n+'</b><span class="dl">'+esc(t[0])+'</span><em>'+c.people+' '+(c.people===1?"person":"people")+'</em></div>'; }).join("");
+  // project cards
+  $("#dashProjects").innerHTML=items.map(it=>{
     const r=DASH.projects[it.id]||{}; if(r.manager) names.add(r.manager); if(r.tl) names.add(r.tl);
-    const scope=(r.scope&&r.scope.length?r.scope:it.scope)||[];
-    const st=r.status?'<span class="st '+esc(r.status)+'">'+(r.status==="yes"?"Yes":r.status==="no"?"No":"Other")+'</span>':'<span class="st">Not recorded</span>';
-    const certs=it.keys.map(k=>k[1]+" "+dashCount(k[0]).n).join(" · ");
-    return '<tr data-id="'+esc(it.id)+'"><td>'+esc(it.name)+'<div class="dmeta">'+esc(it.type)+'</div></td><td>'+(scope.length?esc(scope.join(", ")):'<span class="dmeta">Not set</span>')+'</td><td>'+(r.manager?esc(r.manager):'<span class="dmeta">Not set</span>')+'</td><td>'+(r.tl?esc(r.tl):'<span class="dmeta">Not set</span>')+'</td><td>'+st+'</td><td>'+(r.reason?esc(r.reason):'<span class="dmeta">'+(r.status==="yes"?"No reason needed":"")+'</span>')+'</td><td>'+esc(certs)+'</td><td>'+(r.at?'<div class="dmeta">'+esc(dashWhen(r.at))+'<br>'+esc(r.by||"")+'</div>':'<span class="dmeta">Never</span>')+'</td><td><button class="btn ghost dedit-btn" data-id="'+esc(it.id)+'">Edit</button></td></tr>';
+    const scope=(r.scope&&r.scope.length?r.scope:it.scope)||[], st=r.status||"none";
+    const owner=(label,n)=>'<div class="downer"><span class="dav'+(n?'':' empty')+'">'+(n?esc(dashInitials(n)):DI.user)+'</span><div><span class="dk">'+label+'</span><b data-f="'+(label==="Manager"?"manager":"tl")+'">'+(n?esc(n):'Not set')+'</b></div></div>';
+    const certs=it.keys.map(k=>'<div><b>'+dashCount(k[0]).n+'</b><span>'+esc(k[1])+'</span></div>').join("");
+    return '<article class="dcard st-'+st+'" data-id="'+esc(it.id)+'">'+
+      '<header><div><h4>'+esc(it.name)+'</h4><span class="dtype">'+esc(it.type)+'</span></div><span class="st '+st+'" data-f="status">'+(ST_LABEL[st]||"Not recorded")+'</span></header>'+
+      '<div class="dk">Scope of work</div><div class="dscope" data-f="scope">'+(scope.length?scope.map(x=>'<span>'+esc(x)+'</span>').join(""):'<em>Not set</em>')+'</div>'+
+      '<div class="downers">'+owner("Manager",r.manager)+owner("Team lead",r.tl)+'</div>'+
+      (st!=="none"&&st!=="yes"?'<div class="dreason '+st+'" data-f="reason"><span class="dk">'+(st==="no"?"Why not, and by when":"Why there is nothing to update")+'</span>'+esc(r.reason||"")+'</div>':st==="yes"?'<div class="dreason yes" data-f="reason"><span class="dk">Reason</span>No reason needed</div>':'<div class="dreason none" data-f="reason"><span class="dk">Status</span>No one has recorded this yet. Click Edit to record it.</div>')+
+      '<div class="dcerts" data-f="certs">'+certs+'</div>'+
+      '<footer><span class="dmeta" data-f="updated">'+(r.at?'Updated '+esc(dashWhen(r.at))+' by '+esc(r.by||""):'Never updated')+'</span><button class="btn ghost dedit-btn" data-id="'+esc(it.id)+'">'+DI.edit+'Edit</button></footer></article>';
   }).join("");
-  $("#dashProjects").innerHTML='<thead><tr><th>Project / track</th><th>Scope of work</th><th>Manager</th><th>Team lead</th><th>Material updated?</th><th>Reason / note</th><th>Certificates</th><th>Last updated</th><th></th></tr></thead><tbody>'+rows+'</tbody>';
   $("#dashNames").innerHTML=[...names].sort().map(n=>'<option value="'+esc(n)+'">').join("");
   $$("#dashProjects .dedit-btn").forEach(b=>b.addEventListener("click",()=>dashEdit(b.dataset.id)));
-  // counts by step and project
-  const crow=(label,k)=>{ const c=dashCount(k); return '<tr><td>'+esc(label)+'</td><td>'+c.n+'</td><td>'+c.people+'</td></tr>'; };
-  let ch=DASH_STEPS.slice(0,2).map(s=>crow(s[1],s[0])).join("");
-  sopClients().forEach(c=>{ ch+=crow("Process training: "+c.name,"proc:"+c.id)+crow("QA certification: "+c.name,"qa:"+c.id); });
-  specTracks().forEach(t=>{ ch+=crow("Specialty training: "+t.name,"spec:"+t.id); });
-  ch+=crow("Final readiness test","final");
-  $("#dashCerts").innerHTML='<thead><tr><th>Step</th><th>Certificates issued</th><th>People certified</th></tr></thead><tbody>'+ch+'</tbody>';
+  // certificates by step: bars
+  const steps=[["RCM Basics","rcm"],["Denial management","denials"]];
+  sopClients().forEach(c=>{ steps.push(["Process: "+c.short,"proc:"+c.id]); steps.push(["QA: "+c.short,"qa:"+c.id]); });
+  specTracks().forEach(t=>steps.push(["Specialty: "+t.short,"spec:"+t.id])); steps.push(["Final readiness test","final"]);
+  const max=Math.max(1,...steps.map(s=>dashCount(s[1]).n));
+  $("#dashCerts").innerHTML=steps.map(s=>{ const c=dashCount(s[1]); return '<div class="drow"><span class="dn">'+esc(s[0])+'</span><span class="dtrack"><i style="width:'+Math.round(c.n/max*100)+'%"></i></span><b>'+c.n+'</b><em>'+c.people+' '+(c.people===1?"person":"people")+'</em></div>'; }).join("");
+  // per project table
+  $("#dashByProject").innerHTML='<thead><tr><th>Project / track</th><th>Process</th><th>QA</th><th>Specialty</th><th>Material</th></tr></thead><tbody>'+items.map(it=>{ const r=DASH.projects[it.id]||{}, st=r.status||"none"; const g=k=>{ const x=it.keys.find(y=>y[1]===k); return x?dashCount(x[0]).n:'<span class="dmeta">–</span>'; }; return '<tr><td>'+esc(it.name)+'</td><td>'+g("Process")+'</td><td>'+g("QA")+'</td><td>'+g("Specialty")+'</td><td><span class="st '+st+'">'+(ST_LABEL[st]||"Not recorded")+'</span></td></tr>'; }).join("")+'</tbody>';
   // recent
   const rec=DASH.recent||[]; $("#dashRecentN").textContent=rec.length?"last "+rec.length:"none yet";
-  $("#dashRecent").innerHTML=rec.length?rec.map(x=>'<li><b>'+esc(x.name||"")+'</b><span>'+esc(dashKeyLabel(x.k||""))+'</span><span>'+esc(x.pct!=null?x.pct+"%":"")+'</span><span class="dmeta">'+esc(dashWhen(x.t))+'</span></li>').join(""):'<li class="dmeta">No certificates have been issued on this site since the dashboard went live.</li>';
+  $("#dashRecent").innerHTML=rec.length?rec.map(x=>'<li><span class="dav sm">'+esc(dashInitials(x.name))+'</span><div><b>'+esc(x.name||"")+'</b><span class="dmeta">'+esc(dashKeyLabel(x.k||""))+'</span></div><span class="dpct">'+esc(x.pct!=null?x.pct+"%":"")+'</span><span class="dmeta">'+esc(dashWhen(x.t))+'</span></li>').join(""):'<li class="dmeta">No certificates have been issued on this site since the dashboard went live.</li>';
 }
 function dashEdit(id){
   const it=dashItems().find(x=>x.id===id); if(!it) return;
-  const r=DASH.projects[id]||{}, scope=(r.scope&&r.scope.length?r.scope:it.scope)||[];
-  const st=r.status||"";
-  $("#dashEdit").innerHTML='<form class="dedit" data-id="'+esc(id)+'"><h4>'+esc(it.name)+' <span class="dmeta">('+esc(it.type)+')</span></h4>'+
-    '<div class="full"><label>Training material updated?</label><div class="opts">'+[["yes","Yes"],["no","No"],["other","Other"]].map(o=>'<label><input type="radio" name="dstatus" value="'+o[0]+'"'+(st===o[0]?' checked':'')+'> '+o[1]+'</label>').join("")+'</div></div>'+
-    '<div class="full"><label>Reason <span class="dmeta dreason-hint">(required for No and Other: for No, what is pending and by when; for Other, why there is no material to update)</span></label><textarea class="fbin" name="dreason" maxlength="600" placeholder="For example: SOP under revision, expected 15 November">'+esc(r.reason||"")+'</textarea></div>'+
+  const r=DASH.projects[id]||{}, scope=(r.scope&&r.scope.length?r.scope:it.scope)||[], st=r.status||"";
+  $("#dashEdit").innerHTML='<div class="dmodal" role="dialog" aria-modal="true" aria-labelledby="dmTitle"><form class="dedit" data-id="'+esc(id)+'">'+
+    '<div class="dmhead"><div><h4 id="dmTitle">'+esc(it.name)+'</h4><span class="dtype">'+esc(it.type)+'</span></div><button type="button" class="fbx dcancel" aria-label="Close">&times;</button></div>'+
+    '<div class="full"><label>Is the training material up to date?</label><div class="dseg">'+[["yes","Yes, up to date"],["no","No, not updated"],["other","Other"]].map(o=>'<label class="'+o[0]+'"><input type="radio" name="dstatus" value="'+o[0]+'"'+(st===o[0]?' checked':'')+'><span>'+o[1]+'</span></label>').join("")+'</div></div>'+
+    '<div class="full"><label>Reason <span class="dmeta">(required for No and Other)</span></label><textarea class="fbin" name="dreason" maxlength="600" placeholder="No: what is pending and by when, for example “SOP under revision, expected 15 November”. Other: why there is no material to update, for example “tracked live on calls”.">'+esc(r.reason||"")+'</textarea></div>'+
     '<div><label>Manager</label><input class="fbin" name="dmanager" list="dashNames" maxlength="80" value="'+esc(r.manager||"")+'" placeholder="Name"></div>'+
     '<div><label>Team lead</label><input class="fbin" name="dtl" list="dashNames" maxlength="80" value="'+esc(r.tl||"")+'" placeholder="Name"></div>'+
     '<div class="full"><label>Scope of work <span class="dmeta">(comma separated)</span></label><input class="fbin" name="dscope" maxlength="400" value="'+esc(scope.join(", "))+'" placeholder="For example: AR follow-up, Eligibility verification (EV), Patient care coordination (PCC)"></div>'+
-    '<div class="drow"><button type="submit" class="btn">Save</button><button type="button" class="btn ghost dcancel">Cancel</button><span class="derr" aria-live="polite"></span></div></form>';
+    '<div class="drowb"><span class="derr" aria-live="polite"></span><button type="button" class="btn ghost dcancel">Cancel</button><button type="submit" class="btn">Save</button></div></form></div>';
   const f=$("#dashEdit form");
-  f.querySelector(".dcancel").addEventListener("click",()=>{ $("#dashEdit").innerHTML=""; });
+  $$("#dashEdit .dcancel").forEach(b=>b.addEventListener("click",()=>{ $("#dashEdit").innerHTML=""; }));
+  $("#dashEdit .dmodal").addEventListener("click",e=>{ if(e.target.classList.contains("dmodal")) $("#dashEdit").innerHTML=""; });
   f.addEventListener("submit",e=>{ e.preventDefault(); dashSave(f); });
-  f.scrollIntoView({behavior:"smooth",block:"start"});
+  setTimeout(()=>{ const x=f.querySelector("input[name=dstatus]:checked")||f.querySelector("input[name=dstatus]"); if(x) x.focus(); },30);
 }
 async function dashSave(f){
   const err=f.querySelector(".derr"), id=f.dataset.id;
