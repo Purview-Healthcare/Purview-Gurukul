@@ -483,6 +483,18 @@ details.les>summary .tick:hover{border-color:var(--green)}
 /* Purview SOPs: client playbooks reuse the course tree */
 details.day.sop>summary{background:linear-gradient(110deg,var(--navy),#1f6fa3)}
 .sopintro{margin:2px 6px 6px;font-size:14px;color:var(--ink-2);line-height:1.55}
+.updpanel{margin:6px 6px 12px;background:#fff;border:1.5px solid var(--line-2);border-left:5px solid var(--orange);border-radius:var(--r);padding:12px 16px}
+.updh{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px}.updh b{font-family:var(--font-display);font-size:15px;color:var(--navy)}.updh span{font-size:12.5px;color:var(--ink-3)}.updh svg{color:var(--orange-deep)}
+.upd{padding:10px 0;border-top:1px solid var(--line)}.upd:first-of-type{border-top:0}
+.upd>b{display:block;font-size:14.5px;color:var(--ink);margin:4px 0 3px}.upd p{margin:0;font-size:13.5px;line-height:1.55;color:var(--ink-2)}
+.updmeta{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.upddate{font-size:11.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--navy)}
+.updby{font-size:12px;font-weight:700;color:var(--orange-deep);background:var(--orange-soft);border-radius:999px;padding:2px 9px}
+.updnew{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#fff;background:var(--orange);border-radius:999px;padding:2px 8px;margin-left:8px;vertical-align:2px}
+.updmeta .updnew{margin-left:0}
+.updlinks{display:flex;flex-direction:column;gap:4px;margin-top:8px}.updlinks .alt{margin:0}
+.updbanner{display:flex;gap:10px;align-items:flex-start;background:var(--orange-soft);border:1px solid var(--orange-line);border-radius:10px;padding:10px 14px;margin:0 0 12px;color:var(--orange-deep)}
+.updbanner b{display:block;font-size:13.5px}.updbanner span{display:block;font-size:13px;color:var(--ink-2);margin-top:2px}.updbanner svg{flex:0 0 auto;margin-top:2px}
 .tag.client{color:#fff;background:var(--navy)}
 details.day.spec>summary{background:linear-gradient(110deg,#0f5e57,#0b8f84)}
 .tag.spec{color:#fff;background:#0f5e57}
@@ -1832,6 +1844,7 @@ function lessonBody(l){
   if(l.spec&&next&&next.mod.track!==m.track) next=null;   // a specialty track ends with its own last topic
   const head=(ic,t,n)=>'<div class="sec">'+ic+'<h3>'+t+'</h3>'+(n?'<span class="n">'+n+'</span>':'')+'</div>';
   let h='<div class="lesbody"><div class="ltags">'+(l.sop?'<span class="tag client">'+esc(m.client.short)+' playbook</span>':l.spec?'<span class="tag spec">'+esc(m.track.short)+' specialty</span>':'')+'<span class="tag">'+esc(m.short)+'</span>'+(l.step?'<span class="tag step">RCM step '+l.step+'</span>':'')+'</div>'+
+    (l.sop&&updFor(l)?(u=>'<div class="updbanner">'+IC.spark+'<div><b>Updated '+esc(updWhen(u.date))+(u.by?', shared by '+esc(u.by):'')+'</b><span>'+esc(u.title)+'</span></div></div>')(updFor(l)):'')+
     '<div class="answer"><div class="answer-h">'+IC.spark+'In one line</div><p>'+fmt(l.line)+'</p></div>';
   if(l.body&&l.body.length) h+=head(IC.info,"Explained")+l.body.map(p=>'<p class="prose">'+fmt(p)+'</p>').join("");
   if(l.flow) h+=head(IC.todo,"Process flow",l.flow.steps.length)+'<ol class="flow">'+l.flow.steps.map(x=>'<li>'+fmt(x)+'</li>').join("")+'</ol>'+
@@ -2109,19 +2122,31 @@ function openSop(id){
   ensureBody(d); d.open=true; S_CUR=id; refreshSopCounts();
   setTimeout(()=>d.querySelector("summary").scrollIntoView({behavior:"smooth",block:"start"}),30);
 }
+/* Client updates: each playbook can carry updates:[{date:"YYYY-MM-DD",by,title,summary,lessons:[ids]}]; a topic it
+   touches carries upd:"YYYY-MM-DD". Shown as a "What changed" panel, an Updated badge for 30 days, and a banner in the topic. */
+const UPD_NEW_DAYS=30;
+function updWhen(d){ try{ return new Date(d+"T12:00:00").toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"}); }catch(e){ return d; } }
+function updIsNew(d){ return !!d&&(Date.now()-Date.parse(d+"T12:00:00"))<UPD_NEW_DAYS*86400000; }
+function clientUpdates(c){ return (c.updates||[]).slice().sort((a,b)=>b.date<a.date?-1:b.date>a.date?1:0); }
+function updFor(l){ const c=l.mod&&l.mod.client; if(!c||!l.upd) return null; const ups=clientUpdates(c); return ups.find(u=>u.date===l.upd&&(u.lessons||[]).indexOf(l.id)>=0)||ups.find(u=>u.date===l.upd)||null; }
+function updPanel(c){
+  const ups=clientUpdates(c); if(!ups.length) return "";
+  return '<div class="updpanel"><div class="updh">'+IC.spark+'<b>What changed</b><span>'+ups.length+' update'+(ups.length===1?"":"s")+', newest first</span></div>'+ups.map(u=>'<div class="upd"><div class="updmeta"><span class="upddate">'+esc(updWhen(u.date))+'</span>'+(u.by?'<span class="updby">Shared by '+esc(u.by)+'</span>':'')+(updIsNew(u.date)?'<span class="updnew">New</span>':'')+'</div><b>'+esc(u.title)+'</b><p>'+fmt(u.summary||"")+'</p>'+((u.lessons||[]).length?'<div class="updlinks">'+u.lessons.map(id=>{ const l=S_BY_ID[id]; return l?'<button class="alt" data-go="'+esc(id)+'"><span>'+esc(l.title)+'</span>'+IC.arw+'</button>':''; }).join("")+'</div>':'')+'</div>').join("")+'</div>';
+}
 function sopPool(short){ return (typeof SOP_QUIZ!=="undefined"?SOP_QUIZ:[]).filter(x=>x.t===short); }
 function sopQuizSize(pool){ return Math.min(8,Math.max(5,pool.length)); }
 function buildSopTree(){
   if(typeof SOP_CLIENTS==="undefined"||!SOP_CLIENTS.length){ $("#sopTree").innerHTML='<div class="none">No client playbooks yet.</div>'; return; }
   $("#sopTree").innerHTML=SOP_CLIENTS.map((c,ci)=>{ const nL=c.modules.reduce((a,m)=>a+m.lessons.length,0);
     return '<details class="day sop"'+(ci===0?" open":"")+'><summary>'+IC.chev+'<span class="dtitle">'+esc(c.name)+'<small>'+c.modules.length+' modules · '+nL+' topics · assessment after each module · '+esc(c.updated||"")+'</small></span><span class="cnt">0/'+nL+'</span></summary>'+
-      '<div class="daybody"><p class="sopintro">'+esc(c.blurb)+'</p>'+c.modules.map(m=>'<details class="mod" data-mod="'+m.id+'"><summary>'+IC.chev+'<span class="mtitle"><b>'+esc(m.title)+'</b><span class="blurb">'+esc(m.blurb)+'</span></span><span class="cnt">0/'+m.lessons.length+'</span></summary>'+
-        '<div class="modbody">'+m.lessons.map(l=>'<details class="les" data-id="'+l.id+'"><summary><span class="tick" role="button" tabindex="0" title="Mark read / unread">'+IC.check+'</span><span class="ltitle">'+esc(l.title)+'</span><em class="hitterm"></em>'+IC.chev+'</summary></details>').join("")+
+      '<div class="daybody"><p class="sopintro">'+esc(c.blurb)+'</p>'+updPanel(c)+c.modules.map(m=>'<details class="mod" data-mod="'+m.id+'"><summary>'+IC.chev+'<span class="mtitle"><b>'+esc(m.title)+'</b><span class="blurb">'+esc(m.blurb)+'</span></span><span class="cnt">0/'+m.lessons.length+'</span></summary>'+
+        '<div class="modbody">'+m.lessons.map(l=>'<details class="les" data-id="'+l.id+'"><summary><span class="tick" role="button" tabindex="0" title="Mark read / unread">'+IC.check+'</span><span class="ltitle">'+esc(l.title)+(updIsNew(l.upd)?'<span class="updnew" title="Updated '+esc(updWhen(l.upd))+'">Updated</span>':'')+'</span><em class="hitterm"></em>'+IC.chev+'</summary></details>').join("")+
         '<div class="dayquiz" data-smod="'+esc(m.short)+'"><div class="dq-head">'+IC.spark+'<div><b>Assessment: '+esc(m.title)+'</b><span>'+sopQuizSize(sopPool(m.short))+' questions from this module, a new set every time. Print or copy the results at the end.</span></div></div><button class="btn" data-start="1">Start the assessment</button><div class="dqarea"></div></div></div></details>').join("")+
       '<div class="dayquiz" data-sclient="'+esc(c.id)+'"><div class="dq-head">'+IC.spark+'<div><b>'+esc(c.short)+' practice round: every module</b><span>15 questions across the whole playbook, a new set every time. The certificate for this process is earned in the Certification tab.</span></div></div><button class="btn" data-start="1">Start the practice round</button> <button class="btn ghost" data-cert="'+esc(c.id)+'">Go to certification</button><div class="dqarea"></div></div></div></details>'; }).join("");
   $$("#sopTree details.les").forEach(d=>d.addEventListener("toggle",()=>{ if(d.open){ ensureBody(d); S_CUR=d.dataset.id; refreshSopCounts(); } }));
   $$("#sopTree details.les > summary .tick").forEach(t=>t.addEventListener("click",e=>{ e.preventDefault(); e.stopPropagation(); sToggleRead(t.closest("details").dataset.id); }));
   $$("#sopTree [data-cert]").forEach(b=>b.addEventListener("click",()=>certOpen("proc",b.dataset.cert)));
+  $$("#sopTree .updpanel [data-go]").forEach(b=>b.addEventListener("click",()=>openSop(b.dataset.go)));
   $$("#sopTree .dayquiz").forEach(box=>box.querySelector("[data-start]").addEventListener("click",()=>{ box.querySelector("[data-start]").hidden=true;
     const area=box.querySelector(".dqarea"), done=()=>{ box.querySelector("[data-start]").hidden=false; };
     if(box.dataset.smod) mountQuiz(area,()=>{ const pool=sopPool(box.dataset.smod); return shuffle(pool).slice(0,sopQuizSize(pool)).map(authored); },done,"the "+box.dataset.smod+" module");
