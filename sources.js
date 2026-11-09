@@ -109,9 +109,26 @@ const S={
   medicareAppealsPub:["Medicare.gov — Medicare Appeals (publication 11525)","https://www.medicare.gov/publications/11525-medicare-appeals.pdf"],
   wcDol:["DOL — Workers' compensation","https://www.dol.gov/general/topic/workcomp"],
   mspLiability:["CMS — Coordination of Benefits & Recovery (liability, no-fault, workers' comp)","https://www.cms.gov/medicare/coordination-benefits-recovery/overview"],
-  medicaidHome:["Medicaid.gov — Medicaid","https://www.medicaid.gov/medicaid/index.html"]
+  medicaidHome:["Medicaid.gov — Medicaid","https://www.medicaid.gov/medicaid/index.html"],
+  part2:["eCFR — 42 CFR Part 2, Confidentiality of substance use disorder patient records","https://www.ecfr.gov/current/title-42/chapter-I/subchapter-A/part-2"],
+  asam:["ASAM — The ASAM Criteria (levels of care)","https://www.asam.org/asam-criteria"],
+  fqhcCenter:["CMS — Federally Qualified Health Centers (FQHC) Center, incl. intensive outpatient services","https://www.cms.gov/medicare/payment/prospective-payment-systems/federally-qualified-health-centers-fqhc-center"],
+  kyDms:["Kentucky Cabinet for Health and Family Services — Department for Medicaid Services","https://www.chfs.ky.gov/agencies/dms"]
 };
 const BASICS_SOURCES={
+  /* Specialties: Behavioral health and IOP track (spec-bh.js) */
+  "bh-terms":[S.asam],
+  "bh-clinicians":[S.part2,S.hipaaPrivacy],
+  "bh-dx":[S.cmsIcd10],
+  "bh-cpt":[S.cpt,S.hcpcs,S.pos],
+  "bh-iop":[S.hcpcs,S.nubc,S.asam],
+  "bh-ub04":[S.nubc],
+  "bh-medicare-iop":[S.fqhcCenter],
+  "bh-auth":[S.asam,S.kyDms],
+  "bh-telehealth":[S.pos],
+  "bh-denials":[S.appeals],
+  "bh-ky":[S.kyDms,S.medicaidHome],
+  "bh-ky-iop":[S.kyDms],
   /* Specialties: Vision care track (spec-vision.js) */
   "vis-refractive":[S.neiRefractive],
   "vis-cpt-exam":[S.aaoEyeCodes,S.bcbsriEyeExam,S.medEyeExams],
