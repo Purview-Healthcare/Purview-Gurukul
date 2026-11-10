@@ -113,6 +113,8 @@ const S={
   part2:["eCFR — 42 CFR Part 2, Confidentiality of substance use disorder patient records","https://www.ecfr.gov/current/title-42/chapter-I/subchapter-A/part-2"],
   asam:["ASAM — The ASAM Criteria (levels of care)","https://www.asam.org/asam-criteria"],
   fqhcCenter:["CMS — Federally Qualified Health Centers (FQHC) Center, incl. intensive outpatient services","https://www.cms.gov/medicare/payment/prospective-payment-systems/federally-qualified-health-centers-fqhc-center"],
+  cmsPfs:["CMS — Physician Fee Schedule (behavioral health integration, collaborative care, digital mental health treatment)","https://www.cms.gov/medicare/payment/fee-schedules/physician"],
+  bacbCoding:["BACB — Behavior Analyst Certification Board (credentials: BCBA, BCaBA, RBT)","https://www.bacb.com/"],
   kyDms:["Kentucky Cabinet for Health and Family Services — Department for Medicaid Services","https://www.chfs.ky.gov/agencies/dms"]
 };
 const BASICS_SOURCES={
@@ -129,6 +131,9 @@ const BASICS_SOURCES={
   "bh-denials":[S.appeals],
   "bh-ky":[S.kyDms,S.medicaidHome],
   "bh-ky-iop":[S.kyDms],
+  "bh-psych":[S.cpt,S.hcpcs],
+  "bh-integrated":[S.cmsPfs,S.hcpcs],
+  "bh-aba":[S.cpt,S.bacbCoding],
   /* Specialties: Vision care track (spec-vision.js) */
   "vis-refractive":[S.neiRefractive],
   "vis-cpt-exam":[S.aaoEyeCodes,S.bcbsriEyeExam,S.medEyeExams],
