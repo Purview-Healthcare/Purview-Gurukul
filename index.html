@@ -68,7 +68,7 @@ svg{display:block;flex:0 0 auto}
 /* Purview lockup — light treatment for the dark bar, real logo art for the light footer */
 .pvlock{display:flex;align-items:center;margin:0 0 6px auto;padding-left:14px}
 .pvlock img{height:46px;width:auto;display:block}
-.pvlock img[hidden]{display:none}
+.pvlock img[hidden],.pvfull[hidden]{display:none}
 .pvword{display:flex;flex-direction:column;line-height:1}
 .pvword b{font-family:var(--font-display);font-size:21px;font-weight:800;letter-spacing:.005em;color:var(--ink);line-height:1}
 .pvword i{font-family:var(--font-display);font-style:normal;font-size:15px;font-weight:600;letter-spacing:.005em;margin-top:3px;
@@ -786,7 +786,8 @@ textarea.fbin{resize:vertical;min-height:110px;line-height:1.5}
   #printSheet .pex{margin:5px 0 0;font-size:10pt;color:#333}
   #printSheet .pfoot{margin-top:18px;font-size:9.5pt;color:#555;border-top:1px solid #999;padding-top:8px}
   #printSheet .certsheet{border:6px double #1f3b57;padding:28px 48px;text-align:center;font-family:Georgia,"Times New Roman",serif;page-break-inside:avoid;box-sizing:border-box;min-height:182mm;display:flex;flex-direction:column;align-items:center;justify-content:center}
-  #printSheet .certlogo{height:14mm;width:45.57mm;margin:0 0 3mm;flex:0 0 auto}
+  #printSheet .certlogo{height:24mm;width:auto;max-width:70mm;margin:0 0 3mm;flex:0 0 auto}
+  #printSheet svg.certlogo{height:14mm;width:45.57mm}
   #printSheet .certbrand{font-size:10.5pt;letter-spacing:.22em;text-transform:uppercase;color:#1f3b57}
   #printSheet .certsheet h1{font-size:30pt;margin:8px 0 2px;color:#0b8f84}
   #printSheet .certarea{font-size:13pt;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#1f3b57;margin:2px 0 0}
@@ -795,7 +796,8 @@ textarea.fbin{resize:vertical;min-height:110px;line-height:1.5}
   #printSheet .certsheet p:not([class]){font-size:12.5pt;line-height:1.6;max-width:640px;margin:6px auto}
   #printSheet .certid{font-size:10pt;color:#666;margin-top:12px}
   #printSheet .certsign{display:flex;justify-content:space-around;gap:30px;margin-top:34px;align-self:stretch}
-  #printSheet .certsign div{border-top:1px solid #333;padding-top:6px;min-width:190px;font-size:10.5pt;color:#333}
+  #printSheet .certsign>div{display:flex;flex-direction:column;align-items:center;min-width:190px;font-size:10.5pt;color:#333}
+  #printSheet .certsign .sgv{display:block;align-self:stretch;height:22px;line-height:22px;border-bottom:1px solid #333;margin-bottom:6px;padding-bottom:3px;font-size:12pt;color:#111}
   #printSheet .certfoot{font-size:9.5pt;color:#666;margin-top:16px}
   #printSheet .qasheet table{width:100%;border-collapse:collapse;font-size:11pt;margin:12px 0}
   #printSheet .qasheet th,#printSheet .qasheet td{border:1px solid #999;padding:6px 8px;text-align:left}}
@@ -968,8 +970,8 @@ textarea.fbin{resize:vertical;min-height:110px;line-height:1.5}
       <span class="navspacer"></span>
       <button class="pillbtn fbbtn" id="fbOpen" hidden><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v12H7l-3 3z"/><path d="M8 9h8M8 12.5h5"/></svg>Feedback</button>
       <div class="pvlock" id="pvLock">
-        <img id="pvImg" alt="Purview Healthcare" hidden>
-        <span id="pvFallback" class="pvfull">
+        <img id="pvImg" src="purview-logo.png" width="119" height="46" alt="Purview Healthcare" onerror="this.hidden=true;document.getElementById('pvFallback').hidden=false">
+        <span id="pvFallback" class="pvfull" hidden>
           <svg class="hexmark" viewBox="0 0 706 768" width="44" height="48" aria-hidden="true">
             <defs>
               <linearGradient id="pvg" gradientUnits="userSpaceOnUse" x1="66" y1="30" x2="690" y2="730">
@@ -2416,6 +2418,9 @@ function printHTML(html,page){
    (16 per top-bar pixel); the text widths are Poppins's own, held fixed so a stand-in font
    keeps the same layout. */
 function pvLogo(){
+  /* The official logo file (the same artwork as Coding Astra and Denial Guru); the drawn copy below is
+     only a fallback if the image could not load. */
+  const img=$("#pvImg"); if(img&&!img.hidden&&img.complete&&img.naturalWidth) return '<img class="certlogo" src="purview-logo.png" alt="Purview Healthcare">';
   const m=$("#pvFallback .hexmark"); if(!m) return "";
   const font=' style="font-family:var(--font-display)" lengthAdjust="spacingAndGlyphs"';
   return '<svg class="certlogo" viewBox="0 0 2500 768" role="img" aria-label="Purview Healthcare">'+m.innerHTML.replace(/\bpvg\b/g,"pvgPrint")+
@@ -2425,7 +2430,7 @@ function pvLogo(){
 }
 function certSheet(kind,area,name,body,idline,signs,foot){
   return '<div class="certsheet">'+pvLogo()+'<div class="certbrand">Purview Gurukul</div><h1>'+kind+'</h1><p class="certarea">'+esc(area)+'</p><p class="certof">This certifies that</p><p class="certname">'+esc(name)+'</p>'+body+
-    '<p class="certid">'+idline+'</p><div class="certsign">'+signs.map(s=>'<div>'+esc(s)+'</div>').join("")+'</div><p class="certfoot">'+esc(foot)+'</p></div>';
+    '<p class="certid">'+idline+'</p><div class="certsign">'+signs.map(s=>{ const o=typeof s==="string"?{l:s,v:""}:s; return '<div><span class="sgv">'+esc(o.v||"")+'</span>'+esc(o.l)+'</div>'; }).join("")+'</div><p class="certfoot">'+esc(foot)+'</p></div>';
 }
 const CERT_PAGE="size:A4 landscape;margin:12mm";   // certificates print landscape, one per page
 function certPrint(d,p){
@@ -2433,19 +2438,19 @@ function certPrint(d,p){
   if(d.kind!=="qa"){ const t=st.t, fin=d.k==="final";
     printHTML(certSheet(fin?"Certificate of Readiness":"Certificate of Training",d.client?d.client.name+" process":d.track?d.track.name+" specialty":d.title,t.name,
       '<p>has cleared the <b>'+esc(fin?"final readiness test":d.label)+'</b>'+(fin?'':' assessment')+' with a score of <b>'+t.pct+'%</b> ('+t.score+' of '+t.n+' questions) on '+esc(t.date)+', covering '+esc(t.covers||d.covers())+'. Pass mark '+CERT_PASS+'%.</p>'+(t.areas?'<p>By area: '+esc(t.areas)+'.</p>':''),
-      'Certificate no. '+esc(t.id),["Trainer signature","Date"],"Issued from Purview Gurukul. Valid with the trainer’s signature."),CERT_PAGE);
+      'Certificate no. '+esc(t.id),["Trainer signature",{l:"Date",v:certDate()}],"Issued from Purview Gurukul. Valid with the trainer’s signature."),CERT_PAGE);
     return; }
   const pid=d.client.id, t=c.train["proc:"+pid], q=c.qa[pid], s=st.s, reviewer=p.querySelector(".qarev").value.trim()||q.reviewer||"";
   if(!q.id){ q.id=certId(d.idp); q.reviewer=reviewer; q.issued=certDate(); certSave(c); if(typeof certLog==="function") certLog(d.k,t.name,Math.round(s.avg)); }
   printHTML(certSheet("Certificate of Quality",d.client.name+" process",t.name,
     '<p>has completed <b>'+s.n+' audited production claims</b> for the <b>'+esc(d.client.name)+'</b> process with an overall QA score of <b>'+s.avg.toFixed(1)+'%</b>, meeting the standard of at least '+QA_MIN_CLAIMS+' claims at '+QA_MIN_SCORE+'% or more, after clearing the '+esc(d.client.name)+' process training on '+esc(t.date)+'.</p>'+(reviewer?'<p>QA reviewer: <b>'+esc(reviewer)+'</b></p>':''),
-    'Certificate no. '+esc(q.id)+' · issued '+esc(q.issued),["QA reviewer signature","Team lead signature"],"Issued from Purview Gurukul. Valid with the signatures above."),CERT_PAGE);
+    'Certificate no. '+esc(q.id)+' · issued '+esc(q.issued),["QA reviewer signature","Team lead signature",{l:"Date",v:certDate()}],"Issued from Purview Gurukul. Valid with the signatures above."),CERT_PAGE);
 }
 function qaPrintLog(d,p){
   const c=certLoad(), s=qaStats(c,d.client.id), name=$("#certName").value.trim()||(c.train["proc:"+d.client.id]||{}).name||"", reviewer=p.querySelector(".qarev").value.trim()||s.q.reviewer||"";
   printHTML('<div class="qasheet"><div class="phead"><span><b>Purview Gurukul</b> · QA record for quality certification</span><span>'+esc(certDate())+'</span></div><h1>QA record'+(name?': '+esc(name):'')+'</h1><p class="pmeta">'+esc(d.client.name)+' process · '+s.n+' claims audited · overall '+(s.n?s.avg.toFixed(1)+'%':'–')+' · standard: at least '+QA_MIN_CLAIMS+' claims at '+QA_MIN_SCORE+'% or more'+(reviewer?' · QA reviewer: '+esc(reviewer):'')+'</p>'+
     '<table><thead><tr><th>#</th><th>Claim reference</th><th>Date audited</th><th>QA score</th></tr></thead><tbody>'+s.rows.map((r,i)=>'<tr><td>'+(i+1)+'</td><td>'+esc(r.ref)+'</td><td>'+esc(r.date)+'</td><td>'+esc(r.score)+'%</td></tr>').join("")+'</tbody></table>'+
-    '<div class="certsign"><div>QA reviewer signature</div><div>Trainee signature</div></div></div>');
+    '<div class="certsign"><div><span class="sgv"></span>QA reviewer signature</div><div><span class="sgv"></span>Trainee signature</div><div><span class="sgv">'+esc(certDate())+'</span>Date</div></div></div>');
 }
 function qaAdd(d,p){
   const ref=p.querySelector(".qaref").value.trim(), date=p.querySelector(".qadate").value, score=parseFloat(p.querySelector(".qascore").value);
